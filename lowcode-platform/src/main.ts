@@ -1,4 +1,13 @@
 import { createApp } from 'vue';
-import App from './App.vue';
+import { createPinia } from 'pinia'
 
-createApp(App).mount('#app')
+import App from './App.vue';
+import router from './router';
+import { usePiniaPersistentStoragePlugin } from './hooks/use-pinia-store-plugin';
+
+const pinia = createPinia();
+
+// 使用持久化插件
+pinia.use(usePiniaPersistentStoragePlugin)
+
+createApp(App).use(router).use(pinia).mount('#app');

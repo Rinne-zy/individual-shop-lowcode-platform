@@ -1,10 +1,13 @@
 <template>
-  <router-view/>
+  <div>
+    我是主页
+  </div>
 </template>
 
 <script setup lang="ts">
+
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 
 </style>

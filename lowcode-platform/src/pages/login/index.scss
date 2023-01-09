@@ -1,0 +1,55 @@
+.login {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #f2f3f5;
+  overflow: hidden;
+  &-box {
+    display: flex;
+    height: 500px;
+    margin-top: 200px;
+    // 登录盒子左侧
+    &-left {
+      width: 550px;
+      margin-right: 20px;
+      border-radius: 6px;
+      background: #fff;
+      padding: 50px 56px 60px;
+      // tabs 样式
+      &-tabs {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 60px;
+        div {
+          font-size: 20px;
+          color: #969799;
+          margin-right: 20px;
+        }
+      }
+      &-item {
+        margin-bottom: 40px;
+      }
+    }
+    // 登录盒子右侧
+    &-right {
+      display: flex;
+      align-items: center;
+      width: 320px;
+      border-radius: 6px;
+      background: #fff;
+    }
+  }
+  &-form-btn {
+    width: 100%;
+  }
+}
+
+:deep(.el-input__wrapper) {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  font-size: 16px;
+  box-shadow: none !important;
+  border-bottom: solid 1px #dcdee0 !important;
+}
