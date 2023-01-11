@@ -1,5 +1,5 @@
 import { clearStorage } from 'lowcode-platform/utils/storage';
-import { PINIA_STORE_PREFIX_FOR_LOCAL_STORAGE } from 'lowcode-platform/const';
+import { PREFIX_FOR_LOCAL_STORAGE } from 'lowcode-platform/const';
 import { setStorage } from 'lowcode-platform/utils/storage';
 import { defineStore } from 'pinia';
 import { toRaw } from 'vue';
@@ -34,14 +34,14 @@ export const useUserStore = defineStore('userStore', {
       this.userType = userType;
       this.expires = Date.now();
       // 持久化存储
-      setStorage(`${PINIA_STORE_PREFIX_FOR_LOCAL_STORAGE}-${this.$id}`, JSON.stringify(toRaw(this.$state)));
+      setStorage(`${PREFIX_FOR_LOCAL_STORAGE}-${this.$id}`, JSON.stringify(toRaw(this.$state)));
     },
     /** 清楚登录的用户信息 */
     clearLoginUserInfo() {
       this.userName = '';
       this.userType = UserType.NoLogin;
       this.expires = 0;
-      clearStorage(`${PINIA_STORE_PREFIX_FOR_LOCAL_STORAGE}-${this.$id}`);
+      clearStorage(`${PREFIX_FOR_LOCAL_STORAGE}-${this.$id}`);
     }
   }
 })

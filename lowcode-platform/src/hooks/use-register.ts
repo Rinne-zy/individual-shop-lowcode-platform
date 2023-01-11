@@ -7,12 +7,14 @@ import { showErrorMessage, showSuccessMessage } from "./use-message-toast";
 import { StatusCode } from "lowcode-platform/api/type";
 
 export function useRegister() {
+  // 注册表单数据
   const registerForm = reactive({
     username: '',
     password: '',
     userType: UserType.Merchant,
   });
 
+  // 注册表单 DOM 引用
   const registerRef = ref<FormInstance>();
   
   // 校验并注册

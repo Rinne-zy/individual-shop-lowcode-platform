@@ -1,6 +1,6 @@
 import type { PiniaPluginContext } from 'pinia';
 
-import { PINIA_STORE_PREFIX_FOR_LOCAL_STORAGE } from 'lowcode-platform/const';
+import { PREFIX_FOR_LOCAL_STORAGE } from 'lowcode-platform/const';
 import { getStorage } from 'lowcode-platform/utils/storage';
 
 /**
@@ -10,7 +10,7 @@ import { getStorage } from 'lowcode-platform/utils/storage';
 export const usePiniaPersistentStoragePlugin = (context: PiniaPluginContext) => {
   const { store } = context;
   // 每次构建项目的时候从本地存储取值
-  const data = getStorage(`${PINIA_STORE_PREFIX_FOR_LOCAL_STORAGE}-${store.$id}`);
+  const data = getStorage(`${PREFIX_FOR_LOCAL_STORAGE}-${store.$id}`);
   return {
       ...data
   }

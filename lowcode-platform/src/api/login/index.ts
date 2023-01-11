@@ -4,10 +4,13 @@ import { UserType } from 'lowcode-platform/store/user-store';
 import { BaseResp } from "../type";
 
 interface LoginResp extends BaseResp {
+  // 登录返回数据
   data?: {
     username: string,
     userType: UserType,
-  }
+  };
+  // token
+  token?: string,
 }
 
 export async function login(username: string, password: string) {

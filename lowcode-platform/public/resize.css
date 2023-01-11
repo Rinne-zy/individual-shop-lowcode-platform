@@ -4,5 +4,5 @@ html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, l
 }
 
 ul, li, ol {
-  list-style: none;                /*清除列表风格*/
+  list-style: none; /*清除列表风格*/
 }

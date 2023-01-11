@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
     name: 'login',
     component: () => login,
     meta: {
-      notRequireAuth: true,
+      notRequireLogin: true,
     }
   }
 ];
@@ -30,13 +30,24 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => { 
-  // 已登录
-  if(to.meta.notRequireAuth || checkIsLogin()) {
-    next();
+  // 判断是否登录
+  if(checkIsLogin()) {
+    // 无需登录页面且登录直接跳到主页
+    if(to.meta.notRequireLogin) {
+      next({
+        path: '/home',
+      });
+    } else {
+      // 需要登录页面且登录放行
+      next();
+    };
+
     return;
   }
 
-  // 需要登录的页面未登录
+  if (to.path === '/login') next();
+
+  // 未登录必定跳登录页
   next({
     path: '/login',
   });

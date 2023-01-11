@@ -156,12 +156,15 @@ const rules = reactive<FormRules>({
 
 // 注册成功回调函数
 const successRegisterCallBack = () => {
-  // 注册成功切换 tab 回登录页
-  activeTab.value = 'login';
   // 重置注册表单
   registerForm.username = ''
   registerForm.password = ''
   registerForm.userType = 2
+  // 重置登录表单
+  loginForm.username = '';
+  loginForm.password = '';
+  // 注册成功切换 tab 回登录页
+  activeTab.value = 'login';
 }
 
 // 登录成功回调函数
