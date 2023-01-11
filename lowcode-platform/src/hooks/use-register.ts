@@ -2,6 +2,9 @@ import { reactive, ref } from "vue";
 import type { FormInstance } from 'element-plus';
 
 import { UserType } from './../store/user-store';
+import { register } from "lowcode-platform/api/register";
+import { showErrorMessage, showSuccessMessage } from "./use-message-toast";
+import { StatusCode } from "lowcode-platform/api/type";
 
 export function useRegister() {
   const registerForm = reactive({
@@ -12,19 +15,27 @@ export function useRegister() {
 
   const registerRef = ref<FormInstance>();
   
-  const register = () => {
+  // 校验并注册
+  const validateAndRegister = (successCallback?: () => void) => {
     registerRef.value?.validate(async (valid) =>  {
-      if (valid) {
-        console.log('校验通过');
-      } else {
-        console.log('校验失败');
-      }
+      try {
+        if(!valid) throw new Error('校验失败');
+        const { username, password, userType } = registerForm;
+        const { data } = await register(username, password, userType);
+        // 注册失败
+        if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+        // 注册成功
+        showSuccessMessage('注册成功，快去登录吧！');
+        successCallback?.();
+      } catch(err) {
+        showErrorMessage((err as Error).message);
+      } 
     });
   };
 
   return {
     registerForm,
-    register,
+    validateAndRegister,
     registerRef
   }
 }

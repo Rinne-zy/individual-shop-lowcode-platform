@@ -48,7 +48,9 @@
             size="large"
             type="primary"
             :round="true"
-            @click="login"
+            @click="() => {
+              validateAndLogin(successLoginCallBack);
+            }"
           >
             登录
           </el-button>
@@ -97,7 +99,9 @@
               size="large"
               type="primary"
               :round="true"
-              @click="register"
+              @click="() => {
+                validateAndRegister(successRegisterCallBack);
+              }"
             >
               立即注册
             </el-button>
@@ -116,6 +120,10 @@ import type { FormRules } from 'element-plus';
 import { reactive, ref } from 'vue';
 import { useLogin } from 'lowcode-platform/hooks/use-login';
 import { useRegister } from 'lowcode-platform/hooks/use-register';
+import { useRouter } from 'vue-router';
+
+// 路由
+const router = useRouter()
 
 // 切换 tabs
 const tabs = [
@@ -132,9 +140,9 @@ const activeTabStyle = {
 }
 
 // 登录
-const { loginForm, login, loginRef } = useLogin();
+const { loginForm, validateAndLogin, loginRef } = useLogin();
 // 注册
-const { registerForm, register, registerRef } = useRegister();
+const { registerForm, validateAndRegister, registerRef } = useRegister();
 
 // 表单校验规则
 const rules = reactive<FormRules>({
@@ -145,5 +153,20 @@ const rules = reactive<FormRules>({
     { required: true, message: '请输入密码', trigger: 'blur' },
   ]
 });
+
+// 注册成功回调函数
+const successRegisterCallBack = () => {
+  // 注册成功切换 tab 回登录页
+  activeTab.value = 'login';
+  // 重置注册表单
+  registerForm.username = ''
+  registerForm.password = ''
+  registerForm.userType = 2
+}
+
+// 登录成功回调函数
+const successLoginCallBack = () => {
+  router.replace('/home');
+}
 </script>
 <style scoped src="./index.scss"></style>

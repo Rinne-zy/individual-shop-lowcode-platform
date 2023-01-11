@@ -1,8 +1,12 @@
+import { showErrorMessage, showSuccessMessage } from 'lowcode-platform/hooks/use-message-toast';
 import { reactive, ref } from "vue";
+import { useRouter } from 'vue-router';
 import type { FormInstance } from "element-plus";
 
 import { LOCAL_STORAGE_DATA_EXPRIES } from "lowcode-platform/const";
 import { UserType, useUserStore } from "lowcode-platform/store/user-store";
+import { login } from "lowcode-platform/api/login";
+import { StatusCode } from 'lowcode-platform/api/type';
 
 /**
  * 检查用户是否登录
@@ -35,19 +39,29 @@ export function useLogin() {
 
   const loginRef = ref<FormInstance>();
   
-  const login = () => {
+  // 校验并登录
+  const validateAndLogin = (successLoginCallback: () => void) => {
     loginRef.value?.validate(async (valid) =>  {
-      if (valid) {
-        console.log('校验通过');
-      } else {
-        console.log('校验失败');
-      }
+      try {
+        if(!valid) throw new Error('校验失败');
+        const { data } = await login(loginForm.username, loginForm.password);
+        // 登录失败
+        if (!data || data.code !== StatusCode.Success || !data.data) throw new Error(data.msg);
+        // 登录成功保存
+        const { username, userType } = data.data;
+        const userStore = useUserStore();
+        userStore.setLoginUserInfo(username, userType)
+        showSuccessMessage(`登录成功，欢迎${username}用户！`);
+        successLoginCallback?.();
+      } catch(err) {
+        showErrorMessage((err as Error).message);
+      } 
     });
   };
 
   return {
     loginForm,
-    login,
+    validateAndLogin,
     loginRef
   }
 }

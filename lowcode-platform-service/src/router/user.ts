@@ -16,7 +16,7 @@ router.post('/user/register', async (ctx) => {
   } catch (err) {
     ctx.body = {
       code: StatusCode.Error,
-      msg: `添加失败，${(err as Error).message}`,
+      msg: `注册失败，${(err as Error).message}`,
     }
   }
 })
