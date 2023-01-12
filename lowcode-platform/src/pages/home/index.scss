@@ -1,0 +1,46 @@
+.home {
+  width: 100vw;
+  height: 100vh;
+  background-color: #E5E5E5;
+  &-aside {
+    background-color: #FFF;
+    height: 100vh;
+    &-top {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60px;
+      margin: 0 20px;
+      border-bottom: 1px solid #d1d1d1;
+    }
+  }
+  &-header {
+    display: flex;
+    background-color: #FFF;
+
+    &-user-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 700;
+      img {
+        width: 40px;
+        margin-right: 5px;
+      }
+    }
+
+    &-btns {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 15px;
+    }
+
+    .activeMenuInfo {
+      display: flex;
+      flex: 1;
+      align-items: center;
+    }
+  }
+}

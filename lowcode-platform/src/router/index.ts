@@ -3,6 +3,10 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import home from 'lowcode-platform/pages/home/index.vue';
 import login from 'lowcode-platform/pages/login/index.vue';
+import homeShop from 'lowcode-platform/pages/home-shop/index.vue';
+import homeConstruction from 'lowcode-platform/pages/home-construction/index.vue';
+import homeOrder from 'lowcode-platform/pages/home-order/index.vue';
+import homeCommodity from 'lowcode-platform/pages/home-commodity/index.vue';
 import { checkIsLogin } from 'lowcode-platform/hooks/use-login';
 
 // 路由数组
@@ -10,8 +14,27 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
+    alias: '/home',
     component: () => home,
-    alias: '/home'
+    redirect: '/shop',
+    children: [
+      {
+        path: '/shop',
+        component: () => homeShop,
+      },
+      {
+        path: '/construction',
+        component: () => homeConstruction,
+      },
+      {
+        path: '/order',
+        component: () => homeOrder,
+      },
+      {
+        path: '/commodity',
+        component: () => homeCommodity,
+      }
+    ],
   },
   {
     path: '/login',
