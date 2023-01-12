@@ -8,7 +8,7 @@ export default async (ctx: Context, next: Next) => {
       await next();
     } catch(err) {
       const msg = (err as Error).message;
-      const code = /^未登录/.test(msg) ? StatusCode.AuthError : StatusCode.Error;
+      const code = ctx.state.statusCode || StatusCode.Error;
       ctx.body = {
         code,
         msg,

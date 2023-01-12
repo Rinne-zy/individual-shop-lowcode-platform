@@ -21,7 +21,7 @@ export function generateToken(userInfo: object | string, signOptions: SignOption
  * @return token 中的 userInfo
  */
 export function verifyToken(token: string) {
-  if(!token || !/^Bearer /.test(token)) throw new Error('未登录，非法 token');
+  if(!token || !/^Bearer /.test(token)) throw new Error('非法 token');
   try {
     const info = verify(token.split(' ')[1], jwtKey);
     // 只返回 username 即可，查表搜索
