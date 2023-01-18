@@ -9,10 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lowcode-platform/packages": "workspace:^1.0.0",
     "axios": "^1.2.2",
+    "deepcopy": "^2.1.0",
     "element-plus": "^2.2.28",
     "pinia": "^2.0.28",
-    "vue-router": "^4.1.6",
-    "@lowcode-platform/packages": "workspace:^1.0.0"
+    "uuid": "^9.0.0",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.0"
   }
 }

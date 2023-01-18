@@ -16,7 +16,11 @@
     <!-- 画布区域 -->
     <div class="construction-panel-container">
       <div class="construction-panel-container-canvas">
-        <div class="construction-panel-container-canvas-content" ref="canvasContentRef">
+        <div 
+          class="construction-panel-container-canvas-content" 
+          ref="canvasContentRef"
+          :style="editorStyle"
+        >
           <components-editor/>
         </div>
       </div>
@@ -25,14 +29,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type { Ref } from 'vue';
 
 import componentsAttributeArea from 'lowcode-platform/components/attribute-area/index.vue';
 import componentsMaterialsArea from 'lowcode-platform/components/materials-area/index.vue';
 import componentsEditor from 'lowcode-platform/components/editor-area/index.vue';
 import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-drag-hooks';
+import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 
+const schemaStore = useSchemaStore();
 const canvasContentRef = ref<HTMLElement>();
 
 // 使用拖拽 hooks
@@ -41,6 +47,15 @@ const { dragStart, dragEnd } = useComponentsMaterialDrag();
 const handleDragStart = (key: string) => {
   dragStart(canvasContentRef as Ref<HTMLElement>, key);
 }
+
+// 编辑器样式
+const editorStyle = computed(() => {
+  const { width, height } = schemaStore.schema.editor;
+  return {
+    width,
+    height,
+  }
+})
 
 </script>
 
