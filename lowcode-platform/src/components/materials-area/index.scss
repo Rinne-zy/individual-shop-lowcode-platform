@@ -1,0 +1,15 @@
+.components-materials {
+  display: flex;
+  height: 700px;
+  box-sizing: content-box;
+  padding: 5px;
+  background: #fff;
+  &-item {
+    margin-left: 20px;
+    width: calc((100% - 100px) / 3);
+    user-select: none;
+  }
+  &-item:first-child {
+    margin-left: 10px;
+  }
+}

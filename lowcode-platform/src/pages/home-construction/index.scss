@@ -1,0 +1,42 @@
+.construction-panel {
+  width: 100%;
+  height: calc(100vh - 100px);
+  position: relative;
+   &-left, &-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    background-color: #fff;
+  }
+  &-top {
+    position: absolute;
+    right: 360px;
+    left: 360px;
+    background-color: #fff;
+    height: 40px;
+  }
+  &-left {
+    left: 0;
+    overflow: auto;
+  }
+  &-right {
+    right: 0;
+  }
+  &-container {
+    padding: 80px 300px 0;
+    height: 100%;
+    box-sizing: border-box;
+    &-canvas {
+      overflow: auto;
+      height: 100%;
+      &-content {
+        position: relative;
+        width: 375px;
+        height: 667px;
+        margin: 0 auto;
+        background: #fff;
+      }
+    }
+  }
+}

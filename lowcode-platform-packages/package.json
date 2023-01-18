@@ -1,0 +1,12 @@
+{
+  "name": "@lowcode-platform/packages",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.ts",
+  "types": "index.ts",
+  "dependencies": {
+    "vant": "^4.0.8"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "image": {
+    "key": "Image",
+    "label": "图片",
+    "icon": "image",
+    "schema": {
+      "style": {
+        "width": "100px"
+      },
+      "propValue": {
+        
+      }
+    } 
+  },
+  "text": {
+    "key": "Text",
+    "label": "文本",
+    "icon": "text",
+    "schema": {
+      "style": {
+        "fontSize": "20px"
+      },
+      "propValue": {
+        
+      }
+    }  
+  }
+}

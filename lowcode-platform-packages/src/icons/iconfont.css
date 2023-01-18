@@ -1,0 +1,16 @@
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('/src/assets/icon/materials-icon.ttf?t=1674020946505') format('truetype');
+}
+
+.icon-image:before {
+  content: "\eb98";
+}
+
+.icon-lunbotuguanli:before {
+  content: "\e6a1";
+}
+
+.icon-text:before {
+  content: "\e60b";
+}

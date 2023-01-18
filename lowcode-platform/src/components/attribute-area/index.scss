@@ -1,0 +1,8 @@
+.components-attribute {
+  height: 100%;
+  overflow: auto;
+  &-content {
+    height: 600px;
+    background: #fff;
+  }
+}
