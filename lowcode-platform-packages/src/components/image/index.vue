@@ -21,7 +21,7 @@ const props = defineProps({
   },
   // 组件样式
   propStyle: {
-    type: CSSStyleDeclaration,
+    type: Object,
     default: () => {},
   }
 })

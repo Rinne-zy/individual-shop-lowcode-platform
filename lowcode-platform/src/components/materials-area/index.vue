@@ -6,7 +6,7 @@
     @dragend="handleDragEnd"
   >
     <material 
-      v-for="(component, index) in componentsMaterial"
+      v-for="component in componentsMaterial"
       class="components-materials-item"
       :icon="component.icon"
       :label="component.label"
