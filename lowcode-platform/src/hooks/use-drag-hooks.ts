@@ -1,7 +1,9 @@
-import { useComponentsMaterialStore } from "lowcode-platform/store/material-store";
-import { useSchemaStore } from "lowcode-platform/store/schema-store";
 import deepCopy from 'deepcopy';
 import type { Ref } from "vue";
+
+import { useComponentsMaterialStore } from "lowcode-platform/store/material-store";
+import { useSchemaStore } from "lowcode-platform/store/schema-store";
+import { calcOffsetPosition, isPositionOutOfCanvasRight, transformPxToNumber } from "lowcode-platform/utils/position";
 
 // 当前选择的物料 key
 let currentDraggedComponentMaterialKey = '';
@@ -11,51 +13,74 @@ let currentDraggedComponentMaterialKey = '';
  * @param ref 画布区域 dom 应勇
  * @returns 拖拽相关函数
  */
-export function useComponentsMaterialDrag() {
+export function useComponentsMaterialDrag(domRef: Ref<HTMLElement>) {
 
   const materialStore = useComponentsMaterialStore();
   const schemaStore = useSchemaStore();
 
+  // 画布 DOM 
+  const canvasRef = domRef;
+
   // 拖拽开始
-  function dragStart(domRef: Ref<HTMLElement>, key: string) {
+  function dragStart(key: string) {
     currentDraggedComponentMaterialKey = key;
     // 进入元素中
-    domRef?.value.addEventListener('dragenter', dragEnter);
+   canvasRef?.value.addEventListener('dragenter', dragEnter);
       // 在目标元素中经过，必须阻止默认行为，否则不能触发 drop
-    domRef?.value.addEventListener('dragover', dragOver);
+   canvasRef?.value.addEventListener('dragover', dragOver);
     // 离开元素时，需要有禁用标识
-    domRef?.value.addEventListener('dragleave', dragLeave);
+   canvasRef?.value.addEventListener('dragleave', dragLeave);
     // 松手的时候，根据拖拽的组件添加一个组件
-    domRef?.value.addEventListener('drop', drop);
+   canvasRef?.value.addEventListener('drop', drop);
   }
 
   // 拖拽结束
-  function dragEnd(domRef: Ref<HTMLElement>) {
-    domRef?.value.removeEventListener('dragenter', dragEnter);
+  function dragEnd() {
+   canvasRef?.value.removeEventListener('dragenter', dragEnter);
     // 在目标元素中经过，必须阻止默认行为，否则不能触发 drop
-    domRef?.value.removeEventListener('dragover', dragOver);
+   canvasRef?.value.removeEventListener('dragover', dragOver);
     // 离开元素时，需要有禁用标识
-    domRef?.value.removeEventListener('dragleave', dragLeave);
+   canvasRef?.value.removeEventListener('dragleave', dragLeave);
     // 松手的时候，根据拖拽的组件添加一个组件
-    domRef?.value.removeEventListener('drop', drop);
+   canvasRef?.value.removeEventListener('drop', drop);
   }
-
 
   // 放置
   function drop(e: DragEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+
     if(!currentDraggedComponentMaterialKey) return;
 
+    // 鼠标点击距离物料左上角的距离
+    const offsetX = +(e.dataTransfer?.getData('offsetX') || 0);
+    const offsetY = +(e.dataTransfer?.getData('offsetY') || 0);
+    // 画布信息
+    const { width, x , y } = canvasRef.value.getBoundingClientRect();
+
+    // 修正偏移后的位置
+    const left = calcOffsetPosition(e.clientX - x, offsetX);
+    const top = calcOffsetPosition(e.clientY - y, offsetY);
+
     const schema = deepCopy(materialStore.schemaByMaterialKey[currentDraggedComponentMaterialKey]);
+
     // 设置定位
-    schema.style.left = `${e.offsetX}px`;
-    schema.style.top = `${e.offsetY}px`;
+    schema.style.top = `${top}px`;
+    // 判断是否超出右侧
+    if(isPositionOutOfCanvasRight(left, schema.style.width, width)) {
+      schema.style.left = `${Math.floor(width - transformPxToNumber(schema.style.width))}px`;
+    } else {
+      schema.style.left = `${left}px`;
+    }
+
     schemaStore.addComponentSchema(schema);
     currentDraggedComponentMaterialKey = '';
   }
 
   return {
     dragStart,
-    dragEnd
+    dragEnd,
+    dragOver
   }
 }
 

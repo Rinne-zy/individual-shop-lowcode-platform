@@ -30,6 +30,9 @@ const emit = defineEmits(['handleDragStart', 'handleDragEnd']);
 
 // 拖拽开始事件
 const handleDragStart = (e: DragEvent) => {
+  e.dataTransfer?.setData('offsetX', `${e.offsetX}`);
+  e.dataTransfer?.setData('offsetY', `${e.offsetY}`);
+
   const { key } = (e.target as HTMLElement).dataset;
   emit('handleDragStart', key);
 }

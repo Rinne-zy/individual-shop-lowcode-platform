@@ -30,16 +30,23 @@ importers:
   lowcode-platform:
     specifiers:
       '@lowcode-platform/packages': workspace:^1.0.0
+      '@types/uuid': ^9.0.0
       axios: ^1.2.2
+      deepcopy: ^2.1.0
       element-plus: ^2.2.28
       pinia: ^2.0.28
+      uuid: ^9.0.0
       vue-router: ^4.1.6
     dependencies:
       '@lowcode-platform/packages': link:../lowcode-platform-packages
       axios: registry.npmmirror.com/axios/1.2.2
+      deepcopy: registry.npmmirror.com/deepcopy/2.1.0
       element-plus: registry.npmmirror.com/element-plus/2.2.28_vue@3.2.45
       pinia: registry.npmmirror.com/pinia/2.0.29_vue@3.2.45
+      uuid: registry.npmmirror.com/uuid/9.0.0
       vue-router: registry.npmmirror.com/vue-router/4.1.6_vue@3.2.45
+    devDependencies:
+      '@types/uuid': registry.npmmirror.com/@types/uuid/9.0.0
 
   lowcode-platform-packages:
     specifiers:
@@ -1612,6 +1619,12 @@ packages:
       '@types/node': registry.npmmirror.com/@types/node/18.11.18
     dev: true
 
+  registry.npmmirror.com/@types/uuid/9.0.0:
+    resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/uuid/-/uuid-9.0.0.tgz}
+    name: '@types/uuid'
+    version: 9.0.0
+    dev: true
+
   registry.npmmirror.com/@types/web-bluetooth/0.0.16:
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/web-bluetooth/-/web-bluetooth-0.0.16.tgz}
     name: '@types/web-bluetooth'
@@ -2153,6 +2166,14 @@ packages:
     resolution: {integrity: sha512-bHtC0iYvWhyaTzvV3CZgPeZQqCOBGyGsVV7v4eevpdkLHfiSrXUdBG+qAuSz4RI70sszvjQ1QSZ98An1yNwpSw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/deep-equal/-/deep-equal-1.0.1.tgz}
     name: deep-equal
     version: 1.0.1
+    dev: false
+
+  registry.npmmirror.com/deepcopy/2.1.0:
+    resolution: {integrity: sha512-8cZeTb1ZKC3bdSCP6XOM1IsTczIO73fdqtwa2B0N15eAz7gmyhQo+mc5gnFuulsgN3vIQYmTgbmQVKalH1dKvQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/deepcopy/-/deepcopy-2.1.0.tgz}
+    name: deepcopy
+    version: 2.1.0
+    dependencies:
+      type-detect: registry.npmmirror.com/type-detect/4.0.8
     dev: false
 
   registry.npmmirror.com/delayed-stream/1.0.0:
@@ -3428,6 +3449,13 @@ packages:
       turbo-windows-arm64: registry.npmmirror.com/turbo-windows-arm64/1.6.3
     dev: false
 
+  registry.npmmirror.com/type-detect/4.0.8:
+    resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/type-detect/-/type-detect-4.0.8.tgz}
+    name: type-detect
+    version: 4.0.8
+    engines: {node: '>=4'}
+    dev: false
+
   registry.npmmirror.com/type-is/1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/type-is/-/type-is-1.6.18.tgz}
     name: type-is
@@ -3511,6 +3539,13 @@ packages:
     hasBin: true
     dev: false
     optional: true
+
+  registry.npmmirror.com/uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/uuid/-/uuid-9.0.0.tgz}
+    name: uuid
+    version: 9.0.0
+    hasBin: true
+    dev: false
 
   registry.npmmirror.com/v8-compile-cache-lib/3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz}

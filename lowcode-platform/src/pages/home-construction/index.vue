@@ -4,7 +4,6 @@
     <div class="construction-panel-left">
       <components-materials-area 
         @handle-drag-start="handleDragStart"
-        @handle-drag-end="dragEnd"
       />
     </div>   
     <!-- 右侧属性控制区 -->
@@ -20,6 +19,8 @@
           class="construction-panel-container-canvas-content" 
           ref="canvasContentRef"
           :style="editorStyle"
+          @dragend="dragEnd"
+          @mousedown="handleCanvasMouseDown"
         >
           <components-editor/>
         </div>
@@ -42,10 +43,10 @@ const schemaStore = useSchemaStore();
 const canvasContentRef = ref<HTMLElement>();
 
 // 使用拖拽 hooks
-const { dragStart, dragEnd } = useComponentsMaterialDrag();
+const { dragStart, dragEnd } = useComponentsMaterialDrag(canvasContentRef as Ref<HTMLElement>);
 // 拖拽开始
 const handleDragStart = (key: string) => {
-  dragStart(canvasContentRef as Ref<HTMLElement>, key);
+  dragStart(key);
 }
 
 // 编辑器样式
@@ -56,6 +57,11 @@ const editorStyle = computed(() => {
     height,
   }
 })
+
+// 点击画布空白处取消选中
+const handleCanvasMouseDown = () => {
+  schemaStore.selectedComponentSchemaId = '';
+}
 
 </script>
 

@@ -5,16 +5,15 @@
       :is-active="component.id === selectedComponentId"
       :style="component.style"
       :class="[ isFixedMode ? 'fixedLayout' : 'sequentialLayout']"
-      @click="(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        selectComponent(component.id)
+      @on-handle-shape-mouse-down="() => {
+        selectComponent(component.id);
       }"
     >
       <component
         class="component"
-        :is="component.key" 
+        :is="component.key"
         :prop-value="component.propValue"
+        :prop-style="component.style"
       />
   </shape>
 </template>
@@ -33,10 +32,10 @@ const components = computed(() => schemaStore.schema.components);
 const selectedComponentId = computed(() => schemaStore.selectedComponentSchemaId);
 const selectComponent = (id: string) => {
   schemaStore.selectedComponentSchemaId = id;
-}
+};
 
 // 是否为固定定位
-const isFixedMode = computed(() => schemaStore.schema.editor.mode === EditorLayoutMode.Fixed)
+const isFixedMode = computed(() => schemaStore.schema.editor.mode === EditorLayoutMode.Fixed);
 
 </script>
 

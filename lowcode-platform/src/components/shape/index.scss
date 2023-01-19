@@ -21,3 +21,12 @@
   outline: 1px solid #70c0ff;
   user-select: none;
 }
+
+.active ::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
