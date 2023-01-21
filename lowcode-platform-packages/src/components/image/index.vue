@@ -2,15 +2,15 @@
   <div>
     <van-image
       src="./azi.jpg"
-      :width="width"
-      :height="height"
+      width="100%"
+      height="100%"
       round
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { Image as VanImage } from 'vant';
 
 const props = defineProps({
@@ -26,9 +26,7 @@ const props = defineProps({
   }
 })
 
-// 图片宽高
-const width = ref(props.propStyle.width);
-const height = ref(props.propStyle.height)
+const style = computed(() => props.propStyle)
 
 </script>
 

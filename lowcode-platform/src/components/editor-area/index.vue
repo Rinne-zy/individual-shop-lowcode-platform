@@ -4,6 +4,7 @@
       :key="component.id"
       :is-active="component.id === selectedComponentId"
       :style="component.style"
+      :isProportion="component.isProportion"
       :class="[ isFixedMode ? 'fixedLayout' : 'sequentialLayout']"
       @on-handle-shape-mouse-down="() => {
         selectComponent(component.id);

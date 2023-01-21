@@ -1,6 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1673953938383') format('truetype');
+  font-family: "iconfont"; /* Project id 3868218 */
+  src: url('iconfont.woff2?t=1674217560127') format('woff2'),
+       url('iconfont.woff?t=1674217560127') format('woff'),
+       url('iconfont.ttf?t=1674217560127') format('truetype');
 }
 
 .iconfont {
@@ -16,6 +18,14 @@
   content: "\e692";
 }
 
+.icon-rotate:before {
+  content: "\e626";
+}
+
+.icon-commodity:before {
+  content: "\e605";
+}
+
 .icon-save:before {
   content: "\e936";
 }
@@ -26,10 +36,6 @@
 
 .icon-order:before {
   content: "\e8ae";
-}
-
-.icon-commodity:before {
-  content: "\e683";
 }
 
 .icon-construction:before {

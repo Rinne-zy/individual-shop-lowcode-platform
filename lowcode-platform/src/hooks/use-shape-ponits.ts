@@ -1,19 +1,34 @@
 import { ref } from "vue";
-import { mod360 } from 'lowcode-platform/utils/translate';
+
+import { getHeightPxNumber, getWidthPxNumber, transformPxToNumber } from 'lowcode-platform/utils/unit';
+import { mod360 } from 'lowcode-platform/utils/rotate';
+import type { Point } from 'lowcode-platform/utils/position';
+
+// 控制点
+export enum Points {
+  Left = 'l',
+  LeftTop = 'lt',
+  Top = 't',
+  RightTop = 'rt',
+  Right = 'r',
+  RightBottom = 'rb',
+  Bottom = 'b',
+  LeftBottom = 'lb',
+}
 
 // 点位置
-const points = ['l', 'lt', 't', 'tr', 'r', 'rb', 'b', 'lb'];
+const points = [Points.Left, Points.LeftTop, Points.Top, Points.RightTop, Points.Right, Points.RightBottom, Points.Bottom, Points.LeftBottom];
 
 // 每个点对应的初始角度
-const initialAngleByPoint: Record<string, number> = { 
-  l: 0,
-  lt: 45,
-  t: 90,
-  tr: 135,
-  r: 180,
-  rb: 225,
-  b: 270,
-  lb: 315,
+const initialAngleByPoint: Record<Points, number> = { 
+  [Points.Left]: 0,
+  [Points.LeftTop]: 45,
+  [Points.Top]: 90,
+  [Points.RightTop]: 135,
+  [Points.Right]: 180,
+  [Points.RightBottom]: 225,
+  [Points.Bottom]: 270,
+  [Points.LeftBottom]: 315,
 };
 
 // 每个范围的角度对应的光标，每转过 22.5 度改变指针
@@ -35,7 +50,18 @@ const angleToCursor = [
  */
 export function getCursor(deg = 0) {
   const rotate = mod360(deg);
-  const cursorByPoint: Record<string, string> = {};
+  // 初始化
+  const cursorByPoint: Record<Points, string> = {
+    [Points.Left]: '',
+    [Points.LeftTop]: '',
+    [Points.Top]: '',
+    [Points.RightTop]: '',
+    [Points.Right]: '',
+    [Points.RightBottom]: '',
+    [Points.Bottom]: '',
+    [Points.LeftBottom]: ''
+  };
+
   // 获取从上一个匹配的索引开始
   let lastMatchedIndex = -1;
   
@@ -62,18 +88,67 @@ export function getCursor(deg = 0) {
   return cursorByPoint;
 }
 
+/**
+ * 获取 Shape 控制点中心对称点的位置（绝对定位）
+ * @param style shape 样式，注意宽高需要先转成 px 数值
+ * @param point 点
+ * @returns 对称点的位置
+ */
+export function getSymmetryPointPosition(style: CSSStyleDeclaration, point: Points): Point {
+  const left = transformPxToNumber(style.left);
+  const top = transformPxToNumber(style.top);
+  const width = getWidthPxNumber(style.width);
+  const height = getHeightPxNumber(style.height);
+
+  switch(point) {
+    case Points.LeftTop: return {
+      x: left + width,
+      y: top + height
+    }
+    case Points.RightTop: return {
+      x: left,
+      y: top + height,
+    }
+    case Points.LeftBottom: return {
+      x: left + width,
+      y: top,
+    }
+    case Points.RightBottom: return {
+      x: left,
+      y: top,
+    }
+    case Points.Left: return {
+      x: left + width,
+      y: top + height / 2,
+    }
+    case Points.Right: return {
+      x: left,
+      y: top + height / 2,
+    }
+    case Points.Top: return {
+      x: left + width / 2,
+      y: top + height,
+    }
+    case Points.Bottom: return {
+      x: left + width / 2,
+      y: top,
+    }
+  }
+
+}
 
 export function usePointsShape() {
   const shapeRef = ref<HTMLElement>();
-  let cursorByPoint: Record<string, string> = getCursor();
+  // 旋转指针样式需要设置为响应式
+  const cursorByPoint = ref(getCursor());
 
   // 获取最新的指针
-  const getNowCursor = () => {
-    cursorByPoint = getCursor();
+  const getNowCursor = (deg: number) => {
+    cursorByPoint.value = getCursor(deg);
   }
 
   // 获取点位置
-  const getPointPositionStyle = (point: string) => {
+  const getPointPositionStyle = (point: Points) => {
     if(!shapeRef.value) return {
       display: 'none',
     }
@@ -113,7 +188,7 @@ export function usePointsShape() {
       marginTop: '-4px',
       left: `${newLeft}px`,
       top: `${newTop}px`,
-      cursor: cursorByPoint[point],
+      cursor: cursorByPoint.value[point],
     }
   }
 
@@ -121,6 +196,6 @@ export function usePointsShape() {
     points,
     shapeRef,
     getNowCursor,
-    getPointPositionStyle,
+    getPointPositionStyle
   }
 }

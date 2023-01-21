@@ -4,9 +4,12 @@
     "label": "图片",
     "icon": "image",
     "schema": {
+      "isProportion": true,
       "style": {
         "width": "100px",
-        "height": "100px"
+        "height": "100px",
+        "rotate": "0deg",
+        "max-width": "100%"
       },
       "propValue": {
         
@@ -18,9 +21,13 @@
     "label": "文本",
     "icon": "text",
     "schema": {
+      "isProportion": false,
       "style": {
         "width": "100%",
-        "fontSize": "20px"
+        "height": "50px",
+        "fontSize": "20px",
+        "max-width": "100%",
+        "rotate": "0deg"
       },
       "propValue": {
         

@@ -7,6 +7,8 @@ export interface CommonSchema {
   id: string;
   // 组件物料的 key
   key: string;
+  // 是否等比例放缩
+  isProportion: boolean,
   // 样式
   style: CSSStyleDeclaration;
   // 属性值

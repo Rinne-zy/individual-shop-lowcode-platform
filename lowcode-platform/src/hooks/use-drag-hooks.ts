@@ -3,7 +3,8 @@ import type { Ref } from "vue";
 
 import { useComponentsMaterialStore } from "lowcode-platform/store/material-store";
 import { useSchemaStore } from "lowcode-platform/store/schema-store";
-import { calcOffsetPosition, isPositionOutOfCanvasRight, transformPxToNumber } from "lowcode-platform/utils/position";
+import { calcOffsetPosition, isPositionOutOfCanvasRight } from "lowcode-platform/utils/position";
+import { getWidthPxNumber } from 'lowcode-platform/utils/unit';
 
 // 当前选择的物料 key
 let currentDraggedComponentMaterialKey = '';
@@ -68,7 +69,7 @@ export function useComponentsMaterialDrag(domRef: Ref<HTMLElement>) {
     schema.style.top = `${top}px`;
     // 判断是否超出右侧
     if(isPositionOutOfCanvasRight(left, schema.style.width, width)) {
-      schema.style.left = `${Math.floor(width - transformPxToNumber(schema.style.width))}px`;
+      schema.style.left = `${Math.floor(width - getWidthPxNumber(schema.style.width))}px`;
     } else {
       schema.style.left = `${left}px`;
     }
