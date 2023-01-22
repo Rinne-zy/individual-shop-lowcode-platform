@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CommonStyleSchema } from '@lowcode-platform/packages/src/types';
+import { CommonStyleSchema } from 'lowcode-platform/packages/types/index';
 
 /** 组件通用 schema */
 export interface CommonSchema {
@@ -11,6 +11,8 @@ export interface CommonSchema {
   key: string;
   // 是否等比例放缩
   isProportion: boolean,
+  // 是否正在编辑属性面板
+  isEdited: boolean,
   // 通用样式
   style: CommonStyleSchema;
   // 组件样式

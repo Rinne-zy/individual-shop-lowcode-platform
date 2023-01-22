@@ -3,6 +3,7 @@
       v-for="component in components"
       :key="component.id"
       :is-active="component.id === selectedComponentId"
+      :id="component.id"
       :commonStyle="component.style"
       :componentStyle="component.componentStyle"
       :isProportion="component.isProportion"

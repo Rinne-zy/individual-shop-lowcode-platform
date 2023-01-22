@@ -43,6 +43,19 @@ const angleToCursor = [
   { start: 293, end: 338, cursor: 'sw' },
 ];
 
+export const shapePointsUpdateById: Record<string, (() => void)> = {};
+
+/**
+ * 执行控制点强制更新函数
+ * @param id 
+ */
+export function execShapePointsForceUpdate(id: string) {
+  const updateFunction = shapePointsUpdateById[id]
+  if(typeof updateFunction === 'function') {
+    updateFunction();
+  }
+}
+
 /**
  * 获取指针
  * @param deg 旋转角

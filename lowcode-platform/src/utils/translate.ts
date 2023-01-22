@@ -1,5 +1,5 @@
-import { getSymmetryPointPosition } from 'lowcode-platform/hooks/use-shape-ponits';
-import { Points } from 'lowcode-platform/hooks/use-shape-ponits';
+import { getSymmetryPointPosition } from 'lowcode-platform/hooks/use-shape-points';
+import { Points } from 'lowcode-platform/hooks/use-shape-points';
 import { getRotateDeg, transformPxToNumber } from 'lowcode-platform/utils/unit';
 import type { Ref } from "vue";
 import { rotate } from './rotate';

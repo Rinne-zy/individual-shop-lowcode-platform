@@ -7,22 +7,25 @@
     @mousedown="handleMouseDown"
   >
     <span v-show="isActive" class="iconfont icon-rotate" @mousedown="handleRotate"/>
-    <div
+    <div v-if="isUpdateShapePoint">
+      <div 
       v-for="item in (isActive ? points : [])"
       :key="item"
       class="shape-point"
       :style="getPointPositionStyle(item)"
       @mousedown="handlePointMouseDown(item, $event)"
-    />
+      />
+    </div>
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, Ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
+import type { Ref } from 'vue';
 
-import { usePointsShape } from 'lowcode-platform/hooks/use-shape-ponits';
-import type { Points } from 'lowcode-platform/hooks/use-shape-ponits';
+import { usePointsShape, shapePointsUpdateById } from 'lowcode-platform/hooks/use-shape-points';
+import type { Points } from 'lowcode-platform/hooks/use-shape-points';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { transformPxToNumber, getRotateDeg } from 'lowcode-platform/utils/unit';
 import { handleScaleTransform } from 'lowcode-platform/utils/translate';
@@ -31,6 +34,10 @@ import { calcOffsetPosition, isPositionOutOfCanvasRight } from 'lowcode-platform
 const schemaStore = useSchemaStore();
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: '',
+  },
   isActive: {
     type: Boolean,
     default: false,
@@ -51,6 +58,7 @@ const props = defineProps({
 
 const emits = defineEmits(['onHandleShapeMouseDown']);
 
+
 const style = computed(() => {
   const commonStyle: Record<string, string> = {};
   Object.keys((props.commonStyle)).forEach((key) => {
@@ -63,6 +71,15 @@ const style = computed(() => {
     ...props.componentStyle,
   }
 })
+
+// 强制更新控制点
+const isUpdateShapePoint = ref(true);
+shapePointsUpdateById[props.id] = () => {
+  isUpdateShapePoint.value = false;
+  nextTick(() => {
+    isUpdateShapePoint.value= true;
+  })
+};
 
 // 启用控制点
 const {
@@ -123,6 +140,7 @@ const handleMouseDown = (e: MouseEvent) => {
   document.addEventListener('mouseup', mouseUp)
 }
 
+// 处理旋转
 const handleRotate = (e: MouseEvent) => {
   e.preventDefault();
   e.stopPropagation();
@@ -169,6 +187,7 @@ const handleRotate = (e: MouseEvent) => {
   document.addEventListener('mouseup', up);
 }
 
+// 处理鼠标移动
 const handlePointMouseDown = (point: Points, e: MouseEvent) => {
   e.stopPropagation();
   e.preventDefault();
@@ -189,6 +208,8 @@ const handlePointMouseDown = (point: Points, e: MouseEvent) => {
   document.addEventListener('mousemove', move)
   document.addEventListener('mouseup', up)
 }
+
+
 </script>
 
 <style scoped src="./index.scss"></style>

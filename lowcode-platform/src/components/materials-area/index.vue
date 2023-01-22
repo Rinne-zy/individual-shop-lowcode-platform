@@ -1,5 +1,4 @@
 <template>
- <!-- 滚动  -->
   <div 
     class="components-materials"
     @dragstart="handleDragStart"

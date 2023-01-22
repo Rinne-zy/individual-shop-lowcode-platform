@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import materials from '@lowcode-platform/packages/src/material.json';
+import materials from 'lowcode-platform/packages/material.json';
 
 import type { CommonSchema } from './schema-store';
 
