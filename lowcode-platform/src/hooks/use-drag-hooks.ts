@@ -66,12 +66,12 @@ export function useComponentsMaterialDrag(domRef: Ref<HTMLElement>) {
     const schema = deepCopy(materialStore.schemaByMaterialKey[currentDraggedComponentMaterialKey]);
 
     // 设置定位
-    schema.style.top = `${top}px`;
+    schema.style.top = top;
     // 判断是否超出右侧
     if(isPositionOutOfCanvasRight(left, schema.style.width, width)) {
-      schema.style.left = `${Math.floor(width - getWidthPxNumber(schema.style.width))}px`;
+      schema.style.left = Math.floor(width - getWidthPxNumber(schema.style.width));
     } else {
-      schema.style.left = `${left}px`;
+      schema.style.left = left;
     }
 
     schemaStore.addComponentSchema(schema);

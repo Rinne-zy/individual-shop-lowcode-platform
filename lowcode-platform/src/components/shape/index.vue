@@ -1,6 +1,7 @@
 <template>
  <div
     :class="['shape', isActive ? 'active' : '']"
+    :style="style"
     ref='shapeRef'
     draggable="false"
     @mousedown="handleMouseDown"
@@ -18,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref } from 'vue';
+import { computed, Ref } from 'vue';
 
 import { usePointsShape } from 'lowcode-platform/hooks/use-shape-ponits';
 import type { Points } from 'lowcode-platform/hooks/use-shape-ponits';
@@ -37,8 +38,31 @@ const props = defineProps({
   isProportion: {
     type: Boolean,
     default: false,
+  },
+  commonStyle: {
+    type: Object,
+    default: () => {}
+  },
+  componentStyle: {
+    type: Object,
+    default: () => {}
   }
 });
+
+const emits = defineEmits(['onHandleShapeMouseDown']);
+
+const style = computed(() => {
+  const commonStyle: Record<string, string> = {};
+  Object.keys((props.commonStyle)).forEach((key) => {
+    commonStyle[key] = `${props.commonStyle[key]}px`;
+  })
+
+  return {
+    ...commonStyle,
+    rotate: `${props.commonStyle.rotate}deg`,
+    ...props.componentStyle,
+  }
+})
 
 // 启用控制点
 const {
@@ -48,7 +72,6 @@ const {
   getPointPositionStyle,
 } = usePointsShape();
 
-const emits = defineEmits(['onHandleShapeMouseDown']);
 
 // 按下鼠标事件，用于拖动组件
 const handleMouseDown = (e: MouseEvent) => {
@@ -85,9 +108,9 @@ const handleMouseDown = (e: MouseEvent) => {
 
     schemaStore.updatedComponentSchemaStyleById(schemaStore.selectedComponentSchemaId, {
       // 利用屏幕坐标偏移进行计算
-      left: `${left}px`,
-      top: `${top}px`,
-    } as CSSStyleDeclaration)
+      left,
+      top,
+    });
   }
 
   // 鼠标抬起
@@ -129,8 +152,8 @@ const handleRotate = (e: MouseEvent) => {
 
     // 更新 style
     schemaStore.updatedComponentSchemaStyleById(schemaStore.selectedComponentSchemaId, {
-      rotate: `${beforeRotate + afterAngleFromOrigin - beforeAngleFromOrigin}deg`,
-    } as CSSStyleDeclaration);
+      rotate: beforeRotate + afterAngleFromOrigin - beforeAngleFromOrigin,
+    });
   }
 
   const up = () => {
@@ -155,7 +178,7 @@ const handlePointMouseDown = (point: Points, e: MouseEvent) => {
 
   const move = (e: MouseEvent) => {
     const style = getScaleStyle(e);
-    schemaStore.updatedComponentSchemaStyleById(schemaStore.selectedComponentSchemaId, style as CSSStyleDeclaration)
+    schemaStore.updatedComponentSchemaStyleById(schemaStore.selectedComponentSchemaId, style)
   }
 
   const up = () => {

@@ -64,21 +64,21 @@ function getScaleTransformStyle(point: Points, fixPoint: Point, currentPoint: Po
   const height = transformPxToNumber(style.height);
 
   if(point === Points.Bottom || point === Points.Top) return {
-    left: `${fixPoint.x - width / 2}px`,
-    top: `${Math.min(fixPoint.y, currentPoint.y)}px`,
-    height: `${Math.abs(fixPoint.y - currentPoint.y)}px`,
+    left: fixPoint.x - width / 2,
+    top: Math.min(fixPoint.y, currentPoint.y),
+    height: Math.abs(fixPoint.y - currentPoint.y),
   }
 
   if(point === Points.Left || point === Points.Right) return {
-    width: `${Math.abs(fixPoint.x - currentPoint.x)}px`,
-    left: `${Math.min(fixPoint.x, currentPoint.x)}px`,
-    top: `${fixPoint.y - height / 2}px`,
+    width: Math.abs(fixPoint.x - currentPoint.x),
+    left: Math.min(fixPoint.x, currentPoint.x),
+    top: fixPoint.y - height / 2,
   }
 
   return {
-    width: `${Math.abs(fixPoint.x - currentPoint.x)}px`,
-    height: `${Math.abs(fixPoint.y - currentPoint.y)}px`,
-    left: `${Math.min(fixPoint.x, currentPoint.x)}px`,
-    top: `${Math.min(fixPoint.y, currentPoint.y)}px`,
+    width: Math.abs(fixPoint.x - currentPoint.x),
+    height: Math.abs(fixPoint.y - currentPoint.y),
+    left: Math.min(fixPoint.x, currentPoint.x),
+    top: Math.min(fixPoint.y, currentPoint.y),
   }
 }

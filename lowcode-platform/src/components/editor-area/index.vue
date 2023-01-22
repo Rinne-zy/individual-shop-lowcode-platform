@@ -3,7 +3,8 @@
       v-for="component in components"
       :key="component.id"
       :is-active="component.id === selectedComponentId"
-      :style="component.style"
+      :commonStyle="component.style"
+      :componentStyle="component.componentStyle"
       :isProportion="component.isProportion"
       :class="[ isFixedMode ? 'fixedLayout' : 'sequentialLayout']"
       @on-handle-shape-mouse-down="() => {

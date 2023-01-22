@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
+import { CommonStyleSchema } from '@lowcode-platform/packages/src/types';
+
 /** 组件通用 schema */
 export interface CommonSchema {
   // 标识组件的唯一 id 值
@@ -9,8 +11,10 @@ export interface CommonSchema {
   key: string;
   // 是否等比例放缩
   isProportion: boolean,
-  // 样式
-  style: CSSStyleDeclaration;
+  // 通用样式
+  style: CommonStyleSchema;
+  // 组件样式
+  componentStyle: CSSStyleDeclaration,
   // 属性值
   propValue: Record<string, string>
 }
@@ -76,7 +80,7 @@ export const useSchemaStore = defineStore('schema', {
      * @param newStyle 新样式
      * @returns 
      */
-    updatedComponentSchemaStyleById(id: string, newStyle: CSSStyleDeclaration) {
+    updatedComponentSchemaStyleById(id: string, newStyle: Partial<CommonStyleSchema>) {
       const { components } = this.schema;
       const schema = components.find(component => component.id === id);
       if(!schema) return;
