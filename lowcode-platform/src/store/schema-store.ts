@@ -2,6 +2,9 @@ import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CommonStyleSchema } from 'lowcode-platform/packages/types/index';
+import { useEditorStatusStore } from './editor-status-store';
+import { showErrorMessage } from 'lowcode-platform/hooks/use-message-toast';
+import { swap } from 'lowcode-platform/utils/array';
 
 /** 组件通用 schema */
 export interface CommonSchema {
@@ -47,8 +50,6 @@ export enum EditorLayoutMode {
 interface SchemaStore {
   // schema
   schema: Schema,
-  // 选中的组件 schema id
-  selectedComponentSchemaId: string;
 }
 
 // 使用组件物料
@@ -62,19 +63,19 @@ export const useSchemaStore = defineStore('schema', {
       },
       components: [],
     },
-    selectedComponentSchemaId: '',
   }),
   actions: {
+    /**
+     * 添加组件 schema
+     * @param schema 组件 schema
+     */
     addComponentSchema(schema: Partial<CommonSchema>) {
       const { components } = this.schema;
       components.push({
         ...schema,
+        // 生成唯一标识
         id: uuidv4(),
       } as CommonSchema);
-    },
-    getSelectedComponentSchema() {
-      const { components } = this.schema;
-      return components.find(component => component.id === this.selectedComponentSchemaId);
     },
     /**
      * 更新组件样式
@@ -93,6 +94,49 @@ export const useSchemaStore = defineStore('schema', {
         ...style,
         ...newStyle
       }
-    }
+    },
+    /**
+     * 根据组件的 index 删除组件
+     * @param index 组件在 Components Schema 数组中的顺序
+     */
+    deleteComponentSchemaByIndex(index: number) {
+      if(index === -1 ) return;
+      const { components } = this.schema;
+      components.splice(index, 1);
+    },
+    /** 获取选中的组件的 schema */
+    getSelectedComponentSchema() {
+      const { components } = this.schema;
+      const editorStatusStore = useEditorStatusStore();
+      return components.find(component => component.id === editorStatusStore.selectedComponentSchemaId);
+    },
+    /** 上移组件层级 */
+    upComponent() {
+      const editorStatusStore = useEditorStatusStore();
+      const selectedIndex = editorStatusStore.selectedComponentIndex;
+      const { components } = this.schema;
+      // 上移图层 index，表示元素在数组中越往后
+      if (selectedIndex >= components.length - 1) {
+        showErrorMessage('已经到顶了');
+        return;
+      };
+      
+      swap(components, selectedIndex, selectedIndex + 1);
+      editorStatusStore.selectedComponentIndex = selectedIndex + 1;
+    },
+    /** 下移组件层级 */
+    downComponent() {
+      const editorStatusStore = useEditorStatusStore();
+      const selectedIndex = editorStatusStore.selectedComponentIndex;
+      const { components } = this.schema;
+        // 下移图层 index，表示元素在数组中越往前
+        if (selectedIndex <= 0) {
+        showErrorMessage('已经到底了')
+        return;
+      };
+      
+      swap(components, selectedIndex, selectedIndex - 1);
+      editorStatusStore.selectedComponentIndex = selectedIndex - 1;
+    },
   }
 })

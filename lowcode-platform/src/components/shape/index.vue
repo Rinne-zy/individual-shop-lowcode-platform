@@ -9,11 +9,11 @@
     <span v-show="isActive" class="iconfont icon-rotate" @mousedown="handleRotate"/>
     <div v-if="isUpdateShapePoint">
       <div 
-      v-for="item in (isActive ? points : [])"
-      :key="item"
-      class="shape-point"
-      :style="getPointPositionStyle(item)"
-      @mousedown="handlePointMouseDown(item, $event)"
+        v-for="item in (isActive ? points : [])"
+        :key="item"
+        class="shape-point"
+        :style="getPointPositionStyle(item)"
+        @mousedown="handlePointMouseDown(item, $event)"
       />
     </div>
     <slot />
@@ -30,8 +30,10 @@ import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { transformPxToNumber, getRotateDeg } from 'lowcode-platform/utils/unit';
 import { handleScaleTransform } from 'lowcode-platform/utils/translate';
 import { calcOffsetPosition, isPositionOutOfCanvasRight } from 'lowcode-platform/utils/position';
+import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 
 const schemaStore = useSchemaStore();
+const editorStatusStore = useEditorStatusStore();
 
 const props = defineProps({
   id: {
@@ -58,7 +60,7 @@ const props = defineProps({
 
 const emits = defineEmits(['onHandleShapeMouseDown']);
 
-
+// 组件样式
 const style = computed(() => {
   const commonStyle: Record<string, string> = {};
   Object.keys((props.commonStyle)).forEach((key) => {
@@ -123,7 +125,7 @@ const handleMouseDown = (e: MouseEvent) => {
     // 计算 top 定位
     const top = calcOffsetPosition(startTop, -offsetY);
 
-    schemaStore.updatedComponentSchemaStyleById(schemaStore.selectedComponentSchemaId, {
+    schemaStore.updatedComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, {
       // 利用屏幕坐标偏移进行计算
       left,
       top,
@@ -169,7 +171,7 @@ const handleRotate = (e: MouseEvent) => {
     const afterAngleFromOrigin = Math.atan2(currentY, currentX) * 180 / Math.PI
 
     // 更新 style
-    schemaStore.updatedComponentSchemaStyleById(schemaStore.selectedComponentSchemaId, {
+    schemaStore.updatedComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, {
       rotate: beforeRotate + afterAngleFromOrigin - beforeAngleFromOrigin,
     });
   }
@@ -197,7 +199,7 @@ const handlePointMouseDown = (point: Points, e: MouseEvent) => {
 
   const move = (e: MouseEvent) => {
     const style = getScaleStyle(e);
-    schemaStore.updatedComponentSchemaStyleById(schemaStore.selectedComponentSchemaId, style)
+    schemaStore.updatedComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, style)
   }
 
   const up = () => {
@@ -208,7 +210,6 @@ const handlePointMouseDown = (point: Points, e: MouseEvent) => {
   document.addEventListener('mousemove', move)
   document.addEventListener('mouseup', up)
 }
-
 
 </script>
 

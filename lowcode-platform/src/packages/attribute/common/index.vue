@@ -24,8 +24,10 @@ import { ElCollapse, ElCollapseItem, ElForm, ElFormItem, ElInput } from 'element
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import type { ComponentsSchema } from 'lowcode-platform/store/schema-store';
 import { execShapePointsForceUpdate } from 'lowcode-platform/hooks/use-shape-points';
+import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 
 const schemaStore = useSchemaStore();
+const editorStatusStore = useEditorStatusStore();
 const selectedComponent = computed(() => schemaStore.getSelectedComponentSchema()) as ComputedRef<ComponentsSchema>;
 
 // 激活的下拉面板
@@ -41,7 +43,7 @@ const labelByStyleKey: Record<string, string> = {
 
 // 处理输入框输入变化
 const onHandleInput = () => {
-  execShapePointsForceUpdate(schemaStore.selectedComponentSchemaId);
+  execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
 }
 </script>
 

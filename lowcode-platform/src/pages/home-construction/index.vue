@@ -16,11 +16,12 @@
     <div class="construction-panel-container">
       <div class="construction-panel-container-canvas">
         <div 
-          class="construction-panel-container-canvas-content" 
+          :class="editorClassName" 
           ref="canvasContentRef"
           :style="editorStyle"
           @dragend="dragEnd"
           @mousedown="handleCanvasMouseDown"
+          @contextmenu="handleContextMenu"
         >
           <components-editor/>
         </div>
@@ -38,9 +39,14 @@ import componentsMaterialsArea from 'lowcode-platform/components/materials-area/
 import componentsEditor from 'lowcode-platform/components/editor-area/index.vue';
 import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-drag-hooks';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
+import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 
 const schemaStore = useSchemaStore();
+const editorStatusStore = useEditorStatusStore();
+// 画布 DOM
 const canvasContentRef = ref<HTMLElement>();
+// 编辑器画布类名
+const editorClassName = 'construction-panel-container-canvas-content';
 
 // 使用拖拽 hooks
 const { dragStart, dragEnd } = useComponentsMaterialDrag(canvasContentRef as Ref<HTMLElement>);
@@ -60,9 +66,31 @@ const editorStyle = computed(() => {
 
 // 点击画布空白处取消选中
 const handleCanvasMouseDown = () => {
-  schemaStore.selectedComponentSchemaId = '';
+  editorStatusStore.selectedComponentSchemaId = '';
+  editorStatusStore.isShowMenu = false;
 }
 
+// 处理右键菜单
+const handleContextMenu = (e: MouseEvent) => {
+  e.stopPropagation();
+  e.preventDefault();
+
+  if(!editorStatusStore.selectedComponentSchemaId) return;
+
+  // 计算菜单相对于组件的位移
+  let target = (e.target) as HTMLElement;
+  let top = e.offsetY;
+  let left = e.offsetX;
+
+  // 循环获取距离编辑器的定位
+  while (target && !target.className.includes(editorClassName)) {
+    left += target.offsetLeft;
+    top += target.offsetTop;
+    target = (target.parentNode) as HTMLElement;
+  };
+
+  editorStatusStore.showMenu(`${left}px`, `${top}px`);
+}
 </script>
 
 <style src="./index.scss" scoped></style>
