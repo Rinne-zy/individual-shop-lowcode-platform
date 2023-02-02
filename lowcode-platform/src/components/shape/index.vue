@@ -130,16 +130,25 @@ const handleMouseDown = (e: MouseEvent) => {
       left,
       top,
     });
+  
+    // 设置组件正在移动并展示辅助线
+    nextTick(() => {
+      editorStatusStore.isMovingComponent = true;
+      editorStatusStore.showLine(e.clientY - startY > 0, e.clientX - startX > 0);
+    })
   }
 
   // 鼠标抬起
-  const mouseUp = () => {
-    document.removeEventListener('mousemove', mouseMove)
-    document.removeEventListener('mouseup', mouseUp)
+  const mouseUp = () => {  
+    document.removeEventListener('mousemove', mouseMove);
+    document.removeEventListener('mouseup', mouseUp);
+    // 清楚辅助线
+    editorStatusStore.isMovingComponent = false;
+    editorStatusStore.hideLine();
   }
 
-  document.addEventListener('mousemove', mouseMove)
-  document.addEventListener('mouseup', mouseUp)
+  document.addEventListener('mousemove', mouseMove);
+  document.addEventListener('mouseup', mouseUp);
 }
 
 // 处理旋转

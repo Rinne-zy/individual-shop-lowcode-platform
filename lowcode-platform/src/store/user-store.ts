@@ -18,7 +18,7 @@ export interface UserStore {
   expires: number;
 }
 
-export const useUserStore = defineStore('userStore', {
+export const useUserStore = defineStore('user', {
   state: () => {
     return {
       userName: '',

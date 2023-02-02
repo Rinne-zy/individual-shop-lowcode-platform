@@ -1,4 +1,4 @@
-import { showErrorMessage } from 'lowcode-platform/hooks/use-message-toast';
+import { showErrorMessage } from 'lowcode-platform/utils/toast';
 import { useUserStore } from 'lowcode-platform/store/user-store';
 import axios from 'axios';
 import type { AxiosResponse } from 'axios';

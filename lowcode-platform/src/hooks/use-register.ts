@@ -3,7 +3,7 @@ import type { FormInstance } from 'element-plus';
 
 import { UserType } from './../store/user-store';
 import { register } from "lowcode-platform/api/register";
-import { showErrorMessage, showSuccessMessage } from "./use-message-toast";
+import { showErrorMessage, showSuccessMessage } from "../utils/toast";
 import { StatusCode } from "lowcode-platform/api/type";
 
 export function useRegister() {

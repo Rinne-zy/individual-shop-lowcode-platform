@@ -1,3 +1,4 @@
+import { CommonStyleSchema } from "lowcode-platform/packages/types";
 import type { Point } from "./position";
 
 /**
@@ -28,5 +29,44 @@ export function rotate(point: Point, centerPoint: Point, deg: number) {
   return {
     x: x1 + centerPoint.x,
     y: y1 + centerPoint.y
+  }
+}
+
+/**
+ * 获取旋转后组件的包围盒
+ * @param style 组件样式
+ * @returns 组件包围盒样式信息
+ */
+export function getComponentRotatedStyle(style: CommonStyleSchema) {
+  const { rotate, width, height } = style;
+  if (!rotate) {
+    return {
+      ...style,
+      bottom: style.top + height,
+      halfWidth: width / 2,
+      right: style.left + width,
+      halfHeight: height / 2,
+    }
+  };
+
+  const sin = Math.sin(rotate * Math.PI / 180);
+  const cos = Math.cos(rotate * Math.PI / 180);
+  
+  // 计算旋转后的样式
+  const newWidth = width * cos + height * sin;
+  const newLeft = style.left - (newWidth - width) / 2;
+  const newHeight = width * sin + height * cos;
+  const newTop = style.top - (newHeight - height) / 2;
+
+  return {
+    left: newLeft,
+    top: newTop,
+    width: newWidth,
+    halfWidth: newWidth / 2, 
+    height: newHeight,
+    halfHeight: newHeight / 2,
+    right: newLeft + newWidth,
+    bottom: newTop + newHeight,
+    rotate,
   }
 }

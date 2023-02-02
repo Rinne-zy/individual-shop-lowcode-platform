@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { CommonStyleSchema } from 'lowcode-platform/packages/types/index';
 import { useEditorStatusStore } from './editor-status-store';
-import { showErrorMessage } from 'lowcode-platform/hooks/use-message-toast';
+import { showErrorMessage } from 'lowcode-platform/utils/toast';
 import { swap } from 'lowcode-platform/utils/array';
 
 /** 组件通用 schema */
@@ -38,7 +38,6 @@ export interface Schema {
   }
   components: ComponentsSchema[];
 }
-
 
 /** 组件 schema */
 export enum EditorLayoutMode {

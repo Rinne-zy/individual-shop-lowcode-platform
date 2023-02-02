@@ -20,16 +20,17 @@
       />
   </shape>
   <control-menu/>
+  <auxiliary-line/>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 
 import ControlMenu from 'lowcode-platform/components/control-menu/index.vue';
-import shape from 'lowcode-platform/components/shape/index.vue';
+import Shape from 'lowcode-platform/components/shape/index.vue';
+import AuxiliaryLine from 'lowcode-platform/components/auxiliary-line/index.vue';
 import { EditorLayoutMode, useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
-
 
 const editorStatusStore = useEditorStatusStore();
 const schemaStore = useSchemaStore();

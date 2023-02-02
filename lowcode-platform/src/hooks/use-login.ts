@@ -1,6 +1,6 @@
 import { JWT_TOKEN_KEY_FOR_LOCAL_STORAGE } from './../const/index';
 import { setStorage, clearStorage } from 'lowcode-platform/utils/storage';
-import { showErrorMessage, showSuccessMessage } from 'lowcode-platform/hooks/use-message-toast';
+import { showErrorMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
 import { reactive, ref } from "vue";
 import type { FormInstance } from "element-plus";
 
