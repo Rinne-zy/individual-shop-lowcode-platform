@@ -6,6 +6,7 @@
     "schema": {
       "isProportion": true,
       "isEdited": false,
+      "componentName": "图片",
       "style": {
         "width": 100,
         "height": 100,
@@ -27,6 +28,7 @@
     "icon": "text",
     "schema": {
       "isProportion": false,
+      "componentName": "文本",
       "isEdited": false,
       "style": {
         "width": 375,

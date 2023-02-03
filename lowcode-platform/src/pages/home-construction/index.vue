@@ -5,16 +5,16 @@
       <components-materials-area 
         @handle-drag-start="handleDragStart"
       />
+      <RealtimeComponents />
     </div>   
     <!-- 右侧属性控制区 -->
     <div class="construction-panel-right">
-      <components-attribute-area/>
+      <components-attribute-area />
     </div>
-    <!-- 顶部区 -->
-    <div class="construction-panel-top"></div>
     <!-- 画布区域 -->
     <div class="construction-panel-container">
       <div class="construction-panel-container-canvas">
+        <operation-menu />
         <div 
           :class="editorClassName" 
           ref="canvasContentRef"
@@ -23,7 +23,7 @@
           @mousedown="handleCanvasMouseDown"
           @contextmenu="handleContextMenu"
         >
-          <components-editor/>
+          <components-editor />
         </div>
       </div>
     </div>
@@ -34,9 +34,11 @@
 import { ref, computed } from 'vue';
 import type { Ref } from 'vue';
 
-import componentsAttributeArea from 'lowcode-platform/components/attribute-area/index.vue';
-import componentsMaterialsArea from 'lowcode-platform/components/materials-area/index.vue';
-import componentsEditor from 'lowcode-platform/components/editor-area/index.vue';
+import ComponentsAttributeArea from 'lowcode-platform/components/attribute-area/index.vue';
+import ComponentsMaterialsArea from 'lowcode-platform/components/materials-area/index.vue';
+import ComponentsEditor from 'lowcode-platform/components/editor-area/index.vue';
+import OperationMenu from 'lowcode-platform/components/operation-menu/index.vue';
+import RealtimeComponents from 'lowcode-platform/components/realtime-components/index.vue';
 import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-drag-hooks';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
@@ -65,7 +67,8 @@ const editorStyle = computed(() => {
 })
 
 // 点击画布空白处取消选中
-const handleCanvasMouseDown = () => {
+const handleCanvasMouseDown = (e: MouseEvent) => {
+  e.stopPropagation();
   editorStatusStore.selectedComponentSchemaId = '';
   editorStatusStore.isShowMenu = false;
 }

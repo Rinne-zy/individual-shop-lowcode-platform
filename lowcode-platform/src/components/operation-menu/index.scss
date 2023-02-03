@@ -1,0 +1,25 @@
+.operation-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 30px;
+  left: calc((100% - 375px) / 2 - 65px);
+  bottom: 100px;
+  &-icon {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    margin-top: 5px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 15px;
+    background-color: #fff;
+  }
+}
+
+.icon-disable {
+  color: #c8c9cc;
+  cursor: not-allowed;
+  background-color: #f4f4f5;
+  border-color: #e9e9eb;
+}

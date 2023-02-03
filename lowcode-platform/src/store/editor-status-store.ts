@@ -1,8 +1,10 @@
+
 import { defineStore } from "pinia";
 
-import { useSchemaStore } from 'lowcode-platform/store/schema-store';
+import { Schema, useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { AuxiliaryLineType, getAdsorptionLinePosStyle, getHorizontalLineConditions, getVerticalLineConditions } from 'lowcode-platform/utils/line';
 import { getComponentRotatedStyle } from 'lowcode-platform/utils/rotate';
+import { execShapePointsForceUpdate } from "lowcode-platform/hooks/use-shape-points";
 
 /** 辅助线 */
 interface AuxiliaryLine {
@@ -78,6 +80,18 @@ export const useEditorStatusStore = defineStore('editorStatus', {
       this.menuPosition.left = left;
       this.menuPosition.top = top;
     },
+    resetSelectedComponent(schema: Schema){
+      const components = schema.components;
+      if(this.selectedComponentSchemaId) {
+        if(components[this.selectedComponentIndex]?.id !== this.selectedComponentSchemaId) {
+          this.selectedComponentIndex = -1;
+          this.selectedComponentSchemaId = '';
+        } else {
+          // 强制更新相应 id 的控制点
+          execShapePointsForceUpdate(this.selectedComponentSchemaId);
+        }
+      }    
+    },
     /** 重置 Store 状态 */
     resetStoreState() {
       this.selectedComponentIndex = -1;
@@ -124,7 +138,7 @@ export const useEditorStatusStore = defineStore('editorStatus', {
             const pos = key === 'vertical' ? 'left' : 'top';
 
             // 吸附
-            schemaStore.updatedComponentSchemaStyleById(
+            schemaStore.updateComponentSchemaStyleById(
               this.selectedComponentSchemaId, 
               getAdsorptionLinePosStyle(pos, condition.adsorptionPos, curComponent.style, curComponentStyle),
             );
@@ -139,7 +153,7 @@ export const useEditorStatusStore = defineStore('editorStatus', {
             }
           })
         });
-      })
+      });
     },
     /**
      * 根据移动方向选择需要显示的辅助线

@@ -33,6 +33,7 @@ const deleteComponent = (e: MouseEvent) => {
   e.preventDefault();
   schemaStore.deleteComponentSchemaByIndex(editorStatusStore.selectedComponentIndex);
   editorStatusStore.resetStoreState();
+  schemaStore.recordSnapshot();
 };
 
 // 上移组件
@@ -41,6 +42,7 @@ const upComponent = (e: MouseEvent) => {
   e.preventDefault();
   schemaStore.upComponent();
   editorStatusStore.isShowMenu = false;
+  schemaStore.recordSnapshot();
 };
 
 // 下移组件
@@ -49,6 +51,7 @@ const downComponent = (e: MouseEvent) => {
   e.preventDefault();
   schemaStore.downComponent();
   editorStatusStore.isShowMenu = false;
+  schemaStore.recordSnapshot();
 };
 </script>
 

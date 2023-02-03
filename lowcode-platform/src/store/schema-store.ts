@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
+import deepcopy from 'deepcopy';
 
 import { CommonStyleSchema } from 'lowcode-platform/packages/types/index';
 import { useEditorStatusStore } from './editor-status-store';
@@ -10,6 +11,8 @@ import { swap } from 'lowcode-platform/utils/array';
 export interface CommonSchema {
   // 标识组件的唯一 id 值
   id: string;
+  // 组件名
+  componentName: string;
   // 组件物料的 key
   key: string;
   // 是否等比例放缩
@@ -49,6 +52,8 @@ export enum EditorLayoutMode {
 interface SchemaStore {
   // schema
   schema: Schema,
+  snapshotSchema: Schema[],
+  snapshotIndex: number,
 }
 
 // 使用组件物料
@@ -62,6 +67,17 @@ export const useSchemaStore = defineStore('schema', {
       },
       components: [],
     },
+    snapshotSchema: [
+      {
+        editor: {
+          width: '375px',
+          height: '667px',
+          mode: EditorLayoutMode.Fixed,
+        },
+        components: [],
+      }
+    ],
+    snapshotIndex: 0,
   }),
   actions: {
     /**
@@ -82,7 +98,7 @@ export const useSchemaStore = defineStore('schema', {
      * @param newStyle 新样式
      * @returns 
      */
-    updatedComponentSchemaStyleById(id: string, newStyle: Partial<CommonStyleSchema>) {
+    updateComponentSchemaStyleById(id: string, newStyle: Partial<CommonStyleSchema>) {
       const { components } = this.schema;
       const schema = components.find(component => component.id === id);
       if(!schema) return;
@@ -110,9 +126,9 @@ export const useSchemaStore = defineStore('schema', {
       return components.find(component => component.id === editorStatusStore.selectedComponentSchemaId);
     },
     /** 上移组件层级 */
-    upComponent() {
+    upComponent(index?: number) {
       const editorStatusStore = useEditorStatusStore();
-      const selectedIndex = editorStatusStore.selectedComponentIndex;
+      const selectedIndex = index || editorStatusStore.selectedComponentIndex;
       const { components } = this.schema;
       // 上移图层 index，表示元素在数组中越往后
       if (selectedIndex >= components.length - 1) {
@@ -124,9 +140,9 @@ export const useSchemaStore = defineStore('schema', {
       editorStatusStore.selectedComponentIndex = selectedIndex + 1;
     },
     /** 下移组件层级 */
-    downComponent() {
+    downComponent(index?: number) {
       const editorStatusStore = useEditorStatusStore();
-      const selectedIndex = editorStatusStore.selectedComponentIndex;
+      const selectedIndex = index || editorStatusStore.selectedComponentIndex;
       const { components } = this.schema;
         // 下移图层 index，表示元素在数组中越往前
         if (selectedIndex <= 0) {
@@ -137,5 +153,34 @@ export const useSchemaStore = defineStore('schema', {
       swap(components, selectedIndex, selectedIndex - 1);
       editorStatusStore.selectedComponentIndex = selectedIndex - 1;
     },
+    /** 撤销 */
+    undo() {
+      if (this.snapshotIndex > 0) {
+        this.snapshotIndex -= 1;
+        const editorStatusStore = useEditorStatusStore();
+        const schema = deepcopy(this.snapshotSchema[this.snapshotIndex]);
+        editorStatusStore.resetSelectedComponent(schema);
+        this.schema = schema;
+      }
+    },
+    /** 重做 */
+    redo() {
+      if(this.snapshotIndex < this.snapshotSchema.length -1) {
+        this.snapshotIndex += 1;
+        const editorStatusStore = useEditorStatusStore();
+        const schema = deepcopy(this.snapshotSchema[this.snapshotIndex]);
+        editorStatusStore.resetSelectedComponent(schema);
+        this.schema = schema;
+      }
+    },
+    /** 记录快照 */
+    recordSnapshot() {
+      // 暂时为了节省空间，若 undo 后进行了其他操作会清除后续操作
+      if (this.snapshotIndex !== this.snapshotSchema.length - 1) {
+        this.snapshotSchema = this.snapshotSchema.slice(0, this.snapshotIndex + 1);
+      }
+      this.snapshotIndex += 1;
+      this.snapshotSchema.push(deepcopy(this.schema));
+    }
   }
 })

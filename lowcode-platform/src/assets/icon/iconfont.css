@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3868218 */
-  src: url('iconfont.woff2?t=1674217560127') format('woff2'),
-       url('iconfont.woff?t=1674217560127') format('woff'),
-       url('iconfont.ttf?t=1674217560127') format('truetype');
+  src: url('iconfont.woff2?t=1675423792566') format('woff2'),
+       url('iconfont.woff?t=1675423792566') format('woff'),
+       url('iconfont.ttf?t=1675423792566') format('truetype');
 }
 
 .iconfont {
@@ -42,3 +42,22 @@
   content: "\e608";
 }
 
+.icon-undo:before {
+  content: "\e734";
+}
+
+.icon-redo:before {
+  content: "\e604";
+}
+
+.icon-up:before {
+  content: "\e637";
+}
+
+.icon-down:before {
+  content: "\e636";
+}
+
+.icon-delete:before {
+  content: "\ec7b";
+}

@@ -76,6 +76,8 @@ export function useComponentsMaterialDrag(domRef: Ref<HTMLElement>) {
 
     schemaStore.addComponentSchema(schema);
     currentDraggedComponentMaterialKey = '';
+    // 保存快照
+    schemaStore.recordSnapshot();
   }
 
   return {

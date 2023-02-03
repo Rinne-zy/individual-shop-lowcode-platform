@@ -79,6 +79,10 @@ const isUpdateShapePoint = ref(true);
 shapePointsUpdateById[props.id] = () => {
   isUpdateShapePoint.value = false;
   nextTick(() => {
+    // 更新旋转后控制点的指针
+    const { style } = shapeRef.value!;
+    const rotate = getRotateDeg(style.rotate);
+    getNowCursor(rotate);
     isUpdateShapePoint.value= true;
   })
 };
@@ -109,8 +113,10 @@ const handleMouseDown = (e: MouseEvent) => {
   // 容器
   const parentRect = shapeRef.value!.parentElement!.getBoundingClientRect();
 
+  let hasMove = false;
   // 按下并鼠标移动
   const mouseMove = (e: MouseEvent) => {
+    hasMove = true;
     const rect = shapeRef.value!.getBoundingClientRect();
 
     const offsetX = e.clientX - startX;
@@ -125,7 +131,7 @@ const handleMouseDown = (e: MouseEvent) => {
     // 计算 top 定位
     const top = calcOffsetPosition(startTop, -offsetY);
 
-    schemaStore.updatedComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, {
+    schemaStore.updateComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, {
       // 利用屏幕坐标偏移进行计算
       left,
       top,
@@ -139,7 +145,12 @@ const handleMouseDown = (e: MouseEvent) => {
   }
 
   // 鼠标抬起
-  const mouseUp = () => {  
+  const mouseUp = () => {
+    // 若已经移动了则保存快照
+    if (hasMove) {
+      schemaStore.recordSnapshot();
+    }
+
     document.removeEventListener('mousemove', mouseMove);
     document.removeEventListener('mouseup', mouseUp);
     // 清楚辅助线
@@ -173,19 +184,25 @@ const handleRotate = (e: MouseEvent) => {
   const startY = e.pageY - center.y;
   const beforeAngleFromOrigin = Math.atan2(startY, startX) * 180 / Math.PI;
 
+  let hasMove = false;
   const move = (e: MouseEvent) => {
+    hasMove = true;
     // 计算移动的角度值
     const currentX = e.pageX - center.x
     const currentY = e.pageY - center.y
     const afterAngleFromOrigin = Math.atan2(currentY, currentX) * 180 / Math.PI
 
     // 更新 style
-    schemaStore.updatedComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, {
+    schemaStore.updateComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, {
       rotate: beforeRotate + afterAngleFromOrigin - beforeAngleFromOrigin,
     });
   }
 
   const up = () => {
+    // 若已经移动了则保存快照
+    if (hasMove) {
+      schemaStore.recordSnapshot();
+    }
     document.removeEventListener('mousemove', move);
     document.removeEventListener('mouseup', up);
     if(!shapeRef.value) return
@@ -198,7 +215,7 @@ const handleRotate = (e: MouseEvent) => {
   document.addEventListener('mouseup', up);
 }
 
-// 处理鼠标移动
+// 处理鼠标放缩节点
 const handlePointMouseDown = (point: Points, e: MouseEvent) => {
   e.stopPropagation();
   e.preventDefault();
@@ -206,12 +223,18 @@ const handlePointMouseDown = (point: Points, e: MouseEvent) => {
   if(!shapeRef.value) return;
   const getScaleStyle = handleScaleTransform(shapeRef as Ref<HTMLElement>, point, props.isProportion);
 
+  let hasMove = false;  
   const move = (e: MouseEvent) => {
+    hasMove = true;
     const style = getScaleStyle(e);
-    schemaStore.updatedComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, style)
+    schemaStore.updateComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, style)
   }
 
   const up = () => {
+    // 若已经移动了则保存快照
+    if(hasMove) {
+      schemaStore.recordSnapshot();
+    }
     document.removeEventListener('mousemove', move)
     document.removeEventListener('mouseup', up)
   }
