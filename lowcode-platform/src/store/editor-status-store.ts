@@ -1,9 +1,9 @@
-
 import { defineStore } from "pinia";
 
 import { Schema, useSchemaStore } from 'lowcode-platform/store/schema-store';
-import { AuxiliaryLineType, getAdsorptionLinePosStyle, getHorizontalLineConditions, getVerticalLineConditions } from 'lowcode-platform/utils/line';
+import { AuxiliaryLineType, getAdsorptionLinePosStyle, getHorizontalLineConditions, getVerticalLineConditions, isNearly } from 'lowcode-platform/utils/line';
 import { getComponentRotatedStyle } from 'lowcode-platform/utils/rotate';
+import { transformPxToNumber } from 'lowcode-platform/utils/unit';
 import { execShapePointsForceUpdate } from "lowcode-platform/hooks/use-shape-points";
 
 /** 辅助线 */
@@ -23,6 +23,8 @@ interface EditorStatusStore {
   selectedComponentIndex: number;
   // 是否展示菜单
   isShowMenu: boolean;
+  // 是否展示画布中线
+  isShowCanvasMidLine: boolean;
   // 菜单位置
   menuPosition: {
     left?: string,
@@ -42,6 +44,7 @@ export const useEditorStatusStore = defineStore('editorStatus', {
     isShowMenu: false,
     menuPosition: {},
     isMovingComponent: false,
+    isShowCanvasMidLine: false,
     lineStatus: {
       xt: {
         isShow: false,
@@ -104,7 +107,8 @@ export const useEditorStatusStore = defineStore('editorStatus', {
       Object.keys(this.lineStatus).forEach(line => {
         this.lineStatus[(line as AuxiliaryLineType)].isShow = false;
         this.lineStatus[(line as AuxiliaryLineType)].style = {};
-      })
+      });
+      this.isShowCanvasMidLine = false;
     },
     /**
      * 展示辅助线
@@ -113,13 +117,13 @@ export const useEditorStatusStore = defineStore('editorStatus', {
      */
     showLine(isDownward: boolean, isRightward: boolean) {
       const schemaStore = useSchemaStore();
-      const { components } = schemaStore.schema;
+      const { components, editor } = schemaStore.schema;
       const curComponent = components[this.selectedComponentIndex];
       // 当前选中组件的信息
       const curComponentStyle = getComponentRotatedStyle(curComponent.style);
-
       // 先消除线，否则会一直显示
       this.hideLine();
+      // 展示组件辅助线
       components.forEach(component => {
         if(component.id === this.selectedComponentSchemaId) return;
         const componentStyle = getComponentRotatedStyle(component.style);
@@ -154,6 +158,12 @@ export const useEditorStatusStore = defineStore('editorStatus', {
           })
         });
       });
+      // 展示画布中线
+      this.isShowCanvasMidLine = isNearly(
+        curComponentStyle.left + curComponentStyle.halfWidth,
+        transformPxToNumber(editor.width) / 2, 
+        0
+      );
     },
     /**
      * 根据移动方向选择需要显示的辅助线

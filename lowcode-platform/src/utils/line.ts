@@ -23,7 +23,7 @@ export enum AuxiliaryLineType {
 /** 用于辅助线计算的组件样式 */
 type ComponentStyleForLine = ReturnType<typeof getComponentRotatedStyle>;
 
-function isNearly(d1: number, d2: number, diff: number) {
+export function isNearly(d1: number, d2: number, diff: number) {
   return Math.abs(d1 - d2) <= diff;
 }
 
