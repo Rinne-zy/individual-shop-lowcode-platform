@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import type { Ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import deepcopy from 'deepcopy';
 
@@ -63,7 +64,7 @@ export const useSchemaStore = defineStore('schema', {
       editor: {
         width: '375px',
         height: '667px',
-        mode: EditorLayoutMode.Fixed,
+        mode: EditorLayoutMode.Sequential,
       },
       components: [],
     },
@@ -72,7 +73,7 @@ export const useSchemaStore = defineStore('schema', {
         editor: {
           width: '375px',
           height: '667px',
-          mode: EditorLayoutMode.Fixed,
+          mode: EditorLayoutMode.Sequential,
         },
         components: [],
       }
@@ -132,7 +133,8 @@ export const useSchemaStore = defineStore('schema', {
       const { components } = this.schema;
       // 上移图层 index，表示元素在数组中越往后
       if (selectedIndex >= components.length - 1) {
-        showErrorMessage('已经到顶了');
+        const errMsg = this.isFixLayoutMode() ? '已经浮到顶层了' : '已经在底部了'
+        showErrorMessage(errMsg);
         return;
       };
       
@@ -145,8 +147,9 @@ export const useSchemaStore = defineStore('schema', {
       const selectedIndex = index || editorStatusStore.selectedComponentIndex;
       const { components } = this.schema;
         // 下移图层 index，表示元素在数组中越往前
-        if (selectedIndex <= 0) {
-        showErrorMessage('已经到底了')
+      if (selectedIndex <= 0) {
+        const errMsg = this.isFixLayoutMode() ? '已经下沉到底了' : '已经在顶部了'
+        showErrorMessage(errMsg);
         return;
       };
       
@@ -155,6 +158,7 @@ export const useSchemaStore = defineStore('schema', {
     },
     /** 撤销 */
     undo() {
+      console.log(this.snapshotSchema);
       if (this.snapshotIndex > 0) {
         this.snapshotIndex -= 1;
         const editorStatusStore = useEditorStatusStore();
@@ -181,6 +185,10 @@ export const useSchemaStore = defineStore('schema', {
       }
       this.snapshotIndex += 1;
       this.snapshotSchema.push(deepcopy(this.schema));
+    },
+    /** 判断是否为固定布局 */
+    isFixLayoutMode() {
+      return this.schema.editor.mode === EditorLayoutMode.Fixed;
     }
   }
 })

@@ -22,7 +22,7 @@ export function handleScaleTransform(ref: Ref<HTMLElement>, point: Points, isPro
   const centerPoint = getStyleCenterPosition(style);
   // 旋转角
   const rotateDeg = getRotateDeg(style.rotate);
-  // 旋转后中心点
+  // 旋转后固定点
   const fixPoint = rotate(originFixPoint, centerPoint, -rotateDeg);
 
   return (e: MouseEvent) => {
@@ -44,8 +44,8 @@ export function handleScaleTransform(ref: Ref<HTMLElement>, point: Points, isPro
     }
 
     // 旋转前的位置
-    const beforeRotateFixPoint = rotate(fixPoint, newCenterPoint, rotateDeg)
-    const beforeRotateCurrentPoint = rotate(current, newCenterPoint, rotateDeg)
+    const beforeRotateFixPoint = rotate(fixPoint, newCenterPoint, rotateDeg);
+    const beforeRotateCurrentPoint = rotate(current, newCenterPoint, rotateDeg);
 
     return getScaleTransformStyle(point, beforeRotateFixPoint, beforeRotateCurrentPoint, style);
   }

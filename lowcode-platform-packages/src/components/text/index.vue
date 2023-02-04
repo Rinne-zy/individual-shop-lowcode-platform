@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="text">
     我是一段文本
   </div>
 </template>
@@ -8,6 +8,4 @@
 
 </script>
 
-<style scoped>
-
-</style>
+<style src="./index.scss" scoped></style>

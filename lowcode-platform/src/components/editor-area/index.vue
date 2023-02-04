@@ -8,8 +8,8 @@
       :componentStyle="component.componentStyle"
       :isProportion="component.isProportion"
       :class="[ isFixedMode ? 'fixedLayout' : 'sequentialLayout']"
-      @on-handle-shape-mouse-down="() => {
-        selectComponent(component.id, index);
+      @on-handle-shape-mouse-down="(ref: Ref<HTMLElement>) => {
+        selectComponent(component.id, index, ref);
       }"
     >
       <component
@@ -20,16 +20,18 @@
       />
   </shape>
   <control-menu/>
-  <auxiliary-line/>
+  <!-- 固定布局展示辅助线 -->
+  <auxiliary-line v-if="isFixedMode"/>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { Ref } from 'vue';
 
 import ControlMenu from 'lowcode-platform/components/control-menu/index.vue';
 import Shape from 'lowcode-platform/components/shape/index.vue';
 import AuxiliaryLine from 'lowcode-platform/components/auxiliary-line/index.vue';
-import { EditorLayoutMode, useSchemaStore } from 'lowcode-platform/store/schema-store';
+import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 
 const editorStatusStore = useEditorStatusStore();
@@ -40,7 +42,8 @@ const components = computed(() => schemaStore.schema.components);
 
 // 选中的组件 id
 const selectedComponentId = computed(() => editorStatusStore.selectedComponentSchemaId);
-const selectComponent = (id: string, index: number) => {
+
+const selectComponent = (id: string, index: number, ref: Ref<HTMLElement>) => {
   // 当选择非同一个组件的时候取消菜单
   if(editorStatusStore.selectedComponentSchemaId !== id) {
     editorStatusStore.isShowMenu = false;
@@ -50,7 +53,7 @@ const selectComponent = (id: string, index: number) => {
 };
 
 // 是否为固定定位
-const isFixedMode = computed(() => schemaStore.schema.editor.mode === EditorLayoutMode.Fixed);
+const isFixedMode = computed(() => schemaStore.isFixLayoutMode());
 
 </script>
 

@@ -43,7 +43,7 @@ export function getCenterPosition(p1: Point, p2: Point): Point {
  * @param B
  * @returns
  */
-export function calcPointInLine (point:Point, A:Point, B:Point) {
+export function calcPointInLine (point: Point, A: Point, B: Point) {
   // 计算点到某条直线上的垂直点
   const x0 = point.x
   const y0 = point.y

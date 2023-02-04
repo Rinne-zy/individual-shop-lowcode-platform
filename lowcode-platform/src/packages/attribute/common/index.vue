@@ -9,7 +9,7 @@
               :label="labelByStyleKey[key]"
               :name="key"
             >
-             <el-input v-model="selectedComponent.style[key]" type="number" @input="onHandleInput" />
+             <el-input v-model="selectedComponent.style[key]" type="number" @input="onHandleInput" @change="onHandleChange" />
             </el-form-item>
           </el-form>
       </el-collapse-item>
@@ -44,6 +44,11 @@ const labelByStyleKey: Record<string, string> = {
 // 处理输入框输入变化
 const onHandleInput = () => {
   execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
+}
+
+const onHandleChange = () => {
+  // 当属性成功改变并失去焦点时记录快照
+  schemaStore.recordSnapshot();
 }
 </script>
 

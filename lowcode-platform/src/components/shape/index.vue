@@ -7,7 +7,7 @@
     @mousedown="handleMouseDown"
   >
     <span v-show="isActive" class="iconfont icon-rotate" @mousedown="handleRotate"/>
-    <div v-if="isUpdateShapePoint">
+    <div v-if="isUpdateShapePoint && isFixedMode">
       <div 
         v-for="item in (isActive ? points : [])"
         :key="item"
@@ -26,7 +26,7 @@ import type { Ref } from 'vue';
 
 import { usePointsShape, shapePointsUpdateById } from 'lowcode-platform/hooks/use-shape-points';
 import type { Points } from 'lowcode-platform/hooks/use-shape-points';
-import { useSchemaStore } from 'lowcode-platform/store/schema-store';
+import {  useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { transformPxToNumber, getRotateDeg } from 'lowcode-platform/utils/unit';
 import { handleScaleTransform } from 'lowcode-platform/utils/translate';
 import { calcOffsetPosition, isPositionOutOfCanvasRight } from 'lowcode-platform/utils/position';
@@ -74,6 +74,9 @@ const style = computed(() => {
   }
 })
 
+// 是否为固定布局
+const isFixedMode = computed(() => schemaStore.isFixLayoutMode());
+
 // 强制更新控制点
 const isUpdateShapePoint = ref(true);
 shapePointsUpdateById[props.id] = () => {
@@ -99,9 +102,9 @@ const {
 // 按下鼠标事件，用于拖动组件
 const handleMouseDown = (e: MouseEvent) => {
   e.stopPropagation();
-  emits('onHandleShapeMouseDown');
+  emits('onHandleShapeMouseDown', shapeRef);
   const schema = schemaStore.getSelectedComponentSchema();
-  if(!schema) return;
+  if(!schema || !isFixedMode.value) return;
 
   // 按下位置的屏幕坐标
   const startY = e.clientY;
@@ -221,7 +224,11 @@ const handlePointMouseDown = (point: Points, e: MouseEvent) => {
   e.preventDefault();
 
   if(!shapeRef.value) return;
-  const getScaleStyle = handleScaleTransform(shapeRef as Ref<HTMLElement>, point, props.isProportion);
+  const getScaleStyle = handleScaleTransform(
+    shapeRef as Ref<HTMLElement>, 
+    point, 
+    props.isProportion, 
+  );
 
   let hasMove = false;  
   const move = (e: MouseEvent) => {

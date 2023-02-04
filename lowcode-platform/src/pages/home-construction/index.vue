@@ -4,6 +4,7 @@
     <div class="construction-panel-left">
       <components-materials-area 
         @handle-drag-start="handleDragStart"
+        @handle-component-material-click="handleComponentsMaterialClick"
       />
       <RealtimeComponents />
     </div>   
@@ -39,9 +40,10 @@ import ComponentsMaterialsArea from 'lowcode-platform/components/materials-area/
 import ComponentsEditor from 'lowcode-platform/components/editor-area/index.vue';
 import OperationMenu from 'lowcode-platform/components/operation-menu/index.vue';
 import RealtimeComponents from 'lowcode-platform/components/realtime-components/index.vue';
-import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-drag-hooks';
+import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-material-drag-hooks';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
+import { useComponentsMaterialClick } from 'lowcode-platform/hooks/use-material-click-hooks';
 
 const schemaStore = useSchemaStore();
 const editorStatusStore = useEditorStatusStore();
@@ -56,6 +58,9 @@ const { dragStart, dragEnd } = useComponentsMaterialDrag(canvasContentRef as Ref
 const handleDragStart = (key: string) => {
   dragStart(key);
 }
+
+// 处理组件物料区点击
+const { handleComponentsMaterialClick } = useComponentsMaterialClick();
 
 // 编辑器样式
 const editorStyle = computed(() => {

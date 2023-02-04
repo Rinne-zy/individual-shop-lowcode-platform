@@ -2,15 +2,15 @@
   <div 
     class="components-materials"
     @dragstart="handleDragStart"
-    @dragend="handleDragEnd"
   >
     <material 
       v-for="component in componentsMaterial"
       class="components-materials-item"
       :icon="component.icon"
       :label="component.label"
-      :draggable="true"
+      :draggable="draggable"
       :data-key="component.key"
+      @click="handleComponentMaterialClick(component.key)"
       />
   </div>
 </template>
@@ -19,13 +19,18 @@
 import { computed } from 'vue';
 
 import { initComponentsMaterialStore } from 'lowcode-platform/hooks/use-components-material-init';
-import material from '../material/index.vue';
+import Material from '../material/index.vue';
+import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 
-const store = initComponentsMaterialStore()
+const store = initComponentsMaterialStore();
+const schemaStore = useSchemaStore();
+
 // 物料
 const componentsMaterial = computed(() => store.componentsMaterial);
+// 是否可拖拽
+const draggable = computed(() => schemaStore.isFixLayoutMode());
 
-const emit = defineEmits(['handleDragStart', 'handleDragEnd']);
+const emit = defineEmits(['handleDragStart', 'handleComponentMaterialClick']);
 
 // 拖拽开始事件
 const handleDragStart = (e: DragEvent) => {
@@ -36,9 +41,10 @@ const handleDragStart = (e: DragEvent) => {
   emit('handleDragStart', key);
 }
 
-// 拖拽结束事件
-const handleDragEnd = () => {
-  emit('handleDragEnd');
+// 处理物料区点击
+const handleComponentMaterialClick = (key: string) => {
+  if(draggable.value || !key) return;
+  emit('handleComponentMaterialClick', key);
 }
 
 </script>

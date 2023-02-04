@@ -36,10 +36,11 @@
         "left": 0,
         "top": 0,
         "max-width": "100%",
-        "rotate": 0
+        "rotate": 0,
+        "font-size": "12px"
       },
       "componentStyle": {
-
+        
       },
       "propValue": {
         

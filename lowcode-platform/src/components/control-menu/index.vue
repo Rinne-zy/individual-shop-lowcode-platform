@@ -4,8 +4,14 @@
       <ul @mousedown="(e) => e.stopPropagation()">
           <template v-if="isSelectedComponent">
             <li @click="deleteComponent">删除</li>
-            <li @click="upComponent">上移</li>
-            <li @click="downComponent">下移</li>
+            <template v-if="isFixedMode">
+              <li @click="upComponent">上浮</li>
+              <li @click="downComponent">下沉</li>
+            </template>
+            <template v-else>
+              <li @click="downComponent">上移</li>
+              <li @click="upComponent">下移</li>
+            </template>        
           </template>
       </ul>
     </div>
@@ -26,6 +32,8 @@ const isShowMenu = computed(() => editorStatusStore.isShowMenu);
 const menuPositionStyle = computed(() => editorStatusStore.menuPosition);
 // 是否选择组件
 const isSelectedComponent = computed(() => editorStatusStore.selectedComponentSchemaId);
+// 是否为固定布局
+const isFixedMode = computed(() => schemaStore.isFixLayoutMode());
 
 // 删除组件
 const deleteComponent = (e: MouseEvent) => {

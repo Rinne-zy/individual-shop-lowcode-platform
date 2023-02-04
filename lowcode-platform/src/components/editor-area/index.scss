@@ -1,6 +1,8 @@
 .component {
   width: 100%;
   height: 100%;
+  // 去掉 div 中的空格，避免选中组件后 rect 获取到的高度发生变化
+  font-size: 0;
 }
 
 .fixedLayout {
@@ -8,5 +10,5 @@
 }
 
 .sequentialLayout {
-  
+  display: block;
 }
