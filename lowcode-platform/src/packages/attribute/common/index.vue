@@ -1,34 +1,44 @@
 <template>
-  <div class="component-common-attr">
-    <el-collapse v-model="activeName">
-      <el-collapse-item title="通用样式" name="style">
-          <el-form label-position="top">
-            <el-form-item 
-              v-for="(value, key) in selectedComponent.style"
-              :key="key"
-              :label="labelByStyleKey[key]"
-              :name="key"
-            >
-             <el-input v-model="selectedComponent.style[key]" type="number" @input="onHandleInput" @change="onHandleChange" />
-            </el-form-item>
-          </el-form>
-      </el-collapse-item>
-    </el-collapse>
-  </div>
+ <el-collapse-item class="component-common-attr" title="通用样式" name="style">
+    <el-form label-position="top">
+      <el-form-item 
+        v-for="(value, key) in commonAttr"
+        :key="key"
+        :label="labelByStyleKey[key]"
+        :name="key"
+      >
+        <el-input v-model="selectedComponent.style[key]" type="number" @input="onHandleInput" @change="onHandleChange" />
+      </el-form-item>
+    </el-form>
+  </el-collapse-item>
 </template>
 
 <script setup lang="ts">
 import { computed, ComputedRef, ref } from 'vue';
-import { ElCollapse, ElCollapseItem, ElForm, ElFormItem, ElInput } from 'element-plus';
+import { ElCollapseItem, ElForm, ElFormItem, ElInput } from 'element-plus';
 
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import type { ComponentsSchema } from 'lowcode-platform/store/schema-store';
 import { execShapePointsForceUpdate } from 'lowcode-platform/hooks/use-shape-points';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
+import type { CommonStyleSchema } from 'lowcode-platform/packages/types';
 
 const schemaStore = useSchemaStore();
 const editorStatusStore = useEditorStatusStore();
 const selectedComponent = computed(() => schemaStore.getSelectedComponentSchema()) as ComputedRef<ComponentsSchema>;
+
+// 通用属性
+const commonAttr = computed(() => {
+  const attr = {} as Record<keyof CommonStyleSchema, string | number>;
+  Object.keys(labelByStyleKey).forEach((key) => {
+    const styleKey = key as keyof CommonStyleSchema;
+    const value =  selectedComponent.value.style[styleKey];
+    // undefined 表示不关心属性，直接去掉
+    if(typeof value === 'undefined') return;
+    attr[styleKey] = selectedComponent.value.style[styleKey];
+  })
+  return attr;
+})
 
 // 激活的下拉面板
 const activeName = ref('style');

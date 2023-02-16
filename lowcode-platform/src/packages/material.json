@@ -32,18 +32,16 @@
       "isEdited": false,
       "style": {
         "width": 375,
-        "height": 50,
         "left": 0,
         "top": 0,
-        "max-width": "100%",
-        "rotate": 0,
-        "font-size": "12px"
-      },
-      "componentStyle": {
-        
+        "rotate": 0
       },
       "propValue": {
-        
+        "value": "我是一则标题",
+        "fontSize": 16,
+        "color": "#000000",
+        "isWarp": true,
+        "position": "left"
       }
     }  
   }

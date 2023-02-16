@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import type { Ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import deepcopy from 'deepcopy';
 
@@ -64,7 +63,7 @@ export const useSchemaStore = defineStore('schema', {
       editor: {
         width: '375px',
         height: '667px',
-        mode: EditorLayoutMode.Sequential,
+        mode: EditorLayoutMode.Fixed,
       },
       components: [],
     },
@@ -73,7 +72,7 @@ export const useSchemaStore = defineStore('schema', {
         editor: {
           width: '375px',
           height: '667px',
-          mode: EditorLayoutMode.Sequential,
+          mode: EditorLayoutMode.Fixed,
         },
         components: [],
       }
@@ -158,7 +157,6 @@ export const useSchemaStore = defineStore('schema', {
     },
     /** 撤销 */
     undo() {
-      console.log(this.snapshotSchema);
       if (this.snapshotIndex > 0) {
         this.snapshotIndex -= 1;
         const editorStatusStore = useEditorStatusStore();
