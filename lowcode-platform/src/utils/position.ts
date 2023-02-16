@@ -9,11 +9,13 @@ export interface Point  {
 /**
  * 计算样式的中心点位置（绝对定位）
  * @param style 样式 注意宽高需要先转成 px 数值
+ * @param scrollTop 父元素滚动条高度
  * @returns 样式中心点
  */
-export function getStyleCenterPosition(style: CSSStyleDeclaration) {
+export function getStyleCenterPosition(style: CSSStyleDeclaration, scrollTop = 0) {
   const left = transformPxToNumber(style.left);
-  const top = transformPxToNumber(style.top);
+  // 由于计算是基于屏幕坐标，因此需要根据父元素滚动条距离修正 top 值
+  const top = transformPxToNumber(style.top) - scrollTop;
   const width = getWidthPxNumber(style.width);
   const height = getHeightPxNumber(style.height);
 

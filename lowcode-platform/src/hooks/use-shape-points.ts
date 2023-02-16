@@ -105,11 +105,13 @@ export function getCursor(deg = 0) {
  * 获取 Shape 控制点中心对称点的位置（绝对定位）
  * @param style shape 样式，注意宽高需要先转成 px 数值
  * @param point 点
+ * @param scrollTop 滚动高度
  * @returns 对称点的位置
  */
-export function getSymmetryPointPosition(style: CSSStyleDeclaration, point: Points): Point {
+export function getSymmetryPointPosition(style: CSSStyleDeclaration, point: Points, scrollTop = 0): Point {
   const left = transformPxToNumber(style.left);
-  const top = transformPxToNumber(style.top);
+  // 由于计算是基于屏幕坐标，因此需要根据父元素滚动条距离修正 top 值
+  const top = transformPxToNumber(style.top) - scrollTop;
   const width = getWidthPxNumber(style.width);
   const height = getHeightPxNumber(style.height);
 
@@ -197,8 +199,8 @@ export function usePointsShape() {
     }
 
     return {
-      marginLeft: '-4px',
-      marginTop: '-4px',
+      marginLeft: '-5px',
+      marginTop: '-5px',
       left: `${newLeft}px`,
       top: `${newTop}px`,
       cursor: cursorByPoint.value[point],

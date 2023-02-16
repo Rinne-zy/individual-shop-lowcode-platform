@@ -1,3 +1,4 @@
+import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { getSymmetryPointPosition } from 'lowcode-platform/hooks/use-shape-points';
 import { Points } from 'lowcode-platform/hooks/use-shape-points';
 import { getRotateDeg, transformPxToNumber } from 'lowcode-platform/utils/unit';
@@ -12,14 +13,19 @@ import { calcPointInLine, getStyleCenterPosition, Point } from './position';
  * @returns 
  */
 export function handleScaleTransform(ref: Ref<HTMLElement>, point: Points, isProportion = false) {
+  const parent = ref.value.parentElement
+  const store = useSchemaStore();
   // 获取画布容器
-  const parentRect = ref.value.parentElement!.getBoundingClientRect();
+  const parentRect = parent!.getBoundingClientRect();
   const { style } = ref.value;
 
+  // 获取当前滚动条的高度
+  const scrollTop = parent!.scrollTop;
+
   // 旋转前固定点
-  const originFixPoint = getSymmetryPointPosition(style, point);
+  const originFixPoint = getSymmetryPointPosition(style, point, scrollTop);
   // 中心点
-  const centerPoint = getStyleCenterPosition(style);
+  const centerPoint = getStyleCenterPosition(style, scrollTop);
   // 旋转角
   const rotateDeg = getRotateDeg(style.rotate);
   // 旋转后固定点
@@ -47,7 +53,11 @@ export function handleScaleTransform(ref: Ref<HTMLElement>, point: Points, isPro
     const beforeRotateFixPoint = rotate(fixPoint, newCenterPoint, rotateDeg);
     const beforeRotateCurrentPoint = rotate(current, newCenterPoint, rotateDeg);
 
-    return getScaleTransformStyle(point, beforeRotateFixPoint, beforeRotateCurrentPoint, style);
+    const newStyle = getScaleTransformStyle(point, beforeRotateFixPoint, beforeRotateCurrentPoint, style);
+    // 修正 top
+    newStyle.top += parent!.scrollTop;
+
+    return newStyle;
   }
 }
 
