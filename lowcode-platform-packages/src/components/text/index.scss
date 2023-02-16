@@ -1,3 +1,9 @@
 .text {
-  font-size: 16px;
+  max-width: 100%;
+}
+
+.nowarp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
