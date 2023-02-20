@@ -14,11 +14,9 @@
         "top": 0,
         "rotate": 0
       },
-      "componentStyle": {
-
-      },
       "propValue": {
-        
+        "src": "",
+        "isRound": false
       }
     } 
   },

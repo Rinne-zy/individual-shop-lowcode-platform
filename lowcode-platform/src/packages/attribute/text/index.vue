@@ -5,7 +5,7 @@
       accordion
     >
       <common-attr />
-      <control-attr 
+      <base-attr
         :simple-control-options="simpleAttr"
         :select-control-options="selectAttr"
       />
@@ -18,8 +18,8 @@ import { ElCollapse } from 'element-plus';
 import { ref } from 'vue';
 
 import CommonAttr from '../common/index.vue';
-import ControlAttr from '../control/index.vue';
-import { BaseControlOption, ControlType, SelectControlOption } from '../control/type';
+import BaseAttr from '../base/index.vue';
+import { BaseControlOption, ControlType, SelectControlOption } from '../base/type';
 import { TextPropValue } from '@lowcode-platform/packages/src/components/text/type';
 
 defineProps({

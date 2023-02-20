@@ -17,5 +17,5 @@ export enum ControlType {
   Color = 'color',
   Radio = 'radio',
   Switch = 'switch',
-  Select = 'select'
+  Select = 'select',
 }

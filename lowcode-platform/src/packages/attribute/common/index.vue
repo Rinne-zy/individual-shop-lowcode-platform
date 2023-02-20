@@ -9,13 +9,22 @@
       >
         <el-input v-model="selectedComponent.style[key]" type="number" @input="onHandleInput" @change="onHandleChange" />
       </el-form-item>
+      <el-form-item
+        v-if="schemaStore.isFixLayoutMode()"
+        label="是否开启等比例放缩"
+        name="isProportion"
+      >
+        <el-switch 
+          v-model="selectedComponent.isProportion"
+        />
+      </el-form-item>
     </el-form>
   </el-collapse-item>
 </template>
 
 <script setup lang="ts">
 import { computed, ComputedRef, ref } from 'vue';
-import { ElCollapseItem, ElForm, ElFormItem, ElInput } from 'element-plus';
+import { ElCollapseItem, ElForm, ElFormItem, ElInput, ElSwitch } from 'element-plus';
 
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import type { ComponentsSchema } from 'lowcode-platform/store/schema-store';

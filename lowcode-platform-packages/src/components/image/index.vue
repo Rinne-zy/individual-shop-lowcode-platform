@@ -4,19 +4,20 @@
       src="./azi.jpg"
       width="100%"
       height="100%"
-      round
+      :round="isRound"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, PropType } from 'vue';
 import { Image as VanImage } from 'vant';
+import type { ImagePropValue } from './type';
 
 const props = defineProps({
   // 属性值
   propValue: {
-    type: Object,
+    type: Object as PropType<ImagePropValue>,
     default: () => {},
   },
   // 组件样式
@@ -26,8 +27,8 @@ const props = defineProps({
   }
 })
 
-const style = computed(() => props.propStyle)
-
+// 是否为圆角
+const isRound = computed(() => props.propValue.isRound);
 </script>
 
 <style scoped>

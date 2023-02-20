@@ -51,7 +51,7 @@
           />
         </template>
       </el-form-item>
-      <!-- 复杂属性部分 -->
+      <!-- 选择框属性部分 -->
       <el-form-item 
         v-for="(value, key) in selectControlOptions"
         :key="key"
@@ -69,6 +69,8 @@
           />
         </el-select>
       </el-form-item>
+      <!-- 组件定制化属性插槽 -->
+      <slot/>
     </el-form>
   </el-collapse-item>
 </template>
