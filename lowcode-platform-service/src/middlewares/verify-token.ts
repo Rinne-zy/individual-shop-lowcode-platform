@@ -6,13 +6,13 @@ import { verifyToken } from '../utils/jwt';
 // 校验白名单
 const authWhiteList = [
   '/user/login',
-  '/user/register'
+  '/user/register',
 ]
 
 // 校验 token
 export default async (ctx: Context, next: Next) => {
  try {
-  if(!authWhiteList.includes(ctx.url)) {
+  if(!authWhiteList.includes(ctx.url) && !isStaticAssets(ctx.url)) {
     const userInfo = verifyToken(ctx.header.authorization || '');
     // 设置传递的用户信息
     ctx.state.userInfo = userInfo;
@@ -23,4 +23,14 @@ export default async (ctx: Context, next: Next) => {
    ctx.state.statusCode = StatusCode.AuthError;
    throw err;
  }
+}
+
+/**
+ * 判断资源请求是否为静态资源
+ * @param url 资源请求 url
+ * @returns 资源请求是否为静态资源
+ */
+function isStaticAssets(url: string) {
+  if(/^\/images\/(.*)/.test(url) || url === '/favicon.ico') return true;
+  return false;
 }
