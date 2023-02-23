@@ -3,6 +3,7 @@
     "key": "Image",
     "label": "图片",
     "icon": "image",
+    "type": "base",
     "schema": {
       "isProportion": true,
       "isEdited": false,
@@ -24,6 +25,7 @@
     "key": "Text",
     "label": "文本",
     "icon": "text",
+    "type": "base",
     "schema": {
       "isProportion": false,
       "componentName": "文本",

@@ -92,7 +92,7 @@ import type { BaseControlOption, SelectControlOption } from './type';
 import { ControlType} from './type'
 import { ComponentsSchema, useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
-import { execShapePointsForceUpdate } from 'lowcode-platform/hooks/use-shape-points-hooks-hooks';
+import { execShapePointsForceUpdate } from 'lowcode-platform/hooks/use-shape-points-hook';
 
 defineProps({
   simpleControlOptions:{

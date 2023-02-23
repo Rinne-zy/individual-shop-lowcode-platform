@@ -1,8 +1,15 @@
-.components-materials {
-  display: flex;
+.components-materials-area {
   height: 60%;
   box-sizing: content-box;
-  padding: 5px;
+  padding: 0 5px;
+  background: #fff;
+}
+
+.components-materials {
+  display: flex;
+  height: 70%;
+  box-sizing: content-box;
+  padding: 5px 0;
   background: #fff;
   &-item {
     margin-left: 20px;

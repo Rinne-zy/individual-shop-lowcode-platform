@@ -3,6 +3,11 @@ import materials from 'lowcode-platform/packages/material.json';
 
 import type { CommonSchema } from './schema-store';
 
+export enum MaterialType {
+  Base = 'base',
+  ECommerce = 'e-commerce'
+}
+
 /** 组件物料类型 */
 export interface ComponentMaterial {
   // 物料对应的组件 key
@@ -11,6 +16,8 @@ export interface ComponentMaterial {
   label: string;
   // 物料展示的图标
   icon: string;
+  // 物料类型
+  type: MaterialType;
 }
 
 /** 组件包 JSON 类型 */
@@ -44,12 +51,13 @@ export const useComponentsMaterialStore = defineStore('material', {
       if (this.isInit) return;
       const componentsMaterial = materials as unknown as Record<string, Materials>
       Object.keys(componentsMaterial).forEach(component  => {
-        const { label, icon, key, schema } = componentsMaterial[component];
+        const { label, icon, key, schema, type } = componentsMaterial[component];
         // 保存物料
         this.componentsMaterial.push({
           key,
           label,
           icon,
+          type,
         });
         // 保存默认 schema
         schema.key = key;
