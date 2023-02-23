@@ -10,11 +10,18 @@
           <el-select
             style="flex: 67%;"
             v-model="selectedComponent.propValue.src"
-            remote
+            :loading="isLoading"
+            :remote-method="getRemotePictureSrc"
           >
+            <el-option
+              v-for="item in imagesOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
           <el-button 
-            style="flex: 33%;"
+            style="flex: 30%; margin-left: 5px;"
             type="primary"
             @click="dialogVisible = true"
           >
@@ -25,15 +32,15 @@
     </el-collapse>
     <upload-dialog 
       :is-visible="dialogVisible"
-      @confirm="dialogVisible = false"
+      @success-upload="successUpload"
       @cancel="dialogVisible = false"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElCollapse, ElFormItem,ElSelect, ElButton } from 'element-plus';
-import { computed, ComputedRef, PropType, ref } from 'vue';
+import { ElCollapse, ElFormItem,ElSelect, ElButton, ElOption } from 'element-plus';
+import { computed, ComputedRef, PropType, ref, onMounted } from 'vue';
 
 import CommonAttr  from '../common/index.vue';
 import BaseAttr from '../base/index.vue';
@@ -42,6 +49,9 @@ import { ControlType } from '../base/type';
 import type { BaseControlOption } from '../base/type';
 import type { ImagePropValue } from '@lowcode-platform/packages/src/components/image/type';
 import { useSchemaStore, ComponentsSchema } from 'lowcode-platform/store/schema-store';
+import { getImages } from 'lowcode-platform/api/image';
+import type { Image } from 'lowcode-platform/api/image';
+import { StatusCode } from 'lowcode-platform/api/type';
 
 defineProps({
   style:{
@@ -68,8 +78,38 @@ const simpleAttr: Partial<Record<keyof ImagePropValue, BaseControlOption>> = {
   }
 };
 
+// 上传图片对话框是否可见
 const dialogVisible = ref(false);
 
+const images = ref<Image[]>([]);
+const imagesOptions = computed(() => images.value.map((image) => {
+  return {
+    label: image.name,
+    value: image.src,
+  }
+}))
+// 是否正在加载
+const isLoading = ref(false);
+
+// 获取远程图片信息
+const getRemotePictureSrc = async () => {
+  if (isLoading.value) return;
+  isLoading.value = true;
+  const { data } = await getImages();
+  if (!data || data.code !== StatusCode.Success || !data.images) throw new Error(data.msg);
+  images.value = data.images;
+  isLoading.value = false;
+}
+
+onMounted(() => {
+  // 属性组件 mounted 时获取图片列表
+  getRemotePictureSrc();
+});
+
+// 成功上传刷新图片列表
+const successUpload = () => {
+  getRemotePictureSrc();
+}
 </script>
 
 <style scoped src="./index.scss"></style>

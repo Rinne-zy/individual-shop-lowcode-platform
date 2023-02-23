@@ -23,6 +23,7 @@
             class="image-uploader"
             :on-change="handleChange"
             :on-exceed="handleExceed"
+            :http-request="handleUploadImage"
             :limit="1"
             :show-file-list="false"
             :auto-upload="false"
@@ -46,10 +47,13 @@
 
 <script setup lang="ts">
 import { ElForm, ElFormItem, ElUpload, ElDialog, ElButton, ElInput } from 'element-plus';
-import type { FormInstance } from 'element-plus';
+import type { FormInstance, UploadRequestOptions } from 'element-plus';
 import { reactive, computed, ref, watch, onUnmounted } from 'vue';
 
 import { useImageUpload } from 'lowcode-platform/hooks/use-image-upload-hooks';
+import { uploadImage as upload } from 'lowcode-platform/api/image/index';
+import { StatusCode } from 'lowcode-platform/api/type';
+import { showSuccessMessage, showErrorMessage } from 'lowcode-platform/utils/toast';
 
 const props = defineProps({
   isVisible: {
@@ -58,7 +62,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['cancel', 'confirm'])
+const emits = defineEmits(['cancel', 'successUpload'])
 
 // 图片上传对话框
 const dialogVisible = computed(() => props.isVisible);
@@ -104,45 +108,65 @@ const validateSrc = (rule: any, value: any, callback: any) => {
 
   uploadForm.src = imageSrc.value;
   callback();
-}
+};
 // 校验规则
 const rules = reactive({
   name: [{ validator: validateName, trigger: 'blur' }],
   src: [{ validator: validateSrc, trigger: 'change' }],
-})
-// 取消
+});
+
+// 取消上传
 const handleCancel = () => {
   emits('cancel');
-  uploadForm.name = '';
-  uploadForm.src = '';
-  imageSrc.value = '';
-}
-// 确认
-const  handleConfirm = async () => {
-  if(await submitForm(formRef.value)){
-    emits('confirm');
-    uploadForm.name = '';
-    uploadForm.src = '';
-    imageSrc.value = '';
+  resetForm();
+};
+// 点击确认上传
+const handleConfirm = async () => {
+  if(await validateForm(formRef.value)){
+    uploadImage.value?.submit();
   };
-}
+};
 
-const submitForm = async (formEl: FormInstance | undefined) => {
+// 校验表单
+const validateForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return false;
-  return await formEl.validate((valid, fields) => {
+  return await formEl.validate((valid) => {
     if (valid) {
-      console.log('submit!')
       return true;
     } else {
-      console.log('error submit!', fields)
       return false;
     }
   })
+};
+// 重置表单
+const resetForm = () => {
+  uploadForm.name = '';
+  uploadForm.src = '';
+  imageSrc.value = '';
+};
+
+// 处理上传图片
+const handleUploadImage = async (options: UploadRequestOptions): Promise<unknown>  => {
+  const formData = new FormData();
+  formData.append("file", options.file);
+  formData.append("name", uploadForm.name);
+  try {
+    const { data } = await upload(formData);
+    if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+    showSuccessMessage('上传成功');
+    // 当上传成功触发确认钩子
+    emits('successUpload');
+    resetForm();
+    return true;
+  } catch (err) {
+    showErrorMessage((err as Error).message);
+    return false;
+  }
 }
 
 onUnmounted(() => {
   stopWatchSrc();
-})
+});
 </script>
 
 <style scoped>

@@ -30,3 +30,20 @@ export async function saveImage(origin: string, username: string, name: string, 
     msg: '上传成功',
   }
 }
+
+/**
+ * 根据用户名获取上传的图片信息
+ * @param username 用户名
+ * @returns 该用户上传的图片信息
+ */
+export async function getImagesByUserName(username: string) {
+  const images = await Image.find({
+    username,
+  }) 
+
+  return {
+    code: StatusCode.Success,
+    images,
+    msg: '获取成功',
+  }
+}

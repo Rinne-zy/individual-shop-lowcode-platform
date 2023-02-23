@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-image
-      src="./azi.jpg"
+      :src="src"
       width="100%"
       height="100%"
       :round="isRound"
@@ -27,8 +27,12 @@ const props = defineProps({
   }
 })
 
+// 默认图片
+const defaultSrc = './azi.jpg';
+
 // 是否为圆角
 const isRound = computed(() => props.propValue.isRound);
+const src = computed(() => props.propValue.src || defaultSrc);
 </script>
 
 <style scoped>
