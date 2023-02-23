@@ -7,7 +7,7 @@ import homeShop from 'lowcode-platform/pages/home-shop/index.vue';
 import homeConstruction from 'lowcode-platform/pages/home-construction/index.vue';
 import homeOrder from 'lowcode-platform/pages/home-order/index.vue';
 import homeCommodity from 'lowcode-platform/pages/home-commodity/index.vue';
-import { checkIsLogin } from 'lowcode-platform/hooks/use-login';
+import { checkIsLogin } from 'lowcode-platform/hooks/use-login-hook';
 
 // 路由数组
 const routes: RouteRecordRaw[] = [

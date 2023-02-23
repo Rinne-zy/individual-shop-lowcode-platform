@@ -1,11 +1,12 @@
 import { reactive, ref } from "vue";
 import type { FormInstance } from 'element-plus';
 
-import { UserType } from './../store/user-store';
+import { UserType } from '../store/user-store';
 import { register } from "lowcode-platform/api/register";
 import { showErrorMessage, showSuccessMessage } from "../utils/toast";
 import { StatusCode } from "lowcode-platform/api/type";
 
+/** 注册 */
 export function useRegister() {
   // 注册表单数据
   const registerForm = reactive({

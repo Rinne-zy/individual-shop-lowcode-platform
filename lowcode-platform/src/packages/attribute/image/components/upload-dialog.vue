@@ -50,7 +50,7 @@ import { ElForm, ElFormItem, ElUpload, ElDialog, ElButton, ElInput } from 'eleme
 import type { FormInstance, UploadRequestOptions } from 'element-plus';
 import { reactive, computed, ref, watch, onUnmounted } from 'vue';
 
-import { useImageUpload } from 'lowcode-platform/hooks/use-image-upload-hooks';
+import { useImageUpload } from 'lowcode-platform/hooks/use-image-upload-hook';
 import { uploadImage as upload } from 'lowcode-platform/api/image/index';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { showSuccessMessage, showErrorMessage } from 'lowcode-platform/utils/toast';

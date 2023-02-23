@@ -1,8 +1,6 @@
 import { ref } from "vue";
 
-import { getHeightPxNumber, getWidthPxNumber, transformPxToNumber } from 'lowcode-platform/utils/unit';
 import { mod360 } from 'lowcode-platform/utils/rotate';
-import type { Point } from 'lowcode-platform/utils/position';
 
 // 控制点
 export enum Points {
@@ -101,57 +99,7 @@ export function getCursor(deg = 0) {
   return cursorByPoint;
 }
 
-/**
- * 获取 Shape 控制点中心对称点的位置（绝对定位）
- * @param style shape 样式，注意宽高需要先转成 px 数值
- * @param point 点
- * @param scrollTop 滚动高度
- * @returns 对称点的位置
- */
-export function getSymmetryPointPosition(style: CSSStyleDeclaration, point: Points, scrollTop = 0): Point {
-  const left = transformPxToNumber(style.left);
-  // 由于计算是基于屏幕坐标，因此需要根据父元素滚动条距离修正 top 值
-  const top = transformPxToNumber(style.top) - scrollTop;
-  const width = getWidthPxNumber(style.width);
-  const height = getHeightPxNumber(style.height);
-
-  switch(point) {
-    case Points.LeftTop: return {
-      x: left + width,
-      y: top + height
-    }
-    case Points.RightTop: return {
-      x: left,
-      y: top + height,
-    }
-    case Points.LeftBottom: return {
-      x: left + width,
-      y: top,
-    }
-    case Points.RightBottom: return {
-      x: left,
-      y: top,
-    }
-    case Points.Left: return {
-      x: left + width,
-      y: top + height / 2,
-    }
-    case Points.Right: return {
-      x: left,
-      y: top + height / 2,
-    }
-    case Points.Top: return {
-      x: left + width / 2,
-      y: top + height,
-    }
-    case Points.Bottom: return {
-      x: left + width / 2,
-      y: top,
-    }
-  }
-
-}
-
+/** 控制点 */
 export function usePointsShape() {
   const shapeRef = ref<HTMLElement>();
   // 旋转指针样式需要设置为响应式

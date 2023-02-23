@@ -4,8 +4,8 @@ import axios from 'axios';
 import type { AxiosResponse } from 'axios';
 
 import type { BaseResp } from 'lowcode-platform/api/type';
-import { StatusCode } from './../api/type';
-import { JWT_TOKEN_KEY_FOR_LOCAL_STORAGE } from './../const/index';
+import { StatusCode } from '../api/type';
+import { JWT_TOKEN_KEY_FOR_LOCAL_STORAGE } from '../const/index';
 import router from 'lowcode-platform/router';
 
 // 无需鉴权的白名单

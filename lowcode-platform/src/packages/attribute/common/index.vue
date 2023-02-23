@@ -28,7 +28,7 @@ import { ElCollapseItem, ElForm, ElFormItem, ElInput, ElSwitch } from 'element-p
 
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import type { ComponentsSchema } from 'lowcode-platform/store/schema-store';
-import { execShapePointsForceUpdate } from 'lowcode-platform/hooks/use-shape-points';
+import { execShapePointsForceUpdate } from 'lowcode-platform/hooks/use-shape-points-hooks-hooks';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 import type { CommonStyleSchema } from 'lowcode-platform/packages/types';
 

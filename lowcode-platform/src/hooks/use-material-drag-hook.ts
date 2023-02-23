@@ -3,7 +3,7 @@ import type { Ref } from "vue";
 
 import { useComponentsMaterialStore } from "lowcode-platform/store/material-store";
 import { useSchemaStore } from "lowcode-platform/store/schema-store";
-import { calcOffsetPosition, isPositionOutOfCanvasRight } from "lowcode-platform/utils/position";
+import { calcPositionOffset, isPositionOutOfCanvasRight } from "lowcode-platform/utils/position";
 import { getWidthPxNumber } from 'lowcode-platform/utils/unit';
 
 // 当前选择的物料 key
@@ -60,8 +60,8 @@ export function useComponentsMaterialDrag(domRef: Ref<HTMLElement>) {
     const { width, x , y } = canvasRef.value.getBoundingClientRect();
 
     // 修正偏移后的位置
-    const left = calcOffsetPosition(e.clientX - x, offsetX);
-    const top = calcOffsetPosition(e.clientY - y, offsetY);
+    const left = calcPositionOffset(e.clientX - x, offsetX);
+    const top = calcPositionOffset(e.clientY - y, offsetY);
 
     const schema = deepCopy(materialStore.schemaByMaterialKey[currentDraggedComponentMaterialKey]);
 

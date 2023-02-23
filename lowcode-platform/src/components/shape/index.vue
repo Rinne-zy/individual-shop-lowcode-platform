@@ -24,12 +24,12 @@
 import { computed, nextTick, ref } from 'vue';
 import type { Ref } from 'vue';
 
-import { usePointsShape, shapePointsUpdateById } from 'lowcode-platform/hooks/use-shape-points';
-import type { Points } from 'lowcode-platform/hooks/use-shape-points';
+import { usePointsShape, shapePointsUpdateById } from 'lowcode-platform/hooks/use-shape-points-hook';
+import type { Points } from 'lowcode-platform/hooks/use-shape-points-hook';
 import {  useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { transformPxToNumber, getRotateDeg } from 'lowcode-platform/utils/unit';
 import { handleScaleTransform } from 'lowcode-platform/utils/translate';
-import { calcOffsetPosition, isPositionOutOfCanvasRight } from 'lowcode-platform/utils/position';
+import { calcPositionOffset, isPositionOutOfCanvasRight } from 'lowcode-platform/utils/position';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 
 const schemaStore = useSchemaStore();
@@ -126,13 +126,13 @@ const handleMouseDown = (e: MouseEvent) => {
     const offsetY = e.clientY - startY;
 
     // 计算 left 定位
-    let left = calcOffsetPosition(startLeft, -offsetX);
+    let left = calcPositionOffset(startLeft, -offsetX);
     // 判断是否超出右侧边界
     if(isPositionOutOfCanvasRight(left, rect.width, parentRect.width)) {
       left = Math.floor(parentRect.width - rect.width);
     };
     // 计算 top 定位
-    const top = calcOffsetPosition(startTop, -offsetY);
+    const top = calcPositionOffset(startTop, -offsetY);
 
     schemaStore.updateComponentSchemaStyleById(editorStatusStore.selectedComponentSchemaId, {
       // 利用屏幕坐标偏移进行计算

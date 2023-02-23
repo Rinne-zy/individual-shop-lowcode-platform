@@ -40,10 +40,10 @@ import ComponentsMaterialsArea from 'lowcode-platform/components/materials-area/
 import ComponentsEditor from 'lowcode-platform/components/editor-area/index.vue';
 import OperationMenu from 'lowcode-platform/components/operation-menu/index.vue';
 import RealtimeComponents from 'lowcode-platform/components/realtime-components/index.vue';
-import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-material-drag-hooks';
+import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-material-drag-hook';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
-import { useComponentsMaterialClick } from 'lowcode-platform/hooks/use-material-click-hooks';
+import { useComponentsMaterialClick } from 'lowcode-platform/hooks/use-material-click-hook';
 
 const schemaStore = useSchemaStore();
 const editorStatusStore = useEditorStatusStore();

@@ -1,10 +1,9 @@
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
-import { getSymmetryPointPosition } from 'lowcode-platform/hooks/use-shape-points';
-import { Points } from 'lowcode-platform/hooks/use-shape-points';
+import { Points } from 'lowcode-platform/hooks/use-shape-points-hook';
 import { getRotateDeg, transformPxToNumber } from 'lowcode-platform/utils/unit';
 import type { Ref } from "vue";
 import { rotate } from './rotate';
-import { calcPointInLine, getStyleCenterPosition, Point } from './position';
+import { getVerticalPointInLine, getContainerCenterPointPosition, Point, getSymmetryPointPosition } from './point';
 
 /**
  * 处理放缩形变
@@ -25,7 +24,7 @@ export function handleScaleTransform(ref: Ref<HTMLElement>, point: Points, isPro
   // 旋转前固定点
   const originFixPoint = getSymmetryPointPosition(style, point, scrollTop);
   // 中心点
-  const centerPoint = getStyleCenterPosition(style, scrollTop);
+  const centerPoint = getContainerCenterPointPosition(style, scrollTop);
   // 旋转角
   const rotateDeg = getRotateDeg(style.rotate);
   // 旋转后固定点
@@ -40,7 +39,7 @@ export function handleScaleTransform(ref: Ref<HTMLElement>, point: Points, isPro
 
     // 对称放缩
     if (isProportion) {
-      current = calcPointInLine(current, fixPoint, centerPoint)
+      current = getVerticalPointInLine(current, fixPoint, centerPoint)
     }
 
     // 新的中心点

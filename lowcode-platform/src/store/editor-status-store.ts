@@ -4,7 +4,7 @@ import { Schema, useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { AuxiliaryLineType, getAdsorptionLinePosStyle, getHorizontalLineConditions, getVerticalLineConditions, isNearly } from 'lowcode-platform/utils/line';
 import { getComponentRotatedStyle } from 'lowcode-platform/utils/rotate';
 import { transformPxToNumber } from 'lowcode-platform/utils/unit';
-import { execShapePointsForceUpdate } from "lowcode-platform/hooks/use-shape-points";
+import { execShapePointsForceUpdate } from "lowcode-platform/hooks/use-shape-points-hook";
 
 /** 辅助线 */
 interface AuxiliaryLine {

@@ -118,8 +118,8 @@ import { ElForm, ElFormItem, ElInput, ElButton, ElRadioGroup, ElRadioButton } fr
 import type { FormRules } from 'element-plus';
 
 import { reactive, ref } from 'vue';
-import { useLogin } from 'lowcode-platform/hooks/use-login';
-import { useRegister } from 'lowcode-platform/hooks/use-register';
+import { useLogin } from 'lowcode-platform/hooks/use-login-hook';
+import { useRegister } from 'lowcode-platform/hooks/use-register-hook';
 import { useRouter } from 'vue-router';
 
 // 路由

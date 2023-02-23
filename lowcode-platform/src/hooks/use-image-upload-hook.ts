@@ -2,6 +2,7 @@ import { genFileId } from 'element-plus';
 import type { UploadInstance, UploadProps, UploadRawFile } from "element-plus";
 import { ref } from "vue";
 
+/** 图片上传 */
 export function useImageUpload() {
   // 上传图片 Dom
   const uploadImage = ref<UploadInstance>();

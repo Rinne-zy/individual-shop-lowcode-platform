@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { initComponentsMaterialStore } from 'lowcode-platform/hooks/use-components-material-init';
+import { initComponentsMaterialStore } from 'lowcode-platform/hooks/use-components-material-init-hook';
 import Material from '../material/index.vue';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 
