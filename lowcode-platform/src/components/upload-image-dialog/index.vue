@@ -3,7 +3,6 @@
     <el-dialog 
       :model-value="dialogVisible"
       title="图片上传"
-      :rules="rules"
       @closed="handleCancel"
     >
       <el-form 
@@ -225,4 +224,4 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped src="./index.scss"></style>
+<style lang="scss" scoped src="./index.scss"></style>

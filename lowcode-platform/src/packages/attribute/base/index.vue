@@ -50,6 +50,16 @@
             @change="onHandleChange"
           />
         </template>
+        <template v-else-if="value.type === ControlType.Slider">
+          <el-slider 
+            v-model="(selectedComponent.propValue[key] as any)"
+            show-input
+            style="padding: 0 10px;"
+            :min="0"
+            :max="10"
+            :step="0.5"
+          />
+        </template>
       </el-form-item>
       <!-- 选择框属性部分 -->
       <el-form-item 
@@ -86,6 +96,7 @@ import {
   ElSwitch,
   ElSelect,
   ElOption,
+  ElSlider,
 } from 'element-plus';
 
 import type { BaseControlOption, SelectControlOption } from './type';

@@ -78,7 +78,6 @@ const materialComponents = computed(() => {
   }
 });
 
-console.log('materialComponents', store.componentsMaterial);
 
 </script>
 

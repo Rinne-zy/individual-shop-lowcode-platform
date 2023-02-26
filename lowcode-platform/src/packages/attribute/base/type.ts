@@ -18,4 +18,5 @@ export enum ControlType {
   Radio = 'radio',
   Switch = 'switch',
   Select = 'select',
+  Slider = 'slider',
 }

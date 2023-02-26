@@ -20,7 +20,7 @@ export function getDate(time: number) {
   minute = minute < 10 ? `0${minute}` : `${minute}`;
   // 秒
   let second: number | string = date.getSeconds();
-  second = second ? `0${second}` : `${second}`;
+  second = second < 10 ? `0${second}` : `${second}`;
   
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }

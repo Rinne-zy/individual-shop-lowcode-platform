@@ -44,5 +44,28 @@
         "position": "left"
       }
     }  
+  },
+  "swipe": {
+    "key": "Swipe",
+    "label": "轮播图",
+    "icon": "swipe",
+    "type": "base",
+    "schema": {
+      "isProportion": false,
+      "componentName": "轮播图",
+      "isEdited": false,
+      "style": {
+        "width": 375,
+        "height": 250,
+        "left": 0,
+        "top": 0,
+        "rotate": 0
+      },
+      "propValue": {
+        "swipeItems": [],
+        "speed": 3,
+        "lazyLoad": true
+      }
+    }  
   }
 }

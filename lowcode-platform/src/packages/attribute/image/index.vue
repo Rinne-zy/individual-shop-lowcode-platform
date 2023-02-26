@@ -11,6 +11,7 @@
             style="flex: 67%;"
             v-model="selectedComponent.propValue.src"
             :loading="isLoading"
+            placeholder="请选择图片"
             :remote-method="getRemotePictureSrc"
           >
             <el-option
@@ -99,7 +100,7 @@ const getRemotePictureSrc = async () => {
   if (!data || data.code !== StatusCode.Success || !data.images) throw new Error(data.msg);
   images.value = data.images;
   isLoading.value = false;
-}
+};
 
 onMounted(() => {
   // 属性组件 mounted 时获取图片列表
@@ -110,7 +111,7 @@ onMounted(() => {
 const successUpload = () => {
   getRemotePictureSrc();
   dialogVisible.value = false
-}
+};
 </script>
 
 <style scoped src="./index.scss"></style>
