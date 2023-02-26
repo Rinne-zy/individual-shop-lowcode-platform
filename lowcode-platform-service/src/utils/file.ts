@@ -7,10 +7,10 @@ import Path from 'path';
  * @param userDir 用户文件夹相对路径
  * @returns 文件夹绝对路径
  */
-export async function ensureUserImagesDirExists(userDir: string) {
+export async function ensureUserImagesDirExists(userDir: string, needToCreated = true) {
   const dirPath = Path.resolve(process.cwd(), `public/images/${userDir}`);
   const isExists = await fs.exists(dirPath);
-  if(!isExists) {
+  if(!isExists && needToCreated) {
     await fs.mkdir(dirPath);
   }
 
@@ -77,4 +77,13 @@ function save(dirPath: string, file: File) {
       reject(error);
     });
   });
+}
+
+/**
+ * 删除图片
+ * @param filePath 需要删除的相对路径
+ */
+export async function deleteImage(filePath: string) {
+  const path = Path.resolve(process.cwd(), `public/images/${filePath}`);
+  await fs.remove(path);
 }

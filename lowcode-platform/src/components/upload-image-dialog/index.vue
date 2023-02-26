@@ -4,7 +4,7 @@
       :model-value="dialogVisible"
       title="图片上传"
       :rules="rules"
-      :show-close="false"
+      @closed="handleCancel"
     >
       <el-form 
         :model="uploadForm"
@@ -23,13 +23,13 @@
             class="image-uploader"
             :on-change="handleChange"
             :on-exceed="handleExceed"
-            :http-request="handleUploadImage"
+            :http-request="isEditing ? handleUpdateImage :handleUploadImage"
             :limit="1"
             :show-file-list="false"
             :auto-upload="false"
           >
             <template #trigger>
-              <img v-if="imageSrc" :src="imageSrc" class="image" />
+              <img v-if="imageSrc" :src="imageSrc" class="image"/>
               <div v-else class="image-uploader-icon">+</div>
             </template>
           </el-upload>
@@ -38,7 +38,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleCancel">取消</el-button>
-          <el-button type="primary" @click="handleConfirm">上传</el-button>
+          <el-button type="primary" @click="handleConfirm" :disabled="isNotChanged">{{ isEditing ? '更新' : '上传' }}</el-button>
         </span>
       </template>
     </el-dialog>
@@ -51,7 +51,7 @@ import type { FormInstance, UploadRequestOptions } from 'element-plus';
 import { reactive, computed, ref, watch, onUnmounted } from 'vue';
 
 import { useImageUpload } from 'lowcode-platform/hooks/use-image-upload-hook';
-import { uploadImage as upload } from 'lowcode-platform/api/image/index';
+import { updateImage, uploadImage as upload } from 'lowcode-platform/api/image/index';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { showSuccessMessage, showErrorMessage } from 'lowcode-platform/utils/toast';
 
@@ -59,13 +59,42 @@ const props = defineProps({
   isVisible: {
     type: Boolean,
     default: false,
+  },
+  isEditing: {
+    type: Boolean,
+    default: false,
   }
 })
 
-const emits = defineEmits(['cancel', 'successUpload'])
+const emits = defineEmits(['cancel', 'successUpload']);
+
+defineExpose({
+  // 编辑图片上传表单
+  setUploadForm(formData: typeof uploadForm) {
+    uploadForm.name = formData.name;
+    uploadForm.id = formData.id;
+    imageSrc.value = formData.src;
+    originFormData = formData;
+  }
+});
+
+// 是否处于编辑状态
+const isEditing = computed(() => props.isEditing);
+// 点击编辑时的表单
+let originFormData = {} as typeof uploadForm;
+// 判断编辑状态是否已改变控制是否可上传
+const isNotChanged = computed(() => isEditing && originFormData.name === uploadForm.name && originFormData.src === uploadForm.src);
 
 // 图片上传对话框
 const dialogVisible = computed(() => props.isVisible);
+// 表单实例
+const formRef = ref<FormInstance>();
+// 图片上传表单
+const uploadForm = reactive({
+  id: '',
+  name: '',
+  src: '',
+});
 
 // 图片上传钩子
 const {
@@ -75,30 +104,21 @@ const {
   handleExceed,
 } = useImageUpload();
 
-// 表单实例
-const formRef = ref<FormInstance>()
-
-// 图片上传表单
-const uploadForm = reactive({
-  name: "",
-  src: "",
-});
-
-// 监听图片 src 变化设置表单
+// 监听图片 src 变化同步更新表单
 const stopWatchSrc = watch(
   () => imageSrc.value,
   (value) => {
     uploadForm.src = value;
-    // 重新检验表单
-    formRef.value?.validateField('src');
+    if(value) {
+      // 重新检验表单
+      formRef.value?.validateField('src');
+    }
   }
-)
+);
 
 // 校验图片名称
 const validateName = (rule: any, value: any, callback: any) => {
-  if (!value) {
-    return callback(new Error('请输入图片名称'))
-  }
+  if (!value) return callback(new Error('请输入图片名称'));
 
   callback();
 }
@@ -122,30 +142,29 @@ const handleCancel = () => {
 };
 // 点击确认上传
 const handleConfirm = async () => {
-  if(await validateForm(formRef.value)){
-    uploadImage.value?.submit();
-  };
+  if(!await validateForm(formRef.value)) return;
+  if(originFormData.src === uploadForm.src) {
+    handleUpdate();
+  }
+  uploadImage.value?.submit();
 };
 
 // 校验表单
 const validateForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return false;
-  return await formEl.validate((valid) => {
-    if (valid) {
-      return true;
-    } else {
-      return false;
-    }
-  })
+  return await formEl.validate((valid) => valid);
 };
-// 重置表单
+// 重置图片上传表单
 const resetForm = () => {
   uploadForm.name = '';
   uploadForm.src = '';
   imageSrc.value = '';
+  originFormData = {} as typeof uploadForm;
+  // 清除校验
+  formRef.value?.clearValidate();
 };
 
-// 处理上传图片
+// 处理上传新图片
 const handleUploadImage = async (options: UploadRequestOptions): Promise<unknown>  => {
   const formData = new FormData();
   formData.append("file", options.file);
@@ -162,6 +181,43 @@ const handleUploadImage = async (options: UploadRequestOptions): Promise<unknown
     showErrorMessage((err as Error).message);
     return false;
   }
+};
+
+// 图片数据发生改变的更新
+const handleUpdateImage = async (options: UploadRequestOptions) => {
+  const formData = new FormData();
+  formData.append("file", options.file);
+  formData.append("name", uploadForm.name);
+  try {
+    const { data } = await updateImage(uploadForm.id, formData);
+    if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+    showSuccessMessage('更新成功');
+    // 当上传成功触发确认钩子
+    emits('successUpload');
+    resetForm();
+    return true;
+  } catch (err) {
+    showErrorMessage((err as Error).message);
+    return false;
+  }
+};
+
+// 图片数据未发生改变的更新
+const handleUpdate = async () => {
+  const formData = new FormData();
+  formData.append("name", uploadForm.name); 
+  try {
+    const { data } = await updateImage(uploadForm.id ,formData);
+    if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+    showSuccessMessage('更新成功');
+    // 当上传成功触发确认钩子
+    emits('successUpload');
+    resetForm();
+    return true;
+  } catch (err) {
+    showErrorMessage((err as Error).message);
+    return false;
+  }
 }
 
 onUnmounted(() => {
@@ -169,32 +225,4 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
-.image-uploader .image {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-
-.image-uploader :deep(.el-upload) {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.image-uploader :deep(.el-upload:hover) {
-  border-color: var(--el-color-primary);
-}
-
-.image-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
-  line-height: 178px;
-}
-</style>
+<style scoped src="./index.scss"></style>

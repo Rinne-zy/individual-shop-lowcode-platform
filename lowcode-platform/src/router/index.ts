@@ -3,10 +3,11 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import home from 'lowcode-platform/pages/home/index.vue';
 import login from 'lowcode-platform/pages/login/index.vue';
-import homeShop from 'lowcode-platform/pages/home-shop/index.vue';
-import homeConstruction from 'lowcode-platform/pages/home-construction/index.vue';
-import homeOrder from 'lowcode-platform/pages/home-order/index.vue';
-import homeCommodity from 'lowcode-platform/pages/home-commodity/index.vue';
+import ShopManage from 'lowcode-platform/pages/shop-manage/index.vue';
+import PageConstruction from 'lowcode-platform/pages/page-construction/index.vue';
+import OrderManage from 'lowcode-platform/pages/order-manage/index.vue';
+import CommodityManage from 'lowcode-platform/pages/commodity-manage/index.vue';
+import PictureManage from 'lowcode-platform/pages/picture-manage/index.vue';
 import { checkIsLogin } from 'lowcode-platform/hooks/use-login-hook';
 
 // 路由数组
@@ -20,19 +21,23 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '/shop',
-        component: () => homeShop,
+        component: () => ShopManage,
       },
       {
         path: '/construction',
-        component: () => homeConstruction,
+        component: () => PageConstruction,
       },
       {
         path: '/order',
-        component: () => homeOrder,
+        component: () => OrderManage,
+      },
+      {
+        path: '/picture',
+        component: () => PictureManage,
       },
       {
         path: '/commodity',
-        component: () => homeCommodity,
+        component: () => CommodityManage,
       }
     ],
   },

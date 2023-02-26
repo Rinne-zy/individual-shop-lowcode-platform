@@ -30,7 +30,7 @@
         </el-form-item>
       </base-attr>
     </el-collapse>
-    <upload-dialog 
+    <upload-image-dialog 
       :is-visible="dialogVisible"
       @success-upload="successUpload"
       @cancel="dialogVisible = false"
@@ -44,7 +44,7 @@ import { computed, ComputedRef, PropType, ref, onMounted } from 'vue';
 
 import CommonAttr  from '../common/index.vue';
 import BaseAttr from '../base/index.vue';
-import UploadDialog from './components/upload-dialog.vue';
+import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
 import { ControlType } from '../base/type';
 import type { BaseControlOption } from '../base/type';
 import type { ImagePropValue } from '@lowcode-platform/packages/src/components/image/type';
@@ -109,6 +109,7 @@ onMounted(() => {
 // 成功上传刷新图片列表
 const successUpload = () => {
   getRemotePictureSrc();
+  dialogVisible.value = false
 }
 </script>
 

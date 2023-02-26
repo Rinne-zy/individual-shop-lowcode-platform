@@ -25,6 +25,11 @@ const merchantMenuItems: Array<MenuItem> = [
     icon: 'icon-commodity'
   },
   {
+    name: '图片管理',
+    value: 'picture',
+    icon: 'icon-pic'
+  },
+  {
     name: '订单管理',
     value: 'order',
     icon: 'icon-order'

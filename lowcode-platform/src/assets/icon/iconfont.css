@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3868218 */
-  src: url('iconfont.woff2?t=1675423792566') format('woff2'),
-       url('iconfont.woff?t=1675423792566') format('woff'),
-       url('iconfont.ttf?t=1675423792566') format('truetype');
+  src: url('iconfont.woff2?t=1677242792990') format('woff2'),
+  url('iconfont.woff?t=1677242792990') format('woff'),
+  url('iconfont.ttf?t=1677242792990') format('truetype');
 }
 
 .iconfont {
@@ -60,4 +60,16 @@
 
 .icon-delete:before {
   content: "\ec7b";
+}
+
+.icon-contain:before {
+  content: "\e889";
+}
+
+.icon-pic:before {
+  content: "\e666";
+}
+
+.icon-search:before {
+  content: "\e609";
 }

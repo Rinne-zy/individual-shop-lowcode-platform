@@ -20,16 +20,10 @@ export function useImageUpload() {
     uploadImage.value!.handleStart(file)
   }
 
-  // 上传图片
-  const upload = () => {
-    uploadImage.value!.submit();
-  }
-
   return {
     uploadImage,
     imageSrc,
     handleChange,
     handleExceed,
-    upload
   }
 }
