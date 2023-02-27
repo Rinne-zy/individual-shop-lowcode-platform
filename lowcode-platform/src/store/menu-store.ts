@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import { UserType, useUserStore } from './user-store';
 
 // 菜单项类型
@@ -11,27 +12,27 @@ export interface MenuItem {
 const merchantMenuItems: Array<MenuItem> = [
   {
     name: '我的商城',
-    value: 'shop',
+    value: '/shop',
     icon: 'icon-home'
   },
   {
     name: '页面搭建',
-    value: 'construction',
+    value: '/construction',
     icon: 'icon-construction'
   },
   {
     name: '商品管理',
-    value: 'commodity',
+    value: '/commodity',
     icon: 'icon-commodity'
   },
   {
     name: '图片管理',
-    value: 'picture',
+    value: '/picture',
     icon: 'icon-pic'
   },
   {
     name: '订单管理',
-    value: 'order',
+    value: '/order',
     icon: 'icon-order'
   }
 ];
@@ -39,11 +40,17 @@ const merchantMenuItems: Array<MenuItem> = [
 // 顾客用户菜单项
 const customerMenuItems: Array<MenuItem> = [];
 
-export function useMenuStore() {
-  const userStore = useUserStore();
-  const menu = userStore.userType === UserType.Merchant ? merchantMenuItems : customerMenuItems;
-  
-  return {
-    menu,
+export const useMenuStore = defineStore('menu', {
+  state:() => {
+    const userStore = useUserStore();
+    return {
+      menu: userStore.userType === UserType.Merchant ? merchantMenuItems : customerMenuItems,
+      activatedMenu: '/shop',
+    }
+  },
+  actions: {
+    changeActiveMenu(routerPath: string) {
+      this.activatedMenu = routerPath;    
+    }
   }
-}
+})

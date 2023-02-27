@@ -5,7 +5,6 @@
       <component 
         :is="`${selectedComponent?.key}Attribute`"
         :style="selectedComponent?.style"
-        :componentStyle="selectedComponent?.componentStyle"
         :propValue="selectedComponent?.propValue"  
       />
     </div>

@@ -2,7 +2,7 @@ import axios from "axios";
 import { BaseResp } from "../type";
 
 export interface Image {
-  _id:string;
+  _id: string;
   username: string;
   name: string;
   src: string;

@@ -28,6 +28,11 @@
         </div>
       </div>
     </div>
+    <create-shop-dialog 
+      :is-visible="isVisible"
+      @cancel="isVisible = false"
+      @confirm="handleSaveConfirm"
+    />
   </div>
 </template>
 
@@ -40,10 +45,16 @@ import ComponentsMaterialsArea from 'lowcode-platform/components/materials-area/
 import ComponentsEditor from 'lowcode-platform/components/editor-area/index.vue';
 import OperationMenu from 'lowcode-platform/components/operation-menu/index.vue';
 import RealtimeComponents from 'lowcode-platform/components/realtime-components/index.vue';
+import CreateShopDialog from 'lowcode-platform/components/create-shop-dialog/index.vue';
 import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-material-drag-hook';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 import { useComponentsMaterialClick } from 'lowcode-platform/hooks/use-material-click-hook';
+import { onBeforeRouteLeave, useRouter } from 'vue-router';
+import type { RouteLocationNormalized } from 'vue-router';
+import { showConfirmMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
+import { saveSchema, updateSchema } from 'lowcode-platform/api/schema';
+import { StatusCode } from 'lowcode-platform/api/type';
 
 const schemaStore = useSchemaStore();
 const editorStatusStore = useEditorStatusStore();
@@ -98,6 +109,62 @@ const handleContextMenu = (e: MouseEvent) => {
   };
 
   editorStatusStore.showMenu(`${left}px`, `${top}px`);
+}
+
+// 路由
+const router = useRouter();
+// 商城创建对话框是否可见
+const isVisible = ref(false);
+// 路由记录
+let pathRouterTo: RouteLocationNormalized | null = null;
+
+// 路由离开判断用户是否保存并进行相应保存更新操作
+onBeforeRouteLeave(async (to, from) => {
+  // 取消
+  const cancelCallback = () => {
+    schemaStore.reset();
+    return true;
+  };
+
+  // 确认
+  const confirmCallback = async () => {
+    if(!schemaStore.id) {
+      pathRouterTo = to;
+      isVisible.value = true;
+      return false;
+    };
+
+    // 当处于编辑商城状态（非新商场）
+    const { data } = await updateSchema(schemaStore.id, undefined, schemaStore.schema);
+    if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+    showSuccessMessage(data.msg);
+    // 保存操作
+    schemaStore.reset(); 
+    return true;
+  };
+
+  if(!schemaStore.isSavedSchema()){
+    return await showConfirmMessage(confirmCallback, cancelCallback);
+  } else {
+    // 已保存则直接清除
+    schemaStore.reset(); 
+  }
+});
+
+/**
+ * 处理确认保存回调
+ * @param name 
+ */
+const handleSaveConfirm = async (name: string) => {
+  const { data } = await saveSchema(name, schemaStore.schema);
+  if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+  showSuccessMessage(data.msg);
+  schemaStore.reset();
+  // 路由控制
+  if(pathRouterTo) {;
+    router.push(pathRouterTo as RouteLocationNormalized);
+    pathRouterTo = null;
+  }
 }
 </script>
 

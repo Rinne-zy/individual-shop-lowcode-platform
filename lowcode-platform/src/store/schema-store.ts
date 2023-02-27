@@ -34,11 +34,13 @@ export interface ComponentsSchema extends CommonSchema {
 
 /** 页面 schema */
 export interface Schema {
+  // 编辑器样式
   editor: {
     width: string;
     height: string;
     mode: EditorLayoutMode;
-  }
+  };
+  // 组件 schema
   components: ComponentsSchema[];
 }
 
@@ -50,34 +52,37 @@ export enum EditorLayoutMode {
 
 /** schema store */
 interface SchemaStore {
+  id: string;
+  name: string;
   // schema
   schema: Schema,
   snapshotSchema: Schema[],
   snapshotIndex: number,
+  isSave: boolean,
 }
+
+// 默认 Schema
+const defaultSchema =  {
+  editor: {
+    width: '375px',
+    height: '667px',
+    mode: EditorLayoutMode.Fixed,
+  },
+  components: [] as ComponentsSchema[],
+};
 
 // 使用组件物料
 export const useSchemaStore = defineStore('schema', {
   state: (): SchemaStore => ({
-    schema: {
-      editor: {
-        width: '375px',
-        height: '667px',
-        mode: EditorLayoutMode.Fixed,
-      },
-      components: [],
-    },
+    // 标识唯一 schema 的 id
+    id: '',
+    name: '',
+    schema: deepcopy(defaultSchema),
     snapshotSchema: [
-      {
-        editor: {
-          width: '375px',
-          height: '667px',
-          mode: EditorLayoutMode.Fixed,
-        },
-        components: [],
-      }
+      deepcopy(defaultSchema),
     ],
     snapshotIndex: 0,
+    isSave: true,
   }),
   actions: {
     /**
@@ -109,6 +114,7 @@ export const useSchemaStore = defineStore('schema', {
         ...style,
         ...newStyle
       }
+      this.isSave = false;
     },
     /**
      * 根据组件的 index 删除组件
@@ -163,6 +169,8 @@ export const useSchemaStore = defineStore('schema', {
         const schema = deepcopy(this.snapshotSchema[this.snapshotIndex]);
         editorStatusStore.resetSelectedComponent(schema);
         this.schema = schema;
+      } else {
+        this.isSave = true;
       }
     },
     /** 重做 */
@@ -183,10 +191,41 @@ export const useSchemaStore = defineStore('schema', {
       }
       this.snapshotIndex += 1;
       this.snapshotSchema.push(deepcopy(this.schema));
+      this.isSave = false;
     },
     /** 判断是否为固定布局 */
     isFixLayoutMode() {
       return this.schema.editor.mode === EditorLayoutMode.Fixed;
+    },
+    /** 重置 schema */
+    reset(isSaveOperation = false) {
+      // 保存操作不需要清除
+      if(!isSaveOperation) {
+        this.schema = deepcopy(defaultSchema);
+        this.snapshotSchema = [
+          deepcopy(defaultSchema),
+        ],
+        this.name = '';
+        this.id = '';
+      };
+
+      this.isSave = true;
+      this.snapshotIndex = 0;
+      const editorStatusStore = useEditorStatusStore();
+      editorStatusStore.reset();
+    },
+    init(schema: Schema, id: string, name: string) {
+      this.schema = deepcopy(schema);
+      this.snapshotSchema = [
+        deepcopy(schema),
+      ];
+      this.id = id;
+      this.name = name;
+      this.reset(true);
+    },
+    isSavedSchema() {
+      // 已保存或者快照位于第一个或者只有一个快照（初始化状态）
+      return this.isSave || this.snapshotIndex === 0 || this.snapshotSchema.length === 1;
     }
   }
 })

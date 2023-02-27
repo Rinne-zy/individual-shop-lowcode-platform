@@ -7,6 +7,7 @@
         :height="swipeItemStyle.height"
       >
         <van-image
+          style="max-width: 100%;"
           :src="swipeItem.src"
           :width="swipeItemStyle.width"
           :height="swipeItemStyle.height"

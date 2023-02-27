@@ -51,10 +51,6 @@ const props = defineProps({
   commonStyle: {
     type: Object,
     default: () => {}
-  },
-  componentStyle: {
-    type: Object,
-    default: () => {}
   }
 });
 
@@ -70,7 +66,6 @@ const style = computed(() => {
   return {
     ...commonStyle,
     rotate: `${props.commonStyle.rotate}deg`,
-    ...props.componentStyle,
   }
 })
 

@@ -217,7 +217,10 @@ export const useEditorStatusStore = defineStore('editorStatus', {
           this.lineStatus.xb.isShow = true;
         }
       }
+    },
+    reset() {
+      this.selectedComponentSchemaId = '';
+      this.selectedComponentIndex = -1;
     }
   }
-  
 })
