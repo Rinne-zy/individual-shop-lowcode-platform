@@ -39,6 +39,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { Ref } from 'vue';
+import { onBeforeRouteLeave, useRouter } from 'vue-router';
+import type { RouteLocationNormalized } from 'vue-router';
 
 import ComponentsAttributeArea from 'lowcode-platform/components/attribute-area/index.vue';
 import ComponentsMaterialsArea from 'lowcode-platform/components/materials-area/index.vue';
@@ -50,8 +52,6 @@ import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-material-d
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 import { useComponentsMaterialClick } from 'lowcode-platform/hooks/use-material-click-hook';
-import { onBeforeRouteLeave, useRouter } from 'vue-router';
-import type { RouteLocationNormalized } from 'vue-router';
 import { showConfirmMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
 import { saveSchema, updateSchema } from 'lowcode-platform/api/schema';
 import { StatusCode } from 'lowcode-platform/api/type';

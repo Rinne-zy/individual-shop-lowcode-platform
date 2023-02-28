@@ -26,6 +26,7 @@
         :data="picturesNeedToShow"
         ref="table"
         style="width: 100%"
+        max-height="600"
         :highlight-current-row="isEditing"
         @current-change="handleCurrentChange"
       >

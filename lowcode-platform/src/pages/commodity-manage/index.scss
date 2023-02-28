@@ -1,0 +1,19 @@
+.commodity-manage {
+  height: 100%;
+  background-color: #fff;
+  padding: 60px 20px 0;
+  &-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.input-with-select {
+  width: 500px;
+  margin-bottom: 20px;
+}
+
+.image-preview{
+  width: 100px;
+}
