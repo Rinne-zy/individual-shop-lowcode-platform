@@ -73,14 +73,16 @@ export async function deleteImageById(id: string) {
  * 更新图片信息
  * @param id 图片 id 信息
  * @param name 图片名称
+ * @param type 图片分类
  * @param file 图片文件
  * @returns 
  */
-export async function updateImage(id: string, name: string, file: Files | undefined) {
-  // 只更新图片名称
+export async function updateImage(id: string, name: string, type: string, file: Files | undefined) {
+  // 更新简单字段信息
   if(!file || !file.file) {
     await Image.findByIdAndUpdate(id, {
       name,
+      type,
       modified: Date.now(),
     });
   } else {
@@ -102,6 +104,7 @@ export async function updateImage(id: string, name: string, file: Files | undefi
     // 保存图片
     await Image.findByIdAndUpdate(id, {
       name,
+      type,
       src: `${splittedSrc[0]}${username}/${fileName}`,
       modified: Date.now(),
     });

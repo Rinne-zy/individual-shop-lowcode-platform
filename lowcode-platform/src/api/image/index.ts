@@ -6,6 +6,7 @@ export interface Image {
   username: string;
   name: string;
   src: string;
+  type: string
   modified: Date;
 }
 

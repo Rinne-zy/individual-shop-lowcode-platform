@@ -8,6 +8,7 @@ import type { Server } from 'http';
 import schemaRouter from './router/schema';
 import userRouter from './router/user';
 import fileRouter from './router/file';
+import typeRouter from './router/type';
 import router from './router';
 import catchError from './middlewares/catch-error';
 import verifyToken from './middlewares/verify-token';
@@ -51,6 +52,10 @@ app.use(fileRouter.allowedMethods());
 // schema 相关路由
 app.use(schemaRouter.routes());
 app.use(schemaRouter.allowedMethods());
+
+// 类型相关路由
+app.use(typeRouter.routes());
+app.use(typeRouter.allowedMethods());
 
 // 启动服务
 const runServer = (port: number): Server => {

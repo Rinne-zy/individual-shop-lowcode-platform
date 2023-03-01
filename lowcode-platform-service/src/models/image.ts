@@ -7,6 +7,8 @@ export interface Image {
   name: string,
   /** 图片链接 */
   src: string,
+  /** 图片分类 */
+  type: string
   /** 修改日期 */
   modified : number,
 }
@@ -16,6 +18,7 @@ const imageSchema = new Schema({
   username: String,
   name: String,
   src: String,
+  type: String,
   modified : Number,
 });
 

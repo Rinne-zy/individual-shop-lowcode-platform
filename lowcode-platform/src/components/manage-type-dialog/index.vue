@@ -34,19 +34,23 @@
         </el-button>
       </transition>
       <el-button type="default" @click="handleCancelSelect">取消选择</el-button>
-      <el-button 
-        type="danger"
-        :disabled="canNotDelete"
-        @click="handleDelete"
-      >
-        删除分类
-      </el-button>
+      <el-popconfirm title="请确认是否删除该分类" @confirm="handleDelete">
+        <template #reference>
+          <el-button 
+            type="danger"
+            :disabled="canNotDelete"
+          >
+            删除分类
+          </el-button>
+        </template>
+      </el-popconfirm>
+   
     </div>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ElDialog, ElButton, ElInput } from 'element-plus';
+import { ElDialog, ElButton, ElInput, ElPopconfirm } from 'element-plus';
 import type { CascaderOption } from 'element-plus'
 import { computed, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
@@ -70,22 +74,26 @@ const props = defineProps({
   }
 });
 const emits = defineEmits(['cancel', 'confirm', 'delete', 'add']);
-
-// 传递的级联选择框拷贝
-const propCascaderOptionCopy = ref<CascaderOption[]>([]);
 defineExpose({
+  // 设置级联选择框内容
   setPropCascaderOption(options: CascaderOption[]){
+    paths.value = [];
+    cascaderOptions.value = [];
     propCascaderOptionCopy.value = deepcopy(options);
     expandCascaderOptionsAccordingPaths(propCascaderOptionCopy.value);
   }
 })
 
+// 传递的级联选择框拷贝
+const propCascaderOptionCopy = ref<CascaderOption[]>([]);
 // 对话框是否可见
 const dialogVisible = computed(() => props.isVisible);
 // 级联选择框选项
 const cascaderOptions = ref([] as CascaderPanelOption[][]);
 // 当前展开的层级路径
 const paths = ref([] as string[]);
+// 当前展开的子数组
+let isExpandArray = [];
 // 输入值
 const inputValue = ref('');
 // 是否正在输入
@@ -93,7 +101,14 @@ const isInput = ref(false);
 // 是否能添加
 const canNotAdd = computed(() => paths.value.length >= props.maxLayer || paths.value[paths.value.length - 1] === 'default');
 // 是否能删除
-const canNotDelete = computed(() => paths.value.length <= 0 || paths.value[paths.value.length - 1] === 'default');
+const canNotDelete = computed(() => 
+  // 当前未选中任何选项
+  paths.value.length <= 0 ||
+  // 默认选项无法删除
+  paths.value[paths.value.length - 1] === 'default' ||
+  // 当前展开包含子数组 
+  isExpandArray.length > 0
+);
 
 // 根据路径获取相应的级联选项
 const findCascaderOptionsByPaths = (options: CascaderOption[]) => {
@@ -111,6 +126,8 @@ const findCascaderOptionsByPaths = (options: CascaderOption[]) => {
 // 根据层级路径展开级联选择器
 const expandCascaderOptionsAccordingPaths = (options: CascaderOption[]) => {
   const foundOptions = findCascaderOptionsByPaths(options);
+  // 设置当前展开的子数组，若长度为 0 则表示无子数组
+  isExpandArray = foundOptions;
   // 未找到相应层级直接返回
   if(!foundOptions || !foundOptions.length) return;
 
@@ -130,26 +147,26 @@ const handleCancelSelect = () => {
   // 只保留第一层级的选项
   cascaderOptions.value = cascaderOptions.value.slice(0, 1);
 };
-
 // 处理展开
 const handleExpand = (value: string, layer: number) => {
   isInput.value = false;
   // 当记录展开路径长度小于层级，表示需要展开下一级
   if(paths.value.length < layer) {
     paths.value.push(value);
+    // 根据当前选中的添加相应的级联选项
     expandCascaderOptionsAccordingPaths(propCascaderOptionCopy.value);
     return;
   };
 
-  // 当记录展开的路径大于或等于层级，表示展开同级或者上一级
+  // 当记录展开的路径大于或等于层级，表示展开同级或者上一级(此处 -1 因为默认展开第一层时为空)
   paths.value = paths.value.slice(0, layer - 1);
   paths.value.push(value);
 
-  // 裁剪多余的层级
+  // 裁剪多余的层级 [0, 1）
   cascaderOptions.value = cascaderOptions.value.slice(0, layer);
+  // 根据当前选中的添加相应的级联选项
   expandCascaderOptionsAccordingPaths(propCascaderOptionCopy.value);
 };
-
 // 处理点击删除
 const handleDelete = () => {
   // 默认未分组无法删除
@@ -171,15 +188,13 @@ const handleDelete = () => {
   // 裁剪数组
   options?.splice(index, 1);
   expandCascaderOptionsAccordingPaths(propCascaderOptionCopy.value);
-  emits('delete');
+  emits('delete', propCascaderOptionCopy.value, value);
 };
-
 // 取消点击
 const handleCancelAdd = () => {
   isInput.value = false;
   inputValue.value = '';
 }
-
 // 点击添加
 const handleAdd = () => {
   if (!inputValue.value) return;
@@ -193,9 +208,8 @@ const handleAdd = () => {
   cascaderOptions.value = cascaderOptions.value.slice(0, paths.value.length);
   expandCascaderOptionsAccordingPaths(propCascaderOptionCopy.value);
   handleCancelAdd();
-  emits('add');
+  emits('add', propCascaderOptionCopy.value);
 }
-
 // 点击取消
 const handleCancel = () => {
   handleCancelSelect();

@@ -36,9 +36,9 @@ router.post('/image/delete', async (ctx) => {
 // 删除图片
 router.post('/image/update', async (ctx) => {
   const files = ctx.request.files;
-  const { name, id } = ctx.request.body;
+  const { name, id, type } = ctx.request.body;
 
-  const res = await updateImage(id, name, files);
+  const res = await updateImage(id, name, type, files);
   ctx.body = res;
 })
 

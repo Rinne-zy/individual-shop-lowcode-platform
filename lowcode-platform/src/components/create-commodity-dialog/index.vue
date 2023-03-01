@@ -67,10 +67,12 @@
       @confirm="handleConfirmSelectImage"
       @close="isSelectImageDialogVisible = false"
     />
-    <create-type-dialog
-      ref="createTypeDialogRef"
+    <manage-type-dialog
+      ref="manageTypeDialogRef"
       :is-visible="isTypeDialogVisible"
       @close="isTypeDialogVisible = false"
+      @add=""
+      @delete=""
     />
   </div>
 </template>
@@ -78,13 +80,15 @@
 <script setup lang="ts">
 import { ElForm, ElFormItem, ElDialog, ElButton, ElInput, ElCard, ElCascader, ElSlider } from 'element-plus';
 import { computed, reactive, ref } from 'vue';
-import type { FormInstance } from 'element-plus';
+import type { CascaderOption, FormInstance } from 'element-plus';
 
 import SelectImageDialog from 'lowcode-platform/components/select-image-dialog/index.vue';
 import DraggableImageList from 'lowcode-platform/components/draggable-image-list/index.vue';
-import CreateTypeDialog from 'lowcode-platform/components/create-type-dialog/index.vue';
+import ManageTypeDialog from 'lowcode-platform/components/manage-type-dialog/index.vue';
 import type { Image } from 'lowcode-platform/api/image';
 import { getDate } from 'lowcode-platform/utils/time';
+import { getCascaderType } from 'lowcode-platform/api/type/index';
+import { StatusCode } from 'lowcode-platform/api/type';
 
 const props = defineProps({
   isVisible: {
@@ -111,9 +115,28 @@ const maxImageNumber = 10;
 // 分类管理对话框
 const isTypeDialogVisible = ref(false);
 // 分类管理对话框实例
-const createTypeDialogRef = ref<InstanceType<typeof CreateTypeDialog> | null>(); 
+const manageTypeDialogRef = ref<InstanceType<typeof ManageTypeDialog> | null>(); 
+// 级联选择选项
+const cascaderOptions = ref<{
+  id: string,
+  options: CascaderOption[]
+}>({
+  id: '',
+  options: [],
+});
 
 const testImage = reactive<any[]>([]);
+
+// 获取级联选项
+const getCascaderOptions = async () => {
+  const { data } = await getCascaderType('commodity');
+  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
+  cascaderOptions.value.id = data.id;
+  cascaderOptions.value.options = data.options;
+};
+// 获取
+getCascaderOptions();
+
 // 点击取消
 const handleCancel = () => {
   emits('cancel');
@@ -121,15 +144,13 @@ const handleCancel = () => {
 // 确认
 const handleConfirm = () => {
 
-}
+};
+
 // 打开分类管理
 const handleOpenTypeCreateDialog = () => {
+  manageTypeDialogRef.value?.setPropCascaderOption(cascaderOptions.value.options);
   isTypeDialogVisible.value = true;
-  createTypeDialogRef.value?.setPropCascaderOption([{
-    value: 'default',
-    label: '未分组',
-  }])
-}
+};
 
 // 确认选择图片
 const handleConfirmSelectImage = (images: Image[]) => {

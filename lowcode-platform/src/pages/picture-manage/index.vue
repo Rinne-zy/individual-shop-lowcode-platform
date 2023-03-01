@@ -32,6 +32,17 @@
     >
       <el-table-column type="selection" width="65" />
       <el-table-column prop="name" label="名称" width="300" />
+      <el-table-column
+        prop="type"
+        label="图片分类"
+        width="300"
+        :filters="filterType"
+        :filter-method="filterHandler"
+      >
+        <template #default="scope">
+          {{ typeLabels[scope.row.type] }}
+        </template>
+      </el-table-column>
       <el-table-column prop="src" label="图片预览" width="300" >
         <template #default="scope">
           <el-image :src="scope.row.src" class="image-preview"/>
@@ -47,7 +58,7 @@
           <el-button 
             size="small"
             type="primary"
-            @click="handleEdit(scope.row)"
+            @click="handleEdit(scope.row, scope)"
           >
             编辑
           </el-button>
@@ -64,11 +75,13 @@
     </el-table-column>
     </el-table>
     <upload-image-dialog 
+      ref="dialog"
       :is-visible="isVisible"
       :is-editing="isEditing"
-      ref="dialog"
+      :cascader-options="cascaderOptions"
       @success-upload="successUpload"
-      @cancel="isVisible = false"
+      @cancel="handleCancel"
+      @update-cascader-options="handleUpdateCascaderOptions"
     />
   </div>
 </template>
@@ -76,6 +89,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { ElTable, ElTableColumn, ElImage, ElButton, ElPopconfirm, ElInput } from 'element-plus';
+import type { TableColumnCtx, CascaderOption } from 'element-plus';
 
 import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
 import { deleteImage, deleteImageByIds, getImages } from 'lowcode-platform/api/image';
@@ -83,6 +97,7 @@ import { StatusCode } from 'lowcode-platform/api/type';
 import type { Image } from 'lowcode-platform/api/image';
 import { getDate } from 'lowcode-platform/utils/time';
 import { showErrorMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
+import { getCascaderType } from 'lowcode-platform/api/type/index';
 
 // 图片数据
 const pictures = ref<Image[]>([]);
@@ -96,6 +111,8 @@ const search = ref('');
 const isVisible = ref(false);
 // 是否处于编辑数据状态
 const isEditing = ref(false);
+// 正在编辑状态的下标
+let isEditingIndex = -1;
 // 需要展示的图片数据
 const picturesNeedToShow = computed(() => {
   if(!search.value) {
@@ -103,6 +120,25 @@ const picturesNeedToShow = computed(() => {
   }
 
   return pictures.value.filter((picture) => picture.name.includes(search.value));
+});
+
+// 级联选择框选项
+const cascaderOptions = ref({} as {id: string, options: CascaderOption[]});
+// 类型标签
+const typeLabels = ref<Record<string, string>>({});
+
+// 筛选类型
+const filterType = computed(() => {
+  const types: string[] = []
+  pictures.value.forEach((picture) => {
+    if(types.includes(picture.type)) return;
+    types.push(picture.type);
+  })
+
+  return types.map((type) => ({
+    text: typeLabels.value[type],
+    value: type,
+  }))
 });
 
 // 获取图片
@@ -137,14 +173,23 @@ const handleDeleteSelectedIds = async () => {
 };
 
 // 处理编辑图片
-const handleEdit = (image: Image) => {
+const handleEdit = (image: Image, scope: any) => {
   dialog.value?.setUploadForm({
     id: image._id,
     name: image.name,
     src: image.src,
+    type: image.type,
   });
+  isEditingIndex = scope.$index;
   isEditing.value = true;
   isVisible.value = true;
+}
+
+// 取消或关闭上传图片框
+const handleCancel = () => {
+  isVisible.value = false
+  isEditing.value = false;
+  isEditingIndex = -1;
 }
 
 // 添加图片
@@ -157,6 +202,41 @@ const addImage = () => {
 const successUpload = () => {
   isVisible.value = false;
   getPicture();
+}
+
+// 处理筛选
+const filterHandler = (
+  value: string,
+  row: Image,
+  column: TableColumnCtx<Image>
+) => {
+  const property = column['property'] as keyof Image; 
+  return row[property] === value
+}
+
+// 获取级联选项
+const getCascaderOptions = async () => {
+  const { data } = await getCascaderType('image');
+  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
+  cascaderOptions.value.id = data.id;
+  cascaderOptions.value.options = data.options;
+  typeLabels.value = data.labels;
+};
+getCascaderOptions();
+
+// 处理更新级联选择框
+const handleUpdateCascaderOptions = async () => {
+ await getCascaderOptions();
+ await getPicture();
+ if(isEditingIndex === -1) return;
+ // 重新设置图片并更新表单
+ const image = picturesNeedToShow.value[isEditingIndex];
+ dialog.value?.setUploadForm({
+    id: image._id,
+    name: image.name,
+    src: image.src,
+    type: image.type,
+  });
 }
 </script>
 

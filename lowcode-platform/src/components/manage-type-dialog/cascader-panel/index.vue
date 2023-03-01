@@ -23,10 +23,12 @@ import { computed, PropType } from 'vue';
 import type { CascaderPanelOption } from './type';
 
 const props = defineProps({
+  // 级联选择框选项
   options: {
     type: Array as PropType<CascaderPanelOption[][]>,
     default: () => [],
   },
+  // 当前选中路径
   paths: {
     type: Array,
     default: () => [],
