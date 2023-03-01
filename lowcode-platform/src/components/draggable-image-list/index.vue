@@ -86,19 +86,14 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['update:modelValue', 'handleAddImage']);
-
+// 图片列表
 const images = reactive(props.modelValue);
 // 容器样式
 const wrapperStyle = computed(() => ({
   width: `${props.column * (props.width + props.marginLeft) - props.marginLeft}px`, 
 }));
-
 // 处理点击添加图片
 const isMax = computed(() => props.modelValue.length >= props.maxNumber);
-const handleAddImage = () => {
-  emits('handleAddImage');
-}
-
 // 拖拽的图片索引
 const draggingImageIndex = ref<number>(-1);
 // 图片容器
@@ -107,19 +102,16 @@ const draggableWrapper = ref<HTMLElement>();
 const getMarinLeftByIndex = (index: number) => {
   return index % props.column ? `${ props.marginLeft }px` : 0
 }
-
 // 处理拖拽开始
 const handleDragStart = (e: DragEvent, imageIndex: number) => {
   draggingImageIndex.value = imageIndex;
   (e.target as HTMLElement).classList.add('draggingItem');
 }
-
 // 处理拖拽结束
 const handleDragEnd = (e: DragEvent) => {
   (e.target as HTMLElement).classList.remove('draggingItem');
   draggingImageIndex.value = -1;
 }
-
 // 处理拖拽
 const handleDragOver = (e: DragEvent) => {
   e.preventDefault();
@@ -158,7 +150,10 @@ const handleDragOver = (e: DragEvent) => {
   swap(images, draggingImageIndex.value, currentIndex);
   draggingImageIndex.value = currentIndex;
 }
-
+// 处理添加图片
+const handleAddImage = () => {
+  emits('handleAddImage');
+}
 // 删除图片
 const deleteImage = (index: number) => {
   images.splice(index, 1)

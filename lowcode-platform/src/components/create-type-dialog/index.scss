@@ -1,0 +1,43 @@
+.create-type-dialog {
+  width: 500px;
+}
+
+.type-cascader {
+  width: fit-content;
+  display: flex;
+}
+
+.operation {
+  position: relative;
+  display: flex;
+  margin-top: 60px;
+  justify-content: right;
+  &-add {
+    position: absolute;
+    left: 0;
+    display: flex;
+    transition: all 1s ease-in-out;
+  }
+}
+
+.slide-fade-enter-active {
+  transition: all 0.45s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.45s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}

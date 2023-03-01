@@ -16,7 +16,7 @@ interface Commodity {
   // 商品名称
   name: string;
   // 商品封面
-  coverSrc: string[];
+  imagesSrc: string[];
   // 商品描述
   desc: string;
   // 商品分类（用于商品分类展示）
