@@ -1,5 +1,5 @@
 import KoaRouter from 'koa-router';
-import { deleteImageType, getTypesAndLabels, updateType } from '../controller/type';
+import { deleteCommodityType, deleteImageType, getTypesAndLabels, updateType } from '../controller/type';
 
 // koa 路由实例
 const router = new KoaRouter();
@@ -27,10 +27,17 @@ router.post('/type/update', async (ctx) => {
   ctx.body = res;
 });
 
-// 删除图片类型
+// 删除图片分类类型
 router.post('/type/image/delete', async (ctx) => {
   const { id, options, type } = ctx.request.body;
   const res = await deleteImageType(id, type, options);
+  ctx.body = res;
+});
+
+// 删除商品分类类型
+router.post('/type/commodity/delete', async (ctx) => {
+  const { id, options, type } = ctx.request.body;
+  const res = await deleteCommodityType(id, type, options);
   ctx.body = res;
 });
 

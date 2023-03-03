@@ -31,7 +31,18 @@
         @current-change="handleCurrentChange"
       >
         <el-table-column v-if="!isEditing" type="selection" width="65" />
-        <el-table-column prop="name" label="名称" width="300" />
+        <el-table-column prop="name" label="名称" width="200" />
+        <el-table-column
+          prop="type"
+          label="图片分类"
+          width="200"
+          :filters="filterType"
+          :filter-method="handleFilter"
+        >
+          <template #default="scope">
+            {{ typeLabels[scope.row.type] }}
+          </template>
+        </el-table-column>
         <el-table-column prop="src" label="图片预览" width="300" >
           <template #default="scope">
             <img :src="scope.row.src" class="image-preview" />
@@ -60,14 +71,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onUnmounted } from 'vue';
-import { ElDialog, ElTable, ElTableColumn, ElInput, ElButton } from 'element-plus';
+import { computed, ref, watch, onUnmounted, onMounted } from 'vue';
+import { ElDialog, ElTable, ElTableColumn, ElInput, ElButton, TableColumnCtx } from 'element-plus';
 
 import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
 import { getImages } from 'lowcode-platform/api/image';
 import { StatusCode } from 'lowcode-platform/api/type';
 import type { Image } from 'lowcode-platform/api/image';
 import { getDate } from 'lowcode-platform/utils/time';
+import { getCascaderType } from 'lowcode-platform/api/type/index';
 
 const props = defineProps({
   isVisible: {
@@ -77,6 +89,10 @@ const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false,
+  },
+  labels: {
+    type: Object,
+    default: () => {},
   }
 });
 
@@ -88,6 +104,26 @@ const pictures = ref<Image[]>([]);
 const search = ref('');
 // 表格实例
 const table = ref<null | InstanceType<typeof ElTable>>();
+// 上传图片对话框是否可见
+const isUploadImageDialogVisible = ref(false);
+// 当前选中的行
+const currentRow = ref<Image>();
+// 类型标签
+const typeLabels = ref<Record<string, string>>(props.labels);
+// 筛选类型
+const filterType = computed(() => {
+  const types: string[] = []
+  pictures.value.forEach((picture) => {
+    if(types.includes(picture.type)) return;
+    types.push(picture.type);
+  })
+
+  return types.map((type) => ({
+    text: typeLabels.value[type],
+    value: type,
+  }))
+});
+
 // 需要展示的图片数据
 const picturesNeedToShow = computed(() => {
   if(!search.value) {
@@ -96,6 +132,7 @@ const picturesNeedToShow = computed(() => {
 
   return pictures.value.filter((picture) => picture.name.includes(search.value));
 });
+
 // 获取远程图片信息
 const getRemotePictureSrc = async () => {
   const { data } = await getImages();
@@ -113,31 +150,46 @@ const stopWatchVisible = watch(isVisible, () =>{
   }
 })
 
-// 处理关闭对话框
-const handleClose = () => {
-  emits('close');
-};
-
-// 处理确认选择
-const handleConfirm = () => {
-  const selectedRows = table.value?.getSelectionRows() as Image[];
-  emits('confirm', isEditing.value ? currentRow.value : selectedRows);
-};
-
-// 当前选中的行
-const currentRow = ref<Image>();
-// 处理单选
-const handleCurrentChange  = (val:Image) => {
-  currentRow.value = val
-}
-
-// 上传图片对话框是否可见
-const isUploadImageDialogVisible = ref(false);
 // 成功上传刷新图片列表
 const successUpload = () => {
   getRemotePictureSrc();
   isUploadImageDialogVisible.value = false
 };
+
+const getLabels = async () => {
+  const { data } = await getCascaderType('image');
+  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
+  typeLabels.value = data.labels;
+}
+
+// 处理关闭对话框
+const handleClose = () => {
+  emits('close');
+};
+// 处理确认选择
+const handleConfirm = () => {
+  const selectedRows = table.value?.getSelectionRows() as Image[];
+  emits('confirm', isEditing.value ? currentRow.value : selectedRows);
+};
+// 处理单选
+const handleCurrentChange  = (val:Image) => {
+  currentRow.value = val
+}
+// 处理筛选
+const handleFilter = (
+  value: string,
+  row: Image,
+  column: TableColumnCtx<Image>
+) => {
+  const property = column['property'] as keyof Image; 
+  return row[property] === value
+}
+
+onMounted(() => {
+  if(!typeLabels.value || Object.keys(typeLabels.value).length) {
+    getLabels();
+  }
+})
 
 onUnmounted(() => {
   stopWatchVisible();

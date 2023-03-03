@@ -88,7 +88,7 @@ const props = defineProps({
   // 级联选择框选项
   cascaderOptions: {
     type: Object as PropType<{id: string, options: CascaderOption[]}>,
-    default: false,
+    default: () => {},
   }
 })
 

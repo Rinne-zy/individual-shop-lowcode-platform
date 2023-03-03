@@ -169,7 +169,7 @@ const handleDeleteSelectedIds = async () => {
   const { data } = await deleteImageByIds(ids);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
-  await getPicture();
+  getPicture();
 };
 
 // 处理编辑图片

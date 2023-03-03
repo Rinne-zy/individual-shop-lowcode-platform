@@ -9,6 +9,7 @@ import schemaRouter from './router/schema';
 import userRouter from './router/user';
 import fileRouter from './router/file';
 import typeRouter from './router/type';
+import CommodityRouter from './router/commodity';
 import router from './router';
 import catchError from './middlewares/catch-error';
 import verifyToken from './middlewares/verify-token';
@@ -56,6 +57,10 @@ app.use(schemaRouter.allowedMethods());
 // 类型相关路由
 app.use(typeRouter.routes());
 app.use(typeRouter.allowedMethods());
+
+// 商品相关路由
+app.use(CommodityRouter.routes());
+app.use(CommodityRouter.allowedMethods());
 
 // 启动服务
 const runServer = (port: number): Server => {

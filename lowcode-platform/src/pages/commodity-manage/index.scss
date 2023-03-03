@@ -17,3 +17,26 @@
 .image-preview{
   width: 100px;
 }
+
+.commodity-name {
+  display: flex;
+  align-items: center;
+  span {
+    margin-left: 10px;
+    color: #185dd4;
+    font-weight: 700;
+  }
+}
+
+.price {
+  color: #185dd4;
+}
+
+.discount-price {
+  color: red;
+}
+
+.original-price {
+  margin-top: 10px;
+  text-decoration: line-through;
+}

@@ -1,8 +1,9 @@
 import { sign, verify } from 'jsonwebtoken';
 import type { SignOptions } from 'jsonwebtoken';
+import type { Context } from 'koa';
 
 import type { User } from './../models/user';
-import { jwtKey } from '../const';
+import { jwtKey, StatusCode } from '../const';
 
 /**
  * 生成 token
@@ -20,9 +21,9 @@ export function generateToken(userInfo: object | string, signOptions: SignOption
  * @param token 请求头中的 token
  * @return token 中的 userInfo
  */
-export function verifyToken(token: string) {
-  if(!token || !/^Bearer /.test(token)) throw new Error('非法 token');
+export function verifyToken(ctx: Context, token: string) {
   try {
+    if(!token || !/^Bearer /.test(token)) throw new Error('非法 token');
     const info = verify(token.split(' ')[1], jwtKey);
     // 只返回 username 即可，查表搜索
     return {
@@ -30,6 +31,7 @@ export function verifyToken(token: string) {
       userType: (info as User).userType,
     };
   } catch(err) {
+    ctx.state.statusCode = StatusCode.AuthError;
     throw new Error(`未登录，${(err as Error).message}`);
   }
 }

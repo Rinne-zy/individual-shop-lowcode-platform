@@ -11,18 +11,12 @@ const authWhiteList = [
 
 // 校验 token
 export default async (ctx: Context, next: Next) => {
- try {
   if(!authWhiteList.includes(ctx.url) && !isStaticAssets(ctx.url)) {
-    const userInfo = verifyToken(ctx.header.authorization || '');
+    const userInfo = verifyToken(ctx, ctx.header.authorization || '');
     // 设置传递的用户信息
     ctx.state.userInfo = userInfo;
   }
   await next();
- } catch(err) {
-   // 捕获认证失败，设置未认证状态码
-   ctx.state.statusCode = StatusCode.AuthError;
-   throw err;
- }
 }
 
 /**

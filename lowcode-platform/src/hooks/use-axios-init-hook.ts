@@ -58,6 +58,8 @@ function initAxiosResponseInterceptor() {
         // 回到登录页
         router.push('/login');
       }, 500);
+    } else if((response.data as BaseResp).code === StatusCode.Error){
+      showErrorMessage(`服务器错误：${response.data.msg}`);
     }
 
     return response;

@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { PropType } from 'vue';
 import { swap } from 'lowcode-platform/utils/array';
 
@@ -87,7 +87,8 @@ const props = defineProps({
 
 const emits = defineEmits(['update:modelValue', 'handleAddImage']);
 // 图片列表
-const images = reactive(props.modelValue);
+const images = computed(() => props.modelValue);
+
 // 容器样式
 const wrapperStyle = computed(() => ({
   width: `${props.column * (props.width + props.marginLeft) - props.marginLeft}px`, 
@@ -138,7 +139,7 @@ const handleDragOver = (e: DragEvent) => {
   const col = Math.floor(offsetX / (props.width + props.marginLeft));
   const row = Math.floor(offsetY / props.height);
   let currentIndex = row * props.column + col;
-  const len = images.length;
+  const len = images.value.length;
 
   // 避免越界
   if(currentIndex >= len) {
@@ -147,7 +148,8 @@ const handleDragOver = (e: DragEvent) => {
   // 相同则不需要交换
   if(currentIndex === draggingImageIndex.value) return;
 
-  swap(images, draggingImageIndex.value, currentIndex);
+  swap(images.value, draggingImageIndex.value, currentIndex);
+  emits('update:modelValue', images.value);
   draggingImageIndex.value = currentIndex;
 }
 // 处理添加图片
@@ -156,7 +158,8 @@ const handleAddImage = () => {
 }
 // 删除图片
 const deleteImage = (index: number) => {
-  images.splice(index, 1)
+  images.value.splice(index, 1)
+  emits('update:modelValue', images.value);
 }
 </script>
 

@@ -1,9 +1,11 @@
+import Commodity from '../models/commodity';
 import Image from './../models/image';
 import { StatusCode } from "../const";
 import type { CascaderPanelOption } from "../models/type";
 import Type from '../models/type';
 import { updateImage } from './image';
 import { getTypeLabels } from '../utils/label';
+import { updateCommodity } from './commodity';
 
 /**
  * 新建类型
@@ -58,6 +60,36 @@ export async function deleteImageType(id: string, deletedType: string, newOption
   if(images && images.length) {
     // 将图片类型重置为未分组
     await Promise.all(images.map((image) => updateImage(image.id, image.name as string, 'default', undefined)));
+  }
+
+  return {
+    code: StatusCode.Success,
+    msg: '操作成功',
+  }
+}
+
+/**
+ * 删除商品类型
+ * @param id 商品分类 id
+ * @param deletedType 已删除的类型值
+ * @param newOptions 新的选项
+ * @returns 
+ */
+export async function deleteCommodityType(id: string, deletedType: string, newOptions: CascaderPanelOption[]) {
+  await Type.findByIdAndUpdate(id, {
+    options: newOptions,
+  });
+
+  // 获取类型为已删除类型的商品并重置
+  const commodities = await Commodity.find({
+    type: deletedType
+  });
+
+  if(commodities && commodities.length) {
+    // 将商品类型重置为未分组
+    await Promise.all(commodities.map((commodity) => updateCommodity(commodity._id.toString(), {
+      type: 'default'
+    })));
   }
 
   return {
