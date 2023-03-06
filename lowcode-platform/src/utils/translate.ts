@@ -13,7 +13,6 @@ import { getVerticalPointInLine, getContainerCenterPointPosition, Point, getSymm
  */
 export function handleScaleTransform(ref: Ref<HTMLElement>, point: Points, isProportion = false) {
   const parent = ref.value.parentElement
-  const store = useSchemaStore();
   // 获取画布容器
   const parentRect = parent!.getBoundingClientRect();
   const { style } = ref.value;

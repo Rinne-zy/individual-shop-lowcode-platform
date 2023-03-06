@@ -1,0 +1,125 @@
+// 水平模式的布局
+.horizon {
+  width: 100%;
+  display: flex;
+  font-size: 12px;
+  overflow: hidden;
+  .img {
+    width: 125px;
+  }
+  .desc {
+    font-size: 12px;
+    position: relative;
+    height: 60px;
+    line-height: 20px;
+    color: #979699;
+  }
+  .many-line-ellipsis{
+    -webkit-line-clamp: 3;
+  }
+}
+
+// 竖直模式的布局
+.vertical {
+  display: flex;
+  background-color: #fff;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 12px;
+  overflow: hidden;
+  .img {
+    // 图片自适应撑满父容器
+    width: 100%;
+    object-fit:cover
+  }
+  .desc {
+    font-size: 12px;
+    position: relative;
+    height: 40px;
+    margin-bottom: 20px;
+    line-height: 20px;
+    color: #979699;
+  }
+  .many-line-ellipsis{
+    -webkit-line-clamp: 2;
+  }
+}
+
+.horizon:last-of-type {
+  margin: 0 !important;
+}
+
+.vertical:last-of-type {
+  margin: 0 !important;
+}
+
+// 商品描述信息
+.info {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px;
+  flex: 1;
+  .title {
+    font-size: 14px;
+    font-weight: 700px;
+  }
+  .buy {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-top: 10px;
+  }
+  // 商品价格
+  .price {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &-number {
+      display: inline-block;
+      line-height: 20px;
+      color: #323233;
+      font-size: 0;
+      &-currency {
+        font-size: 10px;
+        font-weight: 600;
+      }
+      &-integer {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      &-dot {
+        font-size: 12px;
+        font-weight: 600;
+      }
+      &-decimal {
+        font-size: 12px;
+        font-weight: 600;
+        font-family: avenir-heavy, "PingFang SC", helvetica neue, arial, sans-serif;
+      }
+    }
+    .origin-price {
+      margin-left: 5px;
+      font-size: 10px;
+      color: #969799;
+      text-decoration: line-through;
+    }
+  }
+  .cart {
+    line-height: 20px;
+  }
+}
+
+// 多行文本省略号
+.many-line-ellipsis{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 控制行内样式的宽度
+.inline {
+  flex-basis: 120px;
+  flex-shrink: 0;
+}

@@ -1,6 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('materials-icon.ttf?t=1674020946505') format('truetype');
+  src: url('./iconfont.woff2?t=1677827453324') format('woff2'),
+       url('./iconfont.woff?t=1677827453324') format('woff'),
+       url('./iconfont.ttf?t=1677827453324') format('truetype');
 }
 
 .icon-image:before {
@@ -13,4 +15,12 @@
 
 .icon-text:before {
   content: "\e60b";
+}
+
+.icon-commodities:before {
+  content: "\e635";
+}
+
+.icon-shopping-cart:before {
+  content: "\e73d";
 }

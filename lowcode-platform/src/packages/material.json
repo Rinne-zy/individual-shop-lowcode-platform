@@ -67,5 +67,30 @@
         "lazyLoad": true
       }
     }  
+  },
+  "commodity": {
+    "key": "Commodity",
+    "label": "商品",
+    "icon": "commodities",
+    "type": "e-commerce",
+    "schema": {
+      "isProportion": false,
+      "componentName": "商品",
+      "isEdited": false,
+      "style": {
+        "width": 375,
+        "left": 0,
+        "top": 0,
+        "rotate": 0
+      },
+      "propValue": {
+        "padding": 10,
+        "layout": "one",
+        "commodities": [],
+        "isTextBlod": false,
+        "isShowDesc": true,
+        "isRound": false
+      }
+    }  
   }
 }

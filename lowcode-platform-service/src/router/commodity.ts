@@ -1,5 +1,5 @@
 import KoaRouter from 'koa-router';
-import { changeCommodityStatus, createCommodity, deleteCommodity, getCommodities, updateCommodity } from '../controller/commodity';
+import { changeCommodityStatus, createCommodity, deleteCommodity, getCommodities, getCommoditiesById, updateCommodity } from '../controller/commodity';
 
 // koa 路由实例
 const router = new KoaRouter();
@@ -48,6 +48,14 @@ router.post('/commodity/onShelves', async (ctx) => {
 router.post('/commodity/offShelves', async (ctx) => {
   const { id } = ctx.request.body;
   const res = await changeCommodityStatus(id, 0);
+  ctx.body = res;
+});
+
+// 根据 id 获取商品信息
+router.post('/commodity/getByIds', async (ctx) => {
+  const { ids } = ctx.request.body;
+  const res = await getCommoditiesById(ids);
+
   ctx.body = res;
 });
 

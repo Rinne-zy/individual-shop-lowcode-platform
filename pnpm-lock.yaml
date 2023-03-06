@@ -51,8 +51,10 @@ importers:
   lowcode-platform-packages:
     specifiers:
       vant: ^4.0.8
+      whatwg-fetch: ^3.6.2
     dependencies:
       vant: registry.npmmirror.com/vant/4.0.8_vue@3.2.45
+      whatwg-fetch: registry.npmmirror.com/whatwg-fetch/3.6.2
 
   lowcode-platform-service:
     specifiers:
@@ -3895,6 +3897,12 @@ packages:
     name: webpack-virtual-modules
     version: 0.4.6
     dev: true
+
+  registry.npmmirror.com/whatwg-fetch/3.6.2:
+    resolution: {integrity: sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz}
+    name: whatwg-fetch
+    version: 3.6.2
+    dev: false
 
   registry.npmmirror.com/whatwg-url/11.0.0:
     resolution: {integrity: sha512-RKT8HExMpoYx4igMiVMY83lN6UeITKJlBQ+vR/8ZJ8OCdSiN3RwCq+9gH0+Xzj0+5IrM6i4j/6LuvzbZIQgEcQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/whatwg-url/-/whatwg-url-11.0.0.tgz}

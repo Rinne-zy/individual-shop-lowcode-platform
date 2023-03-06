@@ -237,7 +237,7 @@ const handleUpdateCascaderOptions = async () => {
     src: image.src,
     type: image.type,
   });
-}
+};
 </script>
 
 <style scoped src="./index.scss"></style>

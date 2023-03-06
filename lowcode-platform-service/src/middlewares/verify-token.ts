@@ -1,12 +1,12 @@
 import type { Context, Next } from 'koa';
 
-import { StatusCode } from '../const';
 import { verifyToken } from '../utils/jwt';
 
 // 校验白名单
 const authWhiteList = [
   '/user/login',
   '/user/register',
+  '/commodity/getByIds'
 ]
 
 // 校验 token

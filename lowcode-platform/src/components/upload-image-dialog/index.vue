@@ -260,7 +260,10 @@ const handleUpdate = async () => {
 }
 
 // 处理点击打开类型管理对话框
-const handleOpenTypeCreateDialog = () => {
+const handleOpenTypeCreateDialog = async () => {
+  if(!cascaderOptions.value) {
+  
+  }
   manageTypeDialogRef.value?.setPropCascaderOption(cascaderOptions.value.options);
   isTypeDialogVisible.value = true;
 }

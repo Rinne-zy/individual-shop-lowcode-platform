@@ -1,0 +1,33 @@
+.commodity {
+  background-color: #f7f8fa;
+}
+
+// 一行一个
+.one-line-one-commodity {
+  display: flex;
+  max-width: 100%;
+  flex-direction: column;
+}
+
+// 一行两个
+.one-line-two-commodity {
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+// 行内展示
+.inline-commodity {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: auto;
+  scrollbar-width: none; /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+// 去掉滚动条
+.inline-commodity::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
+}

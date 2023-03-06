@@ -78,6 +78,7 @@
     </el-dialog>
     <select-image-dialog 
       :is-visible="isSelectImageDialogVisible"
+      :cascader-options="cascaderOptions"
       :labels="labels"
       @confirm="handleConfirmSelectImage"
       @close="isSelectImageDialogVisible = false"

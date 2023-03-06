@@ -1,3 +1,4 @@
 dist
 node_modules
 lowcode-platform-service/public
+.vscode

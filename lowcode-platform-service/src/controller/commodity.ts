@@ -59,7 +59,6 @@ export async function updateCommodity(id: string, commodity: Partial<CommodityTy
  */
 export async function deleteCommodity(id: string | string[]) {
   const ids: string[] = typeof id === 'string' ? [id] : id;
-  console.log(id, ids);
   await Promise.all(ids.map((id) => Commodity.findByIdAndDelete(id)));
   
   return {
@@ -82,5 +81,20 @@ export async function changeCommodityStatus(id: string, status: number) {
   return {
     code: StatusCode.Success,
     msg: '更新状态成功',
+  }
+}
+
+/**
+ * 根据商品 id 获取商品
+ * @param id 商品id
+ * @returns 
+ */
+export async function getCommoditiesById(id: string | string[]) {
+  const ids: string[] = typeof id === 'string' ? [id] : id;
+  const commodities = await Promise.all(ids.map((id) => Commodity.findById(id)));
+  return {
+    code: StatusCode.Success,
+    commodities,
+    msg: '获取成功',
   }
 }

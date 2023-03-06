@@ -64,6 +64,7 @@
     <!-- 上传 -->
     <upload-image-dialog 
       :is-visible="isUploadImageDialogVisible"
+      :cascader-options="cascaderOptions"
       @success-upload="successUpload"
       @cancel="isUploadImageDialogVisible = false"
     />
@@ -71,8 +72,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onUnmounted, onMounted } from 'vue';
-import { ElDialog, ElTable, ElTableColumn, ElInput, ElButton, TableColumnCtx } from 'element-plus';
+import { computed, ref, watch, onUnmounted, onMounted, PropType } from 'vue';
+import { ElDialog, ElTable, ElTableColumn, ElInput, ElButton } from 'element-plus';
+import type { TableColumnCtx, CascaderOption } from 'element-plus';
 
 import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
 import { getImages } from 'lowcode-platform/api/image';
@@ -93,6 +95,10 @@ const props = defineProps({
   labels: {
     type: Object,
     default: () => {},
+  },
+  cascaderOptions: {
+    type: Object as PropType<{id: string, options: CascaderOption[]}>,
+    default: () => {},
   }
 });
 
@@ -110,6 +116,8 @@ const isUploadImageDialogVisible = ref(false);
 const currentRow = ref<Image>();
 // 类型标签
 const typeLabels = ref<Record<string, string>>(props.labels);
+// 级联选择框选项
+const cascaderOptions = ref({} as {id: string, options: CascaderOption[]});
 // 筛选类型
 const filterType = computed(() => {
   const types: string[] = []
@@ -156,10 +164,13 @@ const successUpload = () => {
   isUploadImageDialogVisible.value = false
 };
 
-const getLabels = async () => {
+// 获取标签
+const getLabelsAndCascaderOptions = async () => {
   const { data } = await getCascaderType('image');
   if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
   typeLabels.value = data.labels;
+  cascaderOptions.value.id = data.id;
+  cascaderOptions.value.options = data.options;
 }
 
 // 处理关闭对话框
@@ -186,8 +197,13 @@ const handleFilter = (
 }
 
 onMounted(() => {
-  if(!typeLabels.value || Object.keys(typeLabels.value).length) {
-    getLabels();
+  if(
+    !typeLabels.value || 
+    Object.keys(typeLabels.value).length ||
+    !cascaderOptions.value.options ||
+    Object.keys(cascaderOptions.value.options).length
+  ) {
+    getLabelsAndCascaderOptions();
   }
 })
 

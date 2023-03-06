@@ -37,6 +37,11 @@
         overflow-y: auto;
         border-radius: 0 0 20px 20px;
         margin-top: 51px;
+        scrollbar-width: none; /* firefox */
+        -ms-overflow-style: none; /* IE 10+ */
+      }    
+      &-content::-webkit-scrollbar {
+        display: none; /* Chrome Safari */
       }
     }
   }
