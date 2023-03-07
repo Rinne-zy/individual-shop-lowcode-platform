@@ -16,6 +16,8 @@ export interface CommodityPropValue {
   commodities: string[];
   // 是否显示描述
   isShowDesc: boolean;
+  // 是否显示原始价格
+  isShowOriginPrice: boolean,
   // 是否为圆角
   isRound: boolean;
 }

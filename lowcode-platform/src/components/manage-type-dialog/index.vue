@@ -43,8 +43,7 @@
             删除分类
           </el-button>
         </template>
-      </el-popconfirm>
-   
+      </el-popconfirm>   
     </div>
   </el-dialog>
 </template>

@@ -55,9 +55,10 @@
             v-model="(selectedComponent.propValue[key] as any)"
             show-input
             style="padding: 0 10px;"
-            :min="0"
-            :max="10"
-            :step="0.5"
+            :min="+value.options!.min"
+            :max="+value.options!.max"
+            :step="+value.options!.step"
+            @input="onHandleInput"
           />
         </template>
       </el-form-item>
@@ -125,9 +126,11 @@ const onHandleInput = () => {
   execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
 }
 
+// 处理变化
 const onHandleChange = () => {
   // 当属性成功改变并失去焦点时记录快照
   schemaStore.recordSnapshot();
+  execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
 }
 </script>
 

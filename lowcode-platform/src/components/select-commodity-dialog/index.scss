@@ -1,0 +1,42 @@
+.commodity-select {
+  height: 100%;
+  background-color: #fff;
+  padding: 60px 20px 0;
+  &-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.input-with-select {
+  width: 500px;
+  margin-bottom: 20px;
+}
+
+.image-preview{
+  width: 100px;
+}
+
+.commodity-name {
+  display: flex;
+  align-items: center;
+  span {
+    margin-left: 10px;
+    color: #185dd4;
+    font-weight: 700;
+  }
+}
+
+.price {
+  color: #185dd4;
+}
+
+.discount-price {
+  color: red;
+}
+
+.original-price {
+  margin-top: 10px;
+  text-decoration: line-through;
+}

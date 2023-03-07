@@ -85,10 +85,10 @@
       },
       "propValue": {
         "padding": 10,
-        "layout": "one",
+        "layout": "one-line-one-commodity",
         "commodities": [],
-        "isTextBlod": false,
         "isShowDesc": true,
+        "isShowOriginPrice": true,
         "isRound": false
       }
     }  

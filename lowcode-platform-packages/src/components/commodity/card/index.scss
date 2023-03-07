@@ -13,6 +13,9 @@
     height: 60px;
     line-height: 20px;
     color: #979699;
+    &-placeholder {
+      height: 60px;
+    }
   }
   .many-line-ellipsis{
     -webkit-line-clamp: 3;
@@ -36,6 +39,9 @@
     font-size: 12px;
     position: relative;
     height: 40px;
+    &-placeholder {
+      height: 60px;
+    }
     margin-bottom: 20px;
     line-height: 20px;
     color: #979699;
@@ -59,6 +65,7 @@
   flex-direction: column;
   padding: 5px 10px;
   flex: 1;
+  background-color: #fff;
   .title {
     font-size: 14px;
     font-weight: 700px;

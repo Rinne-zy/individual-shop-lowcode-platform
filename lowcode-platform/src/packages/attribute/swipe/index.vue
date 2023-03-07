@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElCollapse, ElCollapseItem, ElSelect, ElButton, } from 'element-plus';
+import { ElCollapse, ElCollapseItem, ElSelect, ElButton } from 'element-plus';
 import { computed, ComputedRef, PropType, ref } from 'vue';
 
 import CommonAttr  from '../common/index.vue';
@@ -107,6 +107,11 @@ const simpleAttr: Partial<Record<keyof SwipePropValue, BaseControlOption>> = {
   speed: {
     type: ControlType.Slider,
     label: '轮播速度(秒)',
+    options: {
+      min: 0,
+      max: 10,
+      step: 0.5, 
+    }
   },
   lazyLoad: {
     type: ControlType.Switch,

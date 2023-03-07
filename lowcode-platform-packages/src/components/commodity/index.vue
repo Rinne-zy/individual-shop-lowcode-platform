@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="commodity" :class="[layoutType]">
+    <div class="commodity" :class="[propValue.layout]">
       <card
         v-for="commodity in commodities"
         :key="commodity._id"
@@ -10,6 +10,9 @@
         :desc="commodity.desc"
         :price="commodity.price * commodity.discount * 0.01"
         :origin-price="commodity.price"
+        :is-show-origin-price="propValue.isShowOriginPrice"
+        :is-show-desc="propValue.isShowDesc"
+        :class="{ round: propValue.isRound }"
         :style="commodityStyle"
       />
     </div>
@@ -36,12 +39,9 @@ const props = defineProps({
   },
 });
 
-// 布局类型
-const layoutType = ref<CommodityLayout>(CommodityLayout.One);
-
 // 商品分类
 const commodityClass = computed(() => {
-  switch (layoutType.value) {
+  switch (props.propValue.layout) {
     case CommodityLayout.Inline:
       return "inline";
     case CommodityLayout.Two:
@@ -57,24 +57,24 @@ const ids = reactive([
   "6401ed2bb6c69fc690a8115f",
   "6401ed47b6c69fc690a81165",
 ]);
+
 const commodities = ref([] as Commodity[]);
-const padding = 10;
 
 // 商品之间的间距
 const commodityStyle = computed(() => {
-  switch (layoutType.value) {
+  switch (props.propValue.layout) {
     case CommodityLayout.One:
       return {
-        marginBottom: `${padding}px`,
+        marginBottom: `${props.propValue.padding}px`,
       };
     case CommodityLayout.Two:
       return {
-        width: `calc((100% - ${padding}px) / 2)`,
+        width: `calc((100% - ${props.propValue.padding}px) / 2)`,
         height: "300px",
       };
     case CommodityLayout.Inline:
       return {
-        marginRight: `${padding}px`,
+        marginRight: `${props.propValue.padding}px`,
       };
   }
 });

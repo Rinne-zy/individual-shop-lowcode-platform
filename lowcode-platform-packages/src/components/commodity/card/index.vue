@@ -4,6 +4,8 @@
     <div class="info">
       <div class="title">{{ title }}</div>
       <div v-if="isShowDesc" class="desc many-line-ellipsis">{{ desc }}</div>
+      <!-- 行内模式不需要占位符 -->
+      <div v-else-if="!isShowDesc && type !== 'inline'" class="desc-placeholder"/>
       <div class="buy">
         <div class="price">
           <div class="price-number">
@@ -30,8 +32,8 @@ import { computed, PropType } from "vue";
 
 const props = defineProps({
   type: {
-    type: String as PropType<"vertical" | "horizon" | "inline">,
-    default: "vertical",
+    type: String as PropType<'vertical' | 'horizon' | 'inline'>,
+    default: 'vertical',
   },
   cover: {
     type: String,
@@ -57,6 +59,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  isShowOriginPrice: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // 展示的价格文本
@@ -70,13 +76,17 @@ const priceText = computed(() => {
 
 // 卡片的样式类
 const cardClass = computed(() => {
-  if (props.type === "inline") return "vertical inline";
+  if (props.type === 'inline') return 'vertical inline';
   return props.type;
 });
 
 const isShowOriginPrice = computed(
-  () => props.type !== "inline" && props.price !== props.originPrice
+  () => props.isShowOriginPrice && 
+    props.type !== 'inline' && 
+    props.price !== props.originPrice
 );
+
+const isShowDesc = computed(() => props.isShowDesc);
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

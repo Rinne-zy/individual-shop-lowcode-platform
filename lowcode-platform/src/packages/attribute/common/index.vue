@@ -14,16 +14,14 @@
         label="是否开启等比例放缩"
         name="isProportion"
       >
-        <el-switch 
-          v-model="selectedComponent.isProportion"
-        />
+        <el-switch v-model="selectedComponent.isProportion" />
       </el-form-item>
     </el-form>
   </el-collapse-item>
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, ref } from 'vue';
+import { computed, ComputedRef } from 'vue';
 import { ElCollapseItem, ElForm, ElFormItem, ElInput, ElSwitch } from 'element-plus';
 
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
@@ -48,9 +46,6 @@ const commonAttr = computed(() => {
   })
   return attr;
 })
-
-// 激活的下拉面板
-const activeName = ref('style');
 
 const labelByStyleKey: Record<string, string> = {
   width: '宽度(单位 px)',

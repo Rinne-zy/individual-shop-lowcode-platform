@@ -2,9 +2,12 @@
 export interface BaseControlOption {
   label: string,
   type: string,
+  options?: Record<string, string | number | boolean>
 }
 
-export interface SelectControlOption extends BaseControlOption {
+export interface SelectControlOption {
+  label: string,
+  type: string,
   options: {
     value: string,
     label: string,
