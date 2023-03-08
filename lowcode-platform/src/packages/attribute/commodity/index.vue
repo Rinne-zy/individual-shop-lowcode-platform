@@ -33,7 +33,7 @@ import type { PropType } from 'vue';
 import CommonAttr  from '../common/index.vue';
 import BaseAttr from '../base/index.vue';
 import DraggableImageList from 'lowcode-platform/components/draggable-image-list/index.vue';
-import type { CommodityPropValue } from '@lowcode-platform/packages/src/components/commodity/type';
+import type { CommodityPropValue } from 'lowcode-platform/packages/components/commodity/type';
 import { ControlType, SelectControlOption } from '../base/type';
 import type { BaseControlOption } from '../base/type';
 

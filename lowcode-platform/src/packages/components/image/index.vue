@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 // 默认图片
-const defaultSrc = './azi.jpg';
+const defaultSrc = '/cover.png';
 
 // 是否为圆角
 const isRound = computed(() => props.propValue.isRound);

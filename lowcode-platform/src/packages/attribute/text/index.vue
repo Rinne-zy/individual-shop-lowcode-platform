@@ -20,7 +20,7 @@ import { ref } from 'vue';
 import CommonAttr from '../common/index.vue';
 import BaseAttr from '../base/index.vue';
 import { BaseControlOption, ControlType, SelectControlOption } from '../base/type';
-import { TextPropValue } from '@lowcode-platform/packages/src/components/text/type';
+import { TextPropValue } from 'lowcode-platform/packages/components/text/type';
 
 defineProps({
   style:{

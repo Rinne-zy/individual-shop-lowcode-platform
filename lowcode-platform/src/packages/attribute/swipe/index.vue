@@ -4,7 +4,7 @@
       <!-- 通用属性 -->
       <common-attr />
       <base-attr :simple-control-options="simpleAttr" />
-      <el-collapse-item title="图片选择">
+      <el-collapse-item title="图片选择" class="swipe-select-image">
         <!-- 真实选择 -->
         <div class="swipe-images" v-for="(swipeItem, index) in swipeItems" :key="index">
             <div class="swipe-images-item">
@@ -68,7 +68,7 @@ import BaseAttr from '../base/index.vue';
 import SelectImageDialog from 'lowcode-platform/components/select-image-dialog/index.vue';
 import type { BaseControlOption } from '../base/type';
 import { ControlType } from '../base/type';
-import type { SwipePropValue } from '@lowcode-platform/packages/src/components/swipe/type';
+import type { SwipePropValue } from 'lowcode-platform/packages/components/swipe/type';
 import { useSchemaStore, ComponentsSchema } from 'lowcode-platform/store/schema-store';
 import type { Image } from 'lowcode-platform/api/image';
 import { swap } from 'lowcode-platform/utils/array';

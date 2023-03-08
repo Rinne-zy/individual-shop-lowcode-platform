@@ -1,4 +1,3 @@
 packages:
   - "lowcode-platform/**"
   - "lowcode-platform-service/**"
-  - "lowcode-platform-packages/**"

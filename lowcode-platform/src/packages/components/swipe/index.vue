@@ -50,7 +50,7 @@ const autoplaySpeed = computed(() => props.propValue.speed * 1000);
 const swipeData = computed(() => {
   if(!props.propValue.swipeItems.length) {
     return [{
-      src: './m.png'
+      src: '/cover.png'
     }];
   };
   

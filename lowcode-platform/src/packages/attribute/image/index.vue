@@ -48,7 +48,7 @@ import BaseAttr from '../base/index.vue';
 import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
 import { ControlType } from '../base/type';
 import type { BaseControlOption } from '../base/type';
-import type { ImagePropValue } from '@lowcode-platform/packages/src/components/image/type';
+import type { ImagePropValue } from 'lowcode-platform/packages/components/image/type';
 import { useSchemaStore, ComponentsSchema } from 'lowcode-platform/store/schema-store';
 import { getImages } from 'lowcode-platform/api/image';
 import type { Image } from 'lowcode-platform/api/image';

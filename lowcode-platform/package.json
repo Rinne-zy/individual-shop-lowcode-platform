@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lowcode-platform/packages": "workspace:^1.0.0",
     "axios": "^1.2.2",
     "deepcopy": "^2.1.0",
     "element-plus": "^2.2.28",
