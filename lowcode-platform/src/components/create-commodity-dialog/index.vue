@@ -78,8 +78,6 @@
     </el-dialog>
     <select-image-dialog 
       :is-visible="isSelectImageDialogVisible"
-      :cascader-options="cascaderOptions"
-      :labels="labels"
       @confirm="handleConfirmSelectImage"
       @close="isSelectImageDialogVisible = false"
     />
@@ -111,6 +109,8 @@ import deepcopy from 'deepcopy';
 import { addCommodity, updateCommodity } from 'lowcode-platform/api/commodity';
 import type { CommodityForm, Commodity } from 'lowcode-platform/api/commodity';
 import { compareTwoArrayIsSame } from 'lowcode-platform/utils/array';
+import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
+import { Type } from 'lowcode-platform/store/type-store';
 
 const props = defineProps({
   isVisible: {
@@ -121,16 +121,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  // 级联选择框选项
-  cascaderOptions: {
-    type: Object as PropType<{id: string, options: CascaderOption[]}>,
-    default: false,
-  },
-  // 标签
-  labels: {
-    type: Object,
-    default: () => {},
-  }
 });
 
 const emits = defineEmits(['cancel', 'confirm', 'updateCascaderOptions']);
@@ -168,7 +158,7 @@ const manageTypeDialogRef = ref<InstanceType<typeof ManageTypeDialog> | null>();
 // 表单实例 Dom
 const formRef = ref<FormInstance>();
 // 级联选择选项
-const cascaderOptions = computed(() => props.cascaderOptions);
+const { cascaderOptions } = useCascaderType(Type.Commodity);
 // 默认的表单值
 const defaultFormValue: CommodityForm = {
   // 商品名称

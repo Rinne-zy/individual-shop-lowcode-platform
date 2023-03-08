@@ -53,4 +53,4 @@ export const useMenuStore = defineStore('menu', {
       this.activatedMenu = routerPath;    
     }
   }
-})
+});

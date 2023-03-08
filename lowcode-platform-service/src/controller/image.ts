@@ -12,7 +12,7 @@ import { StatusCode } from "../const";
  * @param file 文件
  * @returns 
  */
-export async function saveImage(origin: string, username: string, name: string, file: Files) {
+export async function saveImage(origin: string, username: string, name: string, type: string, file: Files) {
   // 保存图片
   const userDir = `${username}/`;
   const fileName = await saveImages(userDir, file);
@@ -23,6 +23,7 @@ export async function saveImage(origin: string, username: string, name: string, 
     username,
     name,
     src: path,
+    type,
     modified: Date.now(),
   })
 

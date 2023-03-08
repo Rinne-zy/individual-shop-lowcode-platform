@@ -45,7 +45,7 @@
         label="商品"
         width="150"
         :filters="filterType"
-        :filter-method="handlerFilter"
+        :filter-method="handleFilter"
       >
         <template #default="scope">
           {{ typeLabels[scope.row.type] }}
@@ -64,7 +64,7 @@
         label="状态"
         width="150"
         :filters="filterStatus"
-        :filter-method="handlerFilter"
+        :filter-method="handleFilter"
       >
         <template #default="scope">
           <el-tag v-if="scope.row.status === 0" type="info">仓库中</el-tag>
@@ -131,31 +131,50 @@
 
 <script setup lang="ts">
 import { ElTable, ElTableColumn, ElButton, ElPopconfirm, ElInput, ElTag } from 'element-plus';
-import type { TableColumnCtx, CascaderOption } from 'element-plus';
 import { computed, ref } from 'vue';
 
 import CreateCommodityDialog from 'lowcode-platform/components/create-commodity-dialog/index.vue';
-import { getCascaderType } from 'lowcode-platform/api/type/index';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { CommodityStatus, deleteCommodity, getCommodities, putCommodityOffShelves, putCommodityOnShelves } from 'lowcode-platform/api/commodity';
 import type { Commodity } from 'lowcode-platform/api/commodity';
 import { getDate } from 'lowcode-platform/utils/time';
 import { showErrorMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
+import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
+import { useElTableHooks } from 'lowcode-platform/hooks/use-el-table-hook';
+import { Type } from 'lowcode-platform/store/type-store';
 
-// 搜索关键字
-const search = ref('');
-const isVisible = ref(false);
+// 商品
 const commodities = ref([] as Commodity[]);
-// 类型标签
-const typeLabels = ref<Record<string, string>>({});
-// 级联选择框选项
-const cascaderOptions = ref({} as {id: string, options: CascaderOption[]});
+// 新建商品对话框是否可见
+const isVisible = ref(false);
+// 新建商品对话框实例
 const dialog = ref<InstanceType<typeof CreateCommodityDialog> | null>(null);
-const table = ref<InstanceType<typeof ElTable> | null>(null);
+
 // 是否处于编辑数据状态
 const isEditing = ref(false);
 // 正在编辑状态的下标
 let isEditingIndex = -1;
+
+// 类型级联选择框 hook
+const {
+  cascaderOptions,
+  typeLabels,
+  getCascaderOptions
+} = useCascaderType(Type.Commodity);
+
+// 获取类型级联选项
+getCascaderOptions();
+
+// 使用 el-table 的 hook
+const {
+  // 表格实例
+  table,
+  // 搜索关键字
+  search,
+  // 处理过滤
+  handleFilter,
+} = useElTableHooks<Commodity>();
+
 // 需要展示的商品
 const commoditiesNeedToShow = computed(() => {
   if(!search.value) {
@@ -163,7 +182,8 @@ const commoditiesNeedToShow = computed(() => {
   }
 
   return commodities.value.filter((commodity) => commodity.name.includes(search.value));
-})
+});
+
 // 筛选类型
 const filterType = computed(() => {
   const types: string[] = []
@@ -193,15 +213,6 @@ const filterStatus = [
   },
 ]
 
-// 获取级联选项
-const getCascaderOptions = async () => {
-  const { data } = await getCascaderType('commodity');
-  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
-  cascaderOptions.value.id = data.id;
-  cascaderOptions.value.options = data.options;
-  typeLabels.value = data.labels;
-};
-getCascaderOptions();
 // 获取商城
 const getCommoditiesFromNetWork = async () => {
   const { data } = await getCommodities();
@@ -218,21 +229,13 @@ const handleUpdateCascaderOptions = async () => {
  const commodity = commodities.value[isEditingIndex];
  dialog.value?.setUploadForm(commodity);
 };
+
 // 处理确认新增商品或者更新商品
 const handleConfirm = () => {
   isVisible.value = false;
   getCommoditiesFromNetWork();
 };
-// 处理表格筛选
-const handlerFilter = <T>(
-  value: string | number,
-  row: T,
-  column: TableColumnCtx<T>
-) => {
-  const property = column['property'] as keyof T;
-  // 由于 filter 必须为 string，因此需要转换类型为字符串
-  return `${row[property]}`=== value
-};
+
 // 处理点击编辑按钮
 const handleEdit = (commodity: Commodity, scope: any) => {
   dialog.value?.setUploadForm(commodity);
@@ -240,9 +243,10 @@ const handleEdit = (commodity: Commodity, scope: any) => {
   isEditing.value = true;
   isVisible.value = true;
 };
+
 // 处理删除
 const handleDelete = async (commodity: Commodity) => {
-  const { data} = await deleteCommodity(commodity._id);
+  const { data } = await deleteCommodity(commodity._id);
   if (!data || data.code !== StatusCode.Success) {
     throw new Error(data.msg);
   };
@@ -263,21 +267,22 @@ const handleDeleteSelectedIds = async () => {
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
   getCommoditiesFromNetWork();
-}
+};
+
 // 上架商品
 const handlePutCommodityOnShelves = async (id: string) => {
   const { data } = await putCommodityOnShelves(id);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
   getCommoditiesFromNetWork();
-}
+};
 // 下架商品
 const handlePutCommodityOffShelves = async (id: string) => {
   const { data } = await putCommodityOffShelves(id);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
   getCommoditiesFromNetWork();
-}
+};
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

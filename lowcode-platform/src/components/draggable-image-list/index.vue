@@ -48,14 +48,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { PropType } from 'vue';
-import { swap } from 'lowcode-platform/utils/array';
 
-interface DraggableImage {
-  // 编号
-  id: number;
-  // 图片链接
-  src: string;
-};
+import type { DraggableImage } from 'lowcode-platform/hooks/use-images-drag-hook';
+import { useImagesDrag } from 'lowcode-platform/hooks/use-images-drag-hook';
+import { swap } from 'lowcode-platform/utils/array';
 
 const props = defineProps({
   modelValue: {
@@ -95,63 +91,44 @@ const wrapperStyle = computed(() => ({
 }));
 // 处理点击添加图片
 const isMax = computed(() => props.modelValue.length >= props.maxNumber);
-// 拖拽的图片索引
-const draggingImageIndex = ref<number>(-1);
-// 图片容器
-const draggableWrapper = ref<HTMLElement>();
-// 根据 index 计算 margin 的值
-const getMarinLeftByIndex = (index: number) => {
-  return index % props.column ? `${ props.marginLeft }px` : 0
+
+// 图片属性
+const imagesAttribute =  {
+  width: props.width,
+  height: props.height,
+  column: props.column,
+  margin: props.marginLeft,
 }
-// 处理拖拽开始
-const handleDragStart = (e: DragEvent, imageIndex: number) => {
-  draggingImageIndex.value = imageIndex;
+// 拖拽开始回调
+const dragStartCallback = (e: DragEvent) => {
   (e.target as HTMLElement).classList.add('draggingItem');
-}
-// 处理拖拽结束
-const handleDragEnd = (e: DragEvent) => {
+};
+// 拖拽结束回调
+const dragEndCallback = (e: DragEvent) => {
   (e.target as HTMLElement).classList.remove('draggingItem');
-  draggingImageIndex.value = -1;
-}
-// 处理拖拽
-const handleDragOver = (e: DragEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-  e.dataTransfer!.dropEffect = 'move';
-  if(draggingImageIndex.value === -1) return;
-
-  const dropRect = draggableWrapper.value?.getBoundingClientRect();
-  if(!dropRect) return;
-
-  const offsetX = e.clientX - dropRect.left;
-  const offsetY = e.clientY - dropRect.top;
-
-  // 超出拖动区域
-  if (
-    offsetX < 0 
-    || offsetX > dropRect.width 
-    || offsetY < 0
-    || offsetY > dropRect.height
-  ) {
-    return;
-  }
-
-  const col = Math.floor(offsetX / (props.width + props.marginLeft));
-  const row = Math.floor(offsetY / props.height);
-  let currentIndex = row * props.column + col;
-  const len = images.value.length;
-
-  // 避免越界
-  if(currentIndex >= len) {
-    currentIndex = len - 1;
-  }
-  // 相同则不需要交换
-  if(currentIndex === draggingImageIndex.value) return;
-
-  swap(images.value, draggingImageIndex.value, currentIndex);
+};
+// 拖拽悬浮回调
+const dragOverCallback = (e: DragEvent, draggingIndex: number, currentIndex: number) => {
+  swap(images.value, draggingIndex, currentIndex);
   emits('update:modelValue', images.value);
-  draggingImageIndex.value = currentIndex;
-}
+};
+// 拖拽
+const {
+  draggableWrapper,
+  handleDragStart,
+  handleDragEnd,
+  getMarinLeftByIndex,
+  handleDragOver,
+} = useImagesDrag(
+  images.value,
+  imagesAttribute,
+  {
+    dragStartCallback,
+    dragEndCallback,
+    dragOverCallback,
+  }
+);
+
 // 处理添加图片
 const handleAddImage = () => {
   emits('handleAddImage');

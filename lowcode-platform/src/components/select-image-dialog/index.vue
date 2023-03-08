@@ -64,7 +64,6 @@
     <!-- 上传 -->
     <upload-image-dialog 
       :is-visible="isUploadImageDialogVisible"
-      :cascader-options="cascaderOptions"
       @success-upload="successUpload"
       @cancel="isUploadImageDialogVisible = false"
     />
@@ -72,16 +71,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onUnmounted, onMounted, PropType } from 'vue';
+import { computed, ref, watch, onUnmounted, onMounted } from 'vue';
 import { ElDialog, ElTable, ElTableColumn, ElInput, ElButton } from 'element-plus';
-import type { TableColumnCtx, CascaderOption } from 'element-plus';
 
 import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
 import { getImages } from 'lowcode-platform/api/image';
 import { StatusCode } from 'lowcode-platform/api/type';
 import type { Image } from 'lowcode-platform/api/image';
 import { getDate } from 'lowcode-platform/utils/time';
-import { getCascaderType } from 'lowcode-platform/api/type/index';
+import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
+import { useElTableHooks } from 'lowcode-platform/hooks/use-el-table-hook';
+import { Type } from 'lowcode-platform/store/type-store';
 
 const props = defineProps({
   isVisible: {
@@ -91,14 +91,6 @@ const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false,
-  },
-  labels: {
-    type: Object,
-    default: () => {},
-  },
-  cascaderOptions: {
-    type: Object as PropType<{id: string, options: CascaderOption[]}>,
-    default: () => {},
   }
 });
 
@@ -106,18 +98,33 @@ const emits = defineEmits(['close', 'confirm']);
 
 // 图片数据
 const pictures = ref<Image[]>([]);
-// 搜索关键字
-const search = ref('');
-// 表格实例
-const table = ref<null | InstanceType<typeof ElTable>>();
 // 上传图片对话框是否可见
 const isUploadImageDialogVisible = ref(false);
-// 当前选中的行
-const currentRow = ref<Image>();
-// 类型标签
-const typeLabels = ref<Record<string, string>>(props.labels);
-// 级联选择框选项
-const cascaderOptions = ref({} as {id: string, options: CascaderOption[]});
+
+// el-table 表格 hook
+const {
+  // 表格实例
+  table,
+  // 搜索字段
+  search,
+  // 当前单选选中行
+  currentRow,
+  // 处理单选
+  handleCurrentChange,
+  // 处理过滤
+  handleFilter,
+} = useElTableHooks<Image>();
+
+// 类型级联选择框 hook
+const {
+  // 级联选择框选项
+  cascaderOptions,
+  // 类型标签
+  typeLabels,
+  // 获取级联选择框相关数据
+  getCascaderOptions
+} = useCascaderType(Type.Image);
+
 // 筛选类型
 const filterType = computed(() => {
   const types: string[] = []
@@ -164,15 +171,6 @@ const successUpload = () => {
   isUploadImageDialogVisible.value = false
 };
 
-// 获取标签
-const getLabelsAndCascaderOptions = async () => {
-  const { data } = await getCascaderType('image');
-  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
-  typeLabels.value = data.labels;
-  cascaderOptions.value.id = data.id;
-  cascaderOptions.value.options = data.options;
-}
-
 // 处理关闭对话框
 const handleClose = () => {
   emits('close');
@@ -182,19 +180,6 @@ const handleConfirm = () => {
   const selectedRows = table.value?.getSelectionRows() as Image[];
   emits('confirm', isEditing.value ? currentRow.value : selectedRows);
 };
-// 处理单选
-const handleCurrentChange  = (val:Image) => {
-  currentRow.value = val
-}
-// 处理筛选
-const handleFilter = (
-  value: string,
-  row: Image,
-  column: TableColumnCtx<Image>
-) => {
-  const property = column['property'] as keyof Image; 
-  return row[property] === value
-}
 
 onMounted(() => {
   if(
@@ -203,7 +188,7 @@ onMounted(() => {
     !cascaderOptions.value.options ||
     Object.keys(cascaderOptions.value.options).length
   ) {
-    getLabelsAndCascaderOptions();
+    getCascaderOptions();
   }
 })
 

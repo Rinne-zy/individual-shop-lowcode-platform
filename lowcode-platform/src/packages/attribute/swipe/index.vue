@@ -135,7 +135,10 @@ const handleConfirm = (selectedImages: Image[] | Image) => {
   const swipeItems = (selectedComponent.value.propValue as unknown as SwipePropValue).swipeItems;
   // 非更改图片情况下添加图片
   if(Array.isArray(selectedImages)) {
-    selectedImages.forEach((image) => {
+    const { length } = swipeItems;
+    selectedImages.forEach((image, index) => {
+      // 若超过限制数目直接剪枝
+      if((length + index + 1) > maxImagesNumber) return;
       swipeItems.push({
         src: image.src,
       });

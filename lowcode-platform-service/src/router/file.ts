@@ -7,6 +7,7 @@ const router = new KoaRouter();
 // 上传图片
 router.post('/image/upload', async (ctx) => {
   const { username } = ctx.state.userInfo;
+  const { type } = ctx.request.body;
   const files = ctx.request.files;
 
   if(!files) throw new Error('上传图片错误');
@@ -15,7 +16,7 @@ router.post('/image/upload', async (ctx) => {
   // 文件名
   const name = ctx.request.body.name || (files.file as File).originalFilename;
 
-  const res = await saveImage(ctx.origin, username, name, files);
+  const res = await saveImage(ctx.origin, username, name, type ,files);
   ctx.body = res;
 });
 

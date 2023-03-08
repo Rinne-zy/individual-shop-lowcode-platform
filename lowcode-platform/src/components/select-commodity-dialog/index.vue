@@ -21,6 +21,7 @@
       style="width: 100%;"
       height="630"
       :data="commoditiesNeedToShow"
+      @current-change="handleCurrentChange"
     >
       <el-table-column type="selection" width="65" />
       <el-table-column prop="name" label="商品名称" width="300" >
@@ -36,7 +37,7 @@
         label="商品"
         width="150"
         :filters="filterType"
-        :filter-method="handlerFilter"
+        :filter-method="handleFilter"
       >
         <template #default="scope">
           {{ typeLabels[scope.row.type] }}
@@ -55,7 +56,7 @@
         label="状态"
         width="150"
         :filters="filterStatus"
-        :filter-method="handlerFilter"
+        :filter-method="handleFilter"
       >
         <template #default="scope">
           <el-tag v-if="scope.row.status === 0" type="info">仓库中</el-tag>
@@ -73,7 +74,6 @@
     <create-commodity-dialog
       ref="dialog"
       :is-visible="isVisible"
-      :is-editing="isEditing"
       :cascader-options="cascaderOptions"
       :labels="typeLabels"
       @update-cascader-options="handleUpdateCascaderOptions"
@@ -85,30 +85,37 @@
 
 <script setup lang="ts">
 import { ElTable, ElTableColumn, ElButton, ElInput, ElTag } from 'element-plus';
-import type { TableColumnCtx, CascaderOption } from 'element-plus';
 import { computed, ref } from 'vue';
 
 import CreateCommodityDialog from 'lowcode-platform/components/create-commodity-dialog/index.vue';
-import { getCascaderType } from 'lowcode-platform/api/type/index';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { CommodityStatus, getCommodities } from 'lowcode-platform/api/commodity';
 import type { Commodity } from 'lowcode-platform/api/commodity';
 import { getDate } from 'lowcode-platform/utils/time';
+import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
+import { useElTableHooks } from 'lowcode-platform/hooks/use-el-table-hook';
+import { Type } from 'lowcode-platform/store/type-store';
 
-// 搜索关键字
-const search = ref('');
-const isVisible = ref(false);
+// 商品
 const commodities = ref([] as Commodity[]);
-// 类型标签
-const typeLabels = ref<Record<string, string>>({});
-// 级联选择框选项
-const cascaderOptions = ref({} as {id: string, options: CascaderOption[]});
+// 新建商品对话框是否可见
+const isVisible = ref(false);
+// 新建商品对话框实例
 const dialog = ref<InstanceType<typeof CreateCommodityDialog> | null>(null);
-const table = ref<InstanceType<typeof ElTable> | null>(null);
-// 是否处于编辑数据状态
-const isEditing = ref(false);
-// 正在编辑状态的下标
-let isEditingIndex = -1;
+// 使用 el-table 的 hook
+const {
+  // 表格实例
+  table,
+  // 搜索关键字
+  search,
+  // 当前单选选中行
+  currentRow,
+  // 处理单选
+  handleCurrentChange,
+  // 处理过滤
+  handleFilter,
+} = useElTableHooks<Commodity>();
+
 // 需要展示的商品
 const commoditiesNeedToShow = computed(() => {
   if(!search.value) {
@@ -116,7 +123,20 @@ const commoditiesNeedToShow = computed(() => {
   }
 
   return commodities.value.filter((commodity) => commodity.name.includes(search.value));
-})
+});
+
+// 类型级联选择框 hook
+const {
+  // 级联选择框选项
+  cascaderOptions,
+  // 类型标签
+  typeLabels,
+  // 获取级联选择框相关数据
+  getCascaderOptions
+} = useCascaderType(Type.Commodity);
+
+getCascaderOptions();
+
 // 筛选类型
 const filterType = computed(() => {
   const types: string[] = []
@@ -146,15 +166,6 @@ const filterStatus = [
   },
 ]
 
-// 获取级联选项
-const getCascaderOptions = async () => {
-  const { data } = await getCascaderType('commodity');
-  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
-  cascaderOptions.value.id = data.id;
-  cascaderOptions.value.options = data.options;
-  typeLabels.value = data.labels;
-};
-getCascaderOptions();
 // 获取商城
 const getCommoditiesFromNetWork = async () => {
   const { data } = await getCommodities();
@@ -167,24 +178,12 @@ getCommoditiesFromNetWork();
 const handleUpdateCascaderOptions = async () => {
  await getCascaderOptions();
  await getCommoditiesFromNetWork();
- if(isEditingIndex === -1) return;
- const commodity = commodities.value[isEditingIndex];
- dialog.value?.setUploadForm(commodity);
 };
+
 // 处理确认新增商品或者更新商品
 const handleConfirm = () => {
   isVisible.value = false;
   getCommoditiesFromNetWork();
-};
-// 处理表格筛选
-const handlerFilter = <T>(
-  value: string | number,
-  row: T,
-  column: TableColumnCtx<T>
-) => {
-  const property = column['property'] as keyof T;
-  // 由于 filter 必须为 string，因此需要转换类型为字符串
-  return `${row[property]}`=== value
 };
 </script>
 

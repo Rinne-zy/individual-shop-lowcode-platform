@@ -73,6 +73,8 @@ import { updateImage, uploadImage as upload } from 'lowcode-platform/api/image/i
 import { StatusCode } from 'lowcode-platform/api/type';
 import { showSuccessMessage, showErrorMessage } from 'lowcode-platform/utils/toast';
 import { deleteCascaderType, updateCascaderType } from 'lowcode-platform/api/type/index';
+import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
+import { Type } from 'lowcode-platform/store/type-store';
 
 const props = defineProps({
   // 是否可见
@@ -84,11 +86,6 @@ const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false,
-  },
-  // 级联选择框选项
-  cascaderOptions: {
-    type: Object as PropType<{id: string, options: CascaderOption[]}>,
-    default: () => {},
   }
 })
 
@@ -132,7 +129,7 @@ const manageTypeDialogRef = ref<InstanceType<typeof ManageTypeDialog> | null>();
 // 分类管理对话框
 const isTypeDialogVisible = ref(false);
 // 级联选择选项
-const cascaderOptions = computed(() => props.cascaderOptions);
+const { cascaderOptions } = useCascaderType(Type.Image);
 
 // 图片上传钩子
 const {
@@ -185,6 +182,7 @@ const validateForm = async (formEl: FormInstance | undefined) => {
 const resetForm = () => {
   uploadForm.name = '';
   uploadForm.src = '';
+  uploadForm.type = '';
   imageSrc.value = '';
   originFormData = {} as typeof uploadForm;
   // 清除校验
@@ -196,6 +194,7 @@ const handleUploadImage = async (options: UploadRequestOptions): Promise<unknown
   const formData = new FormData();
   formData.append("file", options.file);
   formData.append("name", uploadForm.name);
+  formData.append("type", uploadForm.type);
   try {
     const { data } = await upload(formData);
     if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
@@ -227,6 +226,7 @@ const handleUpdateImage = async (options: UploadRequestOptions) => {
   const formData = new FormData();
   formData.append("file", options.file);
   formData.append("name", uploadForm.name);
+  formData.append("type", uploadForm.type);
   try {
     const { data } = await updateImage(uploadForm.id, formData);
     if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
@@ -261,9 +261,6 @@ const handleUpdate = async () => {
 
 // 处理点击打开类型管理对话框
 const handleOpenTypeCreateDialog = async () => {
-  if(!cascaderOptions.value) {
-  
-  }
   manageTypeDialogRef.value?.setPropCascaderOption(cascaderOptions.value.options);
   isTypeDialogVisible.value = true;
 }

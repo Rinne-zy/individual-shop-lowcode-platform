@@ -37,7 +37,7 @@
         label="图片分类"
         width="300"
         :filters="filterType"
-        :filter-method="filterHandler"
+        :filter-method="handleFilter"
       >
         <template #default="scope">
           {{ typeLabels[scope.row.type] }}
@@ -89,7 +89,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { ElTable, ElTableColumn, ElImage, ElButton, ElPopconfirm, ElInput } from 'element-plus';
-import type { TableColumnCtx, CascaderOption } from 'element-plus';
 
 import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
 import { deleteImage, deleteImageByIds, getImages } from 'lowcode-platform/api/image';
@@ -97,22 +96,31 @@ import { StatusCode } from 'lowcode-platform/api/type';
 import type { Image } from 'lowcode-platform/api/image';
 import { getDate } from 'lowcode-platform/utils/time';
 import { showErrorMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
-import { getCascaderType } from 'lowcode-platform/api/type/index';
+import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
+import { useElTableHooks } from 'lowcode-platform/hooks/use-el-table-hook';
+import { Type } from 'lowcode-platform/store/type-store';
 
 // 图片数据
 const pictures = ref<Image[]>([]);
 // 上传对话框实例
 const dialog = ref<null | InstanceType<typeof UploadImageDialog>>(null);
-// 表格实例
-const table = ref<null | InstanceType<typeof ElTable>>();
-// 搜索关键字
-const search = ref('');
 // 对话框是否可见
 const isVisible = ref(false);
 // 是否处于编辑数据状态
 const isEditing = ref(false);
 // 正在编辑状态的下标
 let isEditingIndex = -1;
+
+// 使用 el-table 的 hook
+const {
+  // 表格实例
+  table,
+  // 搜索关键字
+  search,
+  // 处理过滤
+  handleFilter,
+} = useElTableHooks<Image>();
+
 // 需要展示的图片数据
 const picturesNeedToShow = computed(() => {
   if(!search.value) {
@@ -122,10 +130,17 @@ const picturesNeedToShow = computed(() => {
   return pictures.value.filter((picture) => picture.name.includes(search.value));
 });
 
-// 级联选择框选项
-const cascaderOptions = ref({} as {id: string, options: CascaderOption[]});
-// 类型标签
-const typeLabels = ref<Record<string, string>>({});
+// 类型级联选择框 hook
+const {
+  // 级联选择框选项
+  cascaderOptions,
+  // 类型标签
+  typeLabels,
+  // 获取级联选择框相关数据
+  getCascaderOptions
+} = useCascaderType(Type.Image);
+
+getCascaderOptions();
 
 // 筛选类型
 const filterType = computed(() => {
@@ -203,26 +218,6 @@ const successUpload = () => {
   isVisible.value = false;
   getPicture();
 }
-
-// 处理筛选
-const filterHandler = (
-  value: string,
-  row: Image,
-  column: TableColumnCtx<Image>
-) => {
-  const property = column['property'] as keyof Image; 
-  return row[property] === value
-}
-
-// 获取级联选项
-const getCascaderOptions = async () => {
-  const { data } = await getCascaderType('image');
-  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
-  cascaderOptions.value.id = data.id;
-  cascaderOptions.value.options = data.options;
-  typeLabels.value = data.labels;
-};
-getCascaderOptions();
 
 // 处理更新级联选择框
 const handleUpdateCascaderOptions = async () => {

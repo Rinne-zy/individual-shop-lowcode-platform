@@ -33,12 +33,14 @@
 import { computed, ref } from 'vue';
 import { ElCollapse, ElCollapseItem } from 'element-plus';
 
-import { initComponentsMaterialStore } from 'lowcode-platform/hooks/use-components-material-init-hook';
 import Material from '../material/index.vue';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
-import { MaterialType } from 'lowcode-platform/store/material-store';
+import { MaterialType, useComponentsMaterialStore } from 'lowcode-platform/store/material-store';
 
-const store = initComponentsMaterialStore();
+// 初始化物料 store
+const store = useComponentsMaterialStore();
+store.init();
+// schema store
 const schemaStore = useSchemaStore();
 
 // 是否可拖拽
