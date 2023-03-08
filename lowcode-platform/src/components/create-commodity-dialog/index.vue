@@ -93,7 +93,7 @@
 
 <script setup lang="ts">
 import { ElForm, ElFormItem, ElDialog, ElButton, ElInput, ElCard, ElCascader, ElSlider } from 'element-plus';
-import { computed, PropType, reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import type { CascaderOption, FormInstance } from 'element-plus';
 
 import SelectImageDialog from 'lowcode-platform/components/select-image-dialog/index.vue';
@@ -101,16 +101,16 @@ import DraggableImageList from 'lowcode-platform/components/draggable-image-list
 import ManageTypeDialog from 'lowcode-platform/components/manage-type-dialog/index.vue';
 import type { Image } from 'lowcode-platform/api/image';
 import { getDate } from 'lowcode-platform/utils/time';
-import { CommodityStatus } from 'lowcode-platform/api/commodity';
 import { deleteCascaderType, updateCascaderType } from 'lowcode-platform/api/type/index';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { showSuccessMessage } from 'lowcode-platform/utils/toast';
 import deepcopy from 'deepcopy';
 import { addCommodity, updateCommodity } from 'lowcode-platform/api/commodity';
-import type { CommodityForm, Commodity } from 'lowcode-platform/api/commodity';
+import type { Commodity, CommodityForm } from 'lowcode-platform/store/commodity-store';
 import { compareTwoArrayIsSame } from 'lowcode-platform/utils/array';
 import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
 import { Type } from 'lowcode-platform/store/type-store';
+import { CommodityStatus } from 'lowcode-platform/store/commodity-store';
 
 const props = defineProps({
   isVisible: {

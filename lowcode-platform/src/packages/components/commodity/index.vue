@@ -16,15 +16,28 @@
         :style="commodityStyle"
       />
     </div>
+    <div v-if="commodities.length === 0" class="commodity one-line-one-commodity">
+      <card 
+        title="测试商品"
+        cover="/cover.png"
+        desc="我是测试商品的描述"
+        :price="100"
+        :origin-price="80"
+        :style="{
+          marinBottom: '10px'
+        }"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import type { PropType } from "vue";
 
 import Card from "./card/index.vue";
 import { Commodity, CommodityLayout, CommodityPropValue } from "./type";
+import { useCommodityStore } from "lowcode-platform/store/commodity-store";
 
 const props = defineProps({
   // 属性值
@@ -39,6 +52,9 @@ const props = defineProps({
   },
 });
 
+const commodityStore = useCommodityStore();
+const commodities = ref([] as Commodity[]);
+
 // 商品分类
 const commodityClass = computed(() => {
   switch (props.propValue.layout) {
@@ -51,14 +67,17 @@ const commodityClass = computed(() => {
   }
 });
 
-const ids = reactive([
-  "64006cddcfdd8e7bfdb35765",
-  "64017b9ca8b3a8639b52fda9",
-  "6401ed2bb6c69fc690a8115f",
-  "6401ed47b6c69fc690a81165",
-]);
+// 商品 id
+const ids = computed(() => props.propValue.commodities);
 
-const commodities = ref([] as Commodity[]);
+// 监听 id 的变化
+watch(
+  ids, 
+  async () => {
+    commodities.value = await commodityStore.getCommoditiesByIds(ids.value);
+  },
+  { deep: true, immediate: true }
+);
 
 // 商品之间的间距
 const commodityStyle = computed(() => {
@@ -79,22 +98,6 @@ const commodityStyle = computed(() => {
   }
 });
 
-// 根据 id 获取相应的商品
-const getCommoditiesByIds = async (ids: string[]) => {
-  const res = await fetch("http://localhost:3300/commodity/getByIds", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      ids,
-    }),
-  });
-  if (res.status !== 200 || !res.ok) throw new Error("服务器错误");
-  commodities.value = (await res.json()).commodities;
-};
-
-getCommoditiesByIds(ids);
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

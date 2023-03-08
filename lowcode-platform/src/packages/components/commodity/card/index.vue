@@ -33,7 +33,7 @@ import { computed, PropType } from "vue";
 const props = defineProps({
   type: {
     type: String as PropType<'vertical' | 'horizon' | 'inline'>,
-    default: 'vertical',
+    default: 'horizon',
   },
   cover: {
     type: String,
@@ -80,12 +80,14 @@ const cardClass = computed(() => {
   return props.type;
 });
 
+// 是否展示原价
 const isShowOriginPrice = computed(
   () => props.isShowOriginPrice && 
     props.type !== 'inline' && 
     props.price !== props.originPrice
 );
 
+// 是否展示详情
 const isShowDesc = computed(() => props.isShowDesc);
 </script>
 

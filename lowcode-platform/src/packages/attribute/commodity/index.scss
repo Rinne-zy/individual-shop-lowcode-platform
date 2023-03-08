@@ -1,0 +1,44 @@
+.select-commodity-area {
+  &-top {
+    padding: 0 5px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f7f7f7;
+  }
+  &-bottom {
+    background-color: #f7f7f7;
+    &-text {
+      padding: 10px 5px;
+      background-color: #f7f7f7;
+      font-size: 14px;
+    }
+  }
+}
+
+.draggable-commodity {
+  display: flex;
+  flex-wrap: wrap;
+  width: 356px;
+  margin-bottom: 20px;
+  &-image {
+    position: relative;
+    display: inline-block;
+    transition: all 0.2s ease-in-out;
+    .delete {
+      position: absolute;
+      text-align: center;
+      border-radius: 15px;
+      background-color: #fff;
+      color: red;
+      font-size: 10px;
+      top: -5px;
+      right: -5px
+      ;
+    }
+    .delete:hover {
+      cursor: initial;
+    }
+    &-image:hover {
+      cursor: grab;
+    }
+  }
+}

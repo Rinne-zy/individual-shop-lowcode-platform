@@ -100,6 +100,10 @@ const emits = defineEmits(['close', 'confirm']);
 const pictures = ref<Image[]>([]);
 // 上传图片对话框是否可见
 const isUploadImageDialogVisible = ref(false);
+// 当前选择框是否可见
+const isVisible = computed(() => props.isVisible);
+// 是否处于编辑状态，编辑状态则为单选模式
+const isEditing = computed(() => props.isEditing);
 
 // el-table 表格 hook
 const {
@@ -117,12 +121,8 @@ const {
 
 // 类型级联选择框 hook
 const {
-  // 级联选择框选项
-  cascaderOptions,
   // 类型标签
   typeLabels,
-  // 获取级联选择框相关数据
-  getCascaderOptions,
   // 初始化
   initCascaderType,
 } = useCascaderType(Type.Image);
@@ -157,12 +157,10 @@ const getRemotePictureSrc = async () => {
   pictures.value = data.images;
 };
 
-// 是否可见
-const isVisible = computed(() => props.isVisible);
-// 是否处于编辑状态，编辑状态则为单选模式
-const isEditing = computed(() => props.isEditing);
+// 监听可见获取图片
 const stopWatchVisible = watch(isVisible, () =>{
   if(isVisible.value) {
+    initCascaderType();
     getRemotePictureSrc();
   }
 })
@@ -182,10 +180,6 @@ const handleConfirm = () => {
   const selectedRows = table.value?.getSelectionRows() as Image[];
   emits('confirm', isEditing.value ? currentRow.value : selectedRows);
 };
-
-onMounted(() => {
-  initCascaderType()
-});
 
 onUnmounted(() => {
   stopWatchVisible();

@@ -66,7 +66,7 @@ export function useImagesDrag(
 
   // 处理拖拽结束
   const handleDragEnd = (e: DragEvent) => {
-    callbacks.dragStartCallback?.(e);
+    callbacks.dragEndCallback?.(e);
     draggingImageIndex.value = -1;
   };
 

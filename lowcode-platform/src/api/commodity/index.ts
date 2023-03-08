@@ -1,72 +1,7 @@
 import axios from "axios";
 
-import { BaseResp } from "../type";
-
-// 商品状态
-export enum CommodityStatus {
-  // 仓库中
-  OnStore = 0,
-	// 上架
-  OnSale = 1,
-  // 售罄
-  SoldOut = 2,
-}
-
-// 商品表单
-export interface CommodityForm {
-  // 商品 id
-  _id?: string;
-  // 商品名称
-  name: string;
-  // 商品封面
-  imagesSrc: { id: number, src: string}[];
-  // 商品描述
-  desc: string;
-  // 商品分类（用于商品分类展示）
-  type: string;
-  // 商品状态
-  status: CommodityStatus;
-  // 商品价格
-  price: number;
-  // 商品折扣
-  discount: number;
-  // 库存
-  stock: number;
-  // 运费
-  freight: number;
-  // 销量
-  sales: number;
-  // 添加时间
-  addTime: number;
-}
-
-// 商品分类
-export interface Commodity {
-  // 商品 id
-	_id: string;
-  // 商品名称
-  name: string;
-  // 商品封面
-  imagesSrc: string[];
-  // 商品描述
-  desc: string;
-  // 商品分类（用于商品分类展示）
-  type: string;
-  // 商品状态
-  status: CommodityStatus;
-  // 商品价格
-  price: number;
-  // 商品折扣
-  discount: number;
-  // 库存
-  stock: number;
-  // 运费
-  freight: number;
-  // 销量
-  sales: number;
-  // 添加时间
-  addTime: number;
-}
+import type { Commodity } from "lowcode-platform/store/commodity-store";
+import type { BaseResp } from "../type";
 
 export interface CommodityResp extends BaseResp {
   commodities: Commodity[];
@@ -150,6 +85,23 @@ export async function putCommodityOffShelves(id: string) {
     url: '/commodity/offShelves',
     data: {
       id,
+    }
+  });
+
+  return res;
+}
+
+/**
+ * 根据 id 获取商品
+ * @param ids 商品 _id
+ * @returns 
+ */
+export async function getCommoditiesByIds(ids: string[]) {
+  const res = await axios<CommodityResp>({
+    method: 'post',
+    url: '/commodity/getByIds',
+    data: {
+      ids,
     }
   });
 

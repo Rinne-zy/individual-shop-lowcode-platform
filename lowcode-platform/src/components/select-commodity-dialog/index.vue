@@ -1,5 +1,12 @@
 <template>
-  <div class="commodity-select">
+  <el-dialog
+    :model-value="isVisible"
+    title="商品选择"
+    width="80%"
+    :close-on-click-modal="false"
+    align-center
+    @close="handleClose"
+  >
     <div class="commodity-select-top">
       <!-- 搜索框 -->
       <el-input
@@ -13,7 +20,7 @@
       </el-input>
       <!-- 操作按钮 -->
       <div>
-        <el-button type="primary" @click=" isVisible = true">新增商品</el-button>
+        <el-button type="primary" @click=" isCreateDialogVisible = true">新增商品</el-button>
       </div>
     </div>
     <el-table
@@ -21,7 +28,6 @@
       style="width: 100%;"
       height="630"
       :data="commoditiesNeedToShow"
-      @current-change="handleCurrentChange"
     >
       <el-table-column type="selection" width="65" />
       <el-table-column prop="name" label="商品名称" width="300" >
@@ -70,36 +76,57 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 新建商品对话框 -->
-    <create-commodity-dialog
-      ref="dialog"
-      :is-visible="isVisible"
-      :cascader-options="cascaderOptions"
-      :labels="typeLabels"
-      @update-cascader-options="handleUpdateCascaderOptions"
-      @confirm="handleConfirm"
-      @cancel=" isVisible = false"
-    />
-  </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="handleClose">取消</el-button>
+        <el-button type="primary" @click="handleSelectConfirm">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>
+      <!-- 新建商品对话框 -->
+  <create-commodity-dialog
+    ref="dialog"
+    :is-visible="isCreateDialogVisible"
+    :cascader-options="cascaderOptions"
+    :labels="typeLabels"
+    @update-cascader-options="handleUpdateCascaderOptions"
+    @confirm="handleConfirm"
+    @cancel=" isCreateDialogVisible = false"
+  />
 </template>
 
 <script setup lang="ts">
-import { ElTable, ElTableColumn, ElButton, ElInput, ElTag } from 'element-plus';
+import { ElTable, ElTableColumn, ElButton, ElInput, ElTag, ElDialog } from 'element-plus';
 import { computed, ref } from 'vue';
+import type {  PropType } from 'vue';
 
 import CreateCommodityDialog from 'lowcode-platform/components/create-commodity-dialog/index.vue';
 import { StatusCode } from 'lowcode-platform/api/type';
-import { CommodityStatus, getCommodities } from 'lowcode-platform/api/commodity';
-import type { Commodity } from 'lowcode-platform/api/commodity';
+import { getCommodities } from 'lowcode-platform/api/commodity';
 import { getDate } from 'lowcode-platform/utils/time';
 import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
 import { useElTableHooks } from 'lowcode-platform/hooks/use-el-table-hook';
 import { Type } from 'lowcode-platform/store/type-store';
+import { CommodityStatus } from 'lowcode-platform/store/commodity-store';
+import type { Commodity } from 'lowcode-platform/store/commodity-store';
+
+const props = defineProps({
+  isVisible: {
+    type: Boolean,
+    default: false,
+  },
+  selectedIds: {
+    type: Array as PropType<string[]>,
+    default: false,
+  }
+});
+
+const emits = defineEmits(['close', 'confirm']);
 
 // 商品
 const commodities = ref([] as Commodity[]);
 // 新建商品对话框是否可见
-const isVisible = ref(false);
+const isCreateDialogVisible = ref(false);
 // 新建商品对话框实例
 const dialog = ref<InstanceType<typeof CreateCommodityDialog> | null>(null);
 // 使用 el-table 的 hook
@@ -108,21 +135,20 @@ const {
   table,
   // 搜索关键字
   search,
-  // 当前单选选中行
-  currentRow,
-  // 处理单选
-  handleCurrentChange,
   // 处理过滤
   handleFilter,
 } = useElTableHooks<Commodity>();
 
 // 需要展示的商品
 const commoditiesNeedToShow = computed(() => {
+  // 过滤已选择的商品
+  const leftCommodity = commodities.value.filter((commodity) => !props.selectedIds.includes(commodity._id));
+
   if(!search.value) {
-    return commodities.value;
+    return leftCommodity;
   }
 
-  return commodities.value.filter((commodity) => commodity.name.includes(search.value));
+  return leftCommodity.filter((commodity) => commodity.name.includes(search.value));
 });
 
 // 类型级联选择框 hook
@@ -182,8 +208,19 @@ const handleUpdateCascaderOptions = async () => {
 
 // 处理确认新增商品或者更新商品
 const handleConfirm = () => {
-  isVisible.value = false;
+  isCreateDialogVisible.value = false;
   getCommoditiesFromNetWork();
+};
+
+// 处理关闭对话框
+const handleClose = () => {
+  emits('close');
+};
+
+// 处理确认选择
+const handleSelectConfirm = () => {
+  const selectedRows = table.value?.getSelectionRows() as Commodity[];
+  emits('confirm', selectedRows);
 };
 </script>
 

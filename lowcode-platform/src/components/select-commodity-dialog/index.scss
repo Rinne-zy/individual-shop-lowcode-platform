@@ -1,7 +1,4 @@
 .commodity-select {
-  height: 100%;
-  background-color: #fff;
-  padding: 60px 20px 0;
   &-top {
     display: flex;
     flex-direction: row;
@@ -39,4 +36,20 @@
 .original-price {
   margin-top: 10px;
   text-decoration: line-through;
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  &-image {
+    position: relative;
+    display: inline-block;
+    transition: all 0.2s ease-in-out;
+    .delete:hover {
+      cursor: initial;
+    }
+  }
+  &-image:hover {
+    cursor: grab;
+  }
 }

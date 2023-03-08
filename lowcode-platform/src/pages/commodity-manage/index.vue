@@ -135,13 +135,14 @@ import { computed, ref } from 'vue';
 
 import CreateCommodityDialog from 'lowcode-platform/components/create-commodity-dialog/index.vue';
 import { StatusCode } from 'lowcode-platform/api/type';
-import { CommodityStatus, deleteCommodity, getCommodities, putCommodityOffShelves, putCommodityOnShelves } from 'lowcode-platform/api/commodity';
-import type { Commodity } from 'lowcode-platform/api/commodity';
+import {  deleteCommodity, getCommodities, putCommodityOffShelves, putCommodityOnShelves } from 'lowcode-platform/api/commodity';
 import { getDate } from 'lowcode-platform/utils/time';
 import { showErrorMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
 import { useCascaderType } from 'lowcode-platform/hooks/use-cascader-type-hook';
 import { useElTableHooks } from 'lowcode-platform/hooks/use-el-table-hook';
 import { Type } from 'lowcode-platform/store/type-store';
+import { useCommodityStore, CommodityStatus } from 'lowcode-platform/store/commodity-store';
+import type { Commodity } from 'lowcode-platform/store/commodity-store';
 
 // 商品
 const commodities = ref([] as Commodity[]);
@@ -215,9 +216,11 @@ const filterStatus = [
 
 // 获取商城
 const getCommoditiesFromNetWork = async () => {
+  const commodityStore = useCommodityStore();
   const { data } = await getCommodities();
   if (!data || data.code !== StatusCode.Success || !data.commodities) throw new Error(data.msg);
   commodities.value = data.commodities;
+  commodityStore.addCommodities(data.commodities);
 };
 getCommoditiesFromNetWork();
 
