@@ -122,7 +122,9 @@ const {
   // 类型标签
   typeLabels,
   // 获取级联选择框相关数据
-  getCascaderOptions
+  getCascaderOptions,
+  // 初始化
+  initCascaderType,
 } = useCascaderType(Type.Image);
 
 // 筛选类型
@@ -182,15 +184,8 @@ const handleConfirm = () => {
 };
 
 onMounted(() => {
-  if(
-    !typeLabels.value || 
-    Object.keys(typeLabels.value).length ||
-    !cascaderOptions.value.options ||
-    Object.keys(cascaderOptions.value.options).length
-  ) {
-    getCascaderOptions();
-  }
-})
+  initCascaderType()
+});
 
 onUnmounted(() => {
   stopWatchVisible();

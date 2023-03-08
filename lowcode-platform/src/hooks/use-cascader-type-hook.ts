@@ -1,5 +1,4 @@
 
-import { CascaderOption } from "element-plus";
 import { computed, ref } from "vue";
 
 import { useTypeStore } from './../store/type-store';
@@ -23,9 +22,21 @@ export function useCascaderType(type: Type) {
     typeStore.updatedOptions(type, data.id, data.options);
   };
 
+  const initCascaderType = async () => {
+    if(
+      !typeLabels.value || 
+      Object.keys(typeLabels.value).length ||
+      !cascaderOptions.value.options ||
+      Object.keys(cascaderOptions.value.options).length
+    ) {
+      await getCascaderOptions();
+    }
+  }
+
   return {
     cascaderOptions,
     typeLabels,
-    getCascaderOptions
+    getCascaderOptions,
+    initCascaderType,
   }
 }
