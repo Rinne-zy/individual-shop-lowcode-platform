@@ -18,7 +18,7 @@ import verifyToken from './middlewares/verify-token';
 const app = new Koa();
 // 跨域
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: '*',
   maxAge: 5 * 60 * 1000, //指定本次预检请求的有效期，单位为秒。
   credentials: true, //是否允许发送Cookie
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], //设置所允许的HTTP请求方法

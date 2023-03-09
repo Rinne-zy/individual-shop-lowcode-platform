@@ -1,0 +1,1 @@
+export const FETCH_URL_PREFIX = 'http://localhost:3300/';

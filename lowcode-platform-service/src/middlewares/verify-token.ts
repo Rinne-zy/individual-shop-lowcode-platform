@@ -6,12 +6,16 @@ import { verifyToken } from '../utils/jwt';
 const authWhiteList = [
   '/user/login',
   '/user/register',
-  '/commodity/getByIds'
+  '/commodity/getByIds',
+  '/schema/getById',
 ]
 
 // 校验 token
 export default async (ctx: Context, next: Next) => {
-  if(!authWhiteList.includes(ctx.url) && !isStaticAssets(ctx.url)) {
+  // 去掉后续的 query
+  const url = ctx.url.split('?')[0];
+
+  if(!authWhiteList.includes(url) && !isStaticAssets(url)) {
     const userInfo = verifyToken(ctx, ctx.header.authorization || '');
     // 设置传递的用户信息
     ctx.state.userInfo = userInfo;

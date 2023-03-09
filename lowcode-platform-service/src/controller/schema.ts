@@ -56,6 +56,21 @@ export async function getByUsername(username: string) {
 }
 
 /**
+ * 根据 id 获取 schema
+ * @param id 商城 id
+ * @returns 
+ */
+export async function getSchemaById(id: string) {
+ const shopSchema = await ShopSchema.findById(id);
+
+  return {
+    code: StatusCode.Success,
+    shop: shopSchema,
+    msg: '获取商城成功',
+  }
+}
+
+/**
  * 根据 id 更新商城 schema
  * @param id 商城 id
  * @param name 商城名称

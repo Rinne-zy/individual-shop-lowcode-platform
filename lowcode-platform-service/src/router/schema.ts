@@ -1,5 +1,5 @@
 import KoaRouter from 'koa-router';
-import { createSchema, getByUsername, updatedSchemaById } from '../controller/schema';
+import { createSchema, getByUsername, getSchemaById, updatedSchemaById } from '../controller/schema';
 
 const router = new KoaRouter();
 
@@ -23,6 +23,13 @@ router.get('/schema/get', async (ctx) => {
 router.post('/schema/updateById', async (ctx) => {
   const { id, name, schema } = ctx.request.body;
   const res = await updatedSchemaById(id, name, schema);
+  ctx.body = res;
+})
+
+// 获取该用户下的所有商城 schema
+router.get('/schema/getById', async (ctx) => {
+  const { id } = ctx.query;
+  const res = await getSchemaById(id as string);
   ctx.body = res;
 })
 
