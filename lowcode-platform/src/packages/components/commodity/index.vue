@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div class="commodity" :class="[propValue.layout]">
+    <!-- 一行一列或一行多列 -->
+    <div 
+      v-if="propValue.layout !== CommodityLayout.Two" 
+      class="commodity" 
+      :class="[propValue.layout]"
+    >
       <card
         v-for="commodity in commodities"
         :key="commodity._id"
@@ -16,7 +21,35 @@
         :style="commodityStyle"
       />
     </div>
-    <div v-if="commodities.length === 0" class="commodity one-line-one-commodity">
+    <!-- 一行两列 -->
+    <div 
+      v-else
+      class="row"
+    >
+      <div class="column" 
+        v-for="data in columnCommodities" 
+        :style="commodityStyle"
+      >
+        <card
+          v-for="commodity in data"
+          :key="commodity._id"
+          :title="commodity.name"
+          :cover="commodity.imagesSrc[0]"
+          :type="commodityClass"
+          :desc="commodity.desc"
+          :price="commodity.price * commodity.discount * 0.01"
+          :origin-price="commodity.price"
+          :is-show-origin-price="propValue.isShowOriginPrice"
+          :is-show-desc="propValue.isShowDesc"
+          :class="{ round: propValue.isRound }"
+          :style="{ marginBottom: `${propValue.padding}px`}"
+        />
+      </div>
+    </div>
+    <div 
+      v-if="commodities.length === 0" 
+      class="commodity one-line-one-commodity"
+    >
       <card 
         title="测试商品"
         cover="/cover.png"
@@ -88,14 +121,23 @@ const commodityStyle = computed(() => {
       };
     case CommodityLayout.Two:
       return {
-        width: `calc((100% - ${props.propValue.padding}px) / 2)`,
-        height: "300px",
+        width: `calc((100% - ${props.propValue.padding}px) / 2)`
       };
     case CommodityLayout.Inline:
       return {
         marginRight: `${props.propValue.padding}px`,
       };
   }
+});
+
+// 一行两列分组
+const columnCommodities = computed(() => {
+  const columns = [[], []] as Array<Commodity[]>;
+  commodities.value.forEach((column, index) => {
+    const i = index % 2;
+    columns[i].push(column);
+  });
+  return columns;
 });
 
 </script>

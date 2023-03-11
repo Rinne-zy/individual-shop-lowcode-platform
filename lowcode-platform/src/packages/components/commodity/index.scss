@@ -7,6 +7,7 @@
   display: flex;
   max-width: 100%;
   flex-direction: column;
+  background-color: #fff;
 }
 
 // 一行两个
@@ -16,6 +17,7 @@
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
+  background-color: #fff;
 }
 
 // 行内展示
@@ -25,6 +27,7 @@
   overflow: auto;
   scrollbar-width: none; /* firefox */
   -ms-overflow-style: none; /* IE 10+ */
+  background-color: #fff;
 }
 
 // 去掉滚动条
@@ -34,4 +37,14 @@
 
 .round {
   border-radius: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
 }

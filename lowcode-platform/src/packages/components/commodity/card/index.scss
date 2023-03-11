@@ -7,6 +7,9 @@
   .img {
     width: 125px;
   }
+  .info {
+    flex: 1;
+  }
   .desc {
     font-size: 12px;
     position: relative;
@@ -27,7 +30,6 @@
   display: flex;
   background-color: #fff;
   flex-direction: column;
-  justify-content: space-between;
   font-size: 12px;
   overflow: hidden;
   .img {
@@ -64,7 +66,6 @@
   display: flex;
   flex-direction: column;
   padding: 5px 10px;
-  flex: 1;
   background-color: #fff;
   .title {
     font-size: 14px;
@@ -129,4 +130,7 @@
 .inline {
   flex-basis: 120px;
   flex-shrink: 0;
+  .img {
+    height: 100%;
+  }
 }
