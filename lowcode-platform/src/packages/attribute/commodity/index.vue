@@ -163,7 +163,7 @@ const selectedText = computed(() => `已选商品${ids.value.length}/${maxSelect
 const images = ref([] as DraggableImage[]);
 // 监听 id 的变化更新图片
 const unWatch = watch(
-  ids,
+  ids.value,
   async () => {
     const commodities = await commodityStore.getCommoditiesByIds(ids.value);
     const newImages = commodities.map((commodity, index) => ({

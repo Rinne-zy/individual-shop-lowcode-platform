@@ -1,10 +1,11 @@
 <template>
   <div>
-    H5 渲染器
+    <schemaRenderer />
   </div>
 </template>
 
 <script setup lang="ts">
+import schemaRenderer from 'lowcode-platform-h5-renderer/components/schema-renderer/index.vue';
 import { getSchemaById } from 'lowcode-platform-h5-renderer/api/get-schema';
 import { useSchemaStore } from 'lowcode-platform-h5-renderer/store/schema';
 

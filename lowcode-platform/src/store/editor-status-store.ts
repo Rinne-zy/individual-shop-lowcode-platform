@@ -148,7 +148,6 @@ export const useEditorStatusStore = defineStore('editorStatus', {
             );
 
             // 更新辅助线样式
-            this.lineStatus.yc.style
             this.lineStatus[condition.line].style[pos] = `${condition.linePos}px`;
             needToShow[condition.line] = true;
             if(Object.keys(needToShow).length) {

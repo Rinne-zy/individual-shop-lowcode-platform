@@ -1,5 +1,5 @@
 import { CommonStyleSchema } from "lowcode-platform/packages/types";
-import type { Point } from "./position";
+import type { Point } from "./point";
 
 /**
  * 获取旋转角正角

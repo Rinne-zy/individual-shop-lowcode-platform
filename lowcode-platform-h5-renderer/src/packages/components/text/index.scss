@@ -1,0 +1,9 @@
+.text {
+  max-width: 100%;
+}
+
+.nowarp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
