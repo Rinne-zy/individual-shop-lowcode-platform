@@ -1,27 +1,29 @@
 <template>
   <div>
-    <schemaRenderer />
+    <router-view />
+    <tabbar />
   </div>
 </template>
 
 <script setup lang="ts">
-import schemaRenderer from 'lowcode-platform-h5-renderer/components/schema-renderer/index.vue';
+import Tabbar from 'lowcode-platform-h5-renderer/components/tabbar/index.vue';
 import { getSchemaById } from 'lowcode-platform-h5-renderer/api/get-schema';
-import { useSchemaStore } from 'lowcode-platform-h5-renderer/store/schema';
+import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 
 // schema 存储 store
-const schemaStore = useSchemaStore();
+const shopStore = useShopStore();
 
 // 初始化
 const init = async () => {
   const query = new URLSearchParams(location.search);
-  const id = query.get('id');
+  // 获取 query 中和 store 中的 id 值
+  const id = query.get('id') || shopStore._id;
   if(!id) return;
 
   const { _id, name, schema } = await getSchemaById(id);
   if(!_id || !name || !schema) return;
 
-  schemaStore.initSchemaStore(_id, name, schema);
+  shopStore.initSchemaStore(_id, name, schema);
   document.title = name;
 };
 init();

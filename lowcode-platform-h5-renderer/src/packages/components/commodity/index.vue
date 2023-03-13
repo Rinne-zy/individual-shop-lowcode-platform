@@ -42,7 +42,7 @@
           :is-show-origin-price="propValue.isShowOriginPrice"
           :is-show-desc="propValue.isShowDesc"
           :class="{ round: propValue.isRound }"
-          :style="{ marginBottom: `${propValue.padding}px`}"
+          :style="{ marginBottom: `${propValue.padding + 5}px`}"
         />
       </div>
     </div>
