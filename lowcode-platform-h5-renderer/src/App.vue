@@ -1,12 +1,10 @@
 <template>
   <div>
     <router-view />
-    <tabbar />
   </div>
 </template>
 
 <script setup lang="ts">
-import Tabbar from 'lowcode-platform-h5-renderer/components/tabbar/index.vue';
 import { getSchemaById } from 'lowcode-platform-h5-renderer/api/get-schema';
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 

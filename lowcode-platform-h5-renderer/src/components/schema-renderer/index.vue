@@ -5,7 +5,6 @@
     <div
       v-for="component in components"
       :key="component.id"
-      ref="componentsRef"
       :style="getComponentStyleToViewPort(component.style)"
       :class="[ isFixedMode ? 'fixedLayout' : 'sequentialLayout']"
     >
@@ -32,8 +31,6 @@ const shopStore = useShopStore();
 const components = computed(() => shopStore.schema.components);
 // 是否为固定定位
 const isFixedMode = computed(() => shopStore.isFixLayoutMode());
-// 渲染器
-const renderer = ref<HTMLElement | undefined>();
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

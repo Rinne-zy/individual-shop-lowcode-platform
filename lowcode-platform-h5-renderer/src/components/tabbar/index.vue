@@ -16,10 +16,11 @@
 
 <script setup lang="ts">
 import { Tabbar, TabbarItem } from 'vant';
+import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 import { TabbarItem as item } from 'lowcode-platform-h5-renderer/type/index';
-import { useRouter } from 'vue-router';
 
 const shop = useShopStore();
 const router  = useRouter();
@@ -33,7 +34,22 @@ const labelTextByItem = {
 
 const handleTabbarChange = (value: string) => {
   router.push(`/${value}`);
+};
+
+// 根据路径名称获取对应的 item
+const tabbarItemByPathName:Record<string, item> = {
+  'home': item.Home,
+  'cart': item.Cart,
+  'info': item.User,
 }
+
+onMounted(() => {
+  const path = location.pathname.split('/')[1];
+  const tabbarItem = tabbarItemByPathName[path];
+  if(!tabbarItem) return;
+  shop.activeTabbar = tabbarItem;
+})
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>
