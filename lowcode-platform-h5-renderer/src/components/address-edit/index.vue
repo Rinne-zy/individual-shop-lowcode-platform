@@ -39,7 +39,8 @@
         />
       </van-cell-group>
       <van-cell-group inset class="address-default-switch">
-        <van-field 
+        <van-field
+          v-model="addressInfo.areaCode"
           name="isDefault"
           label="是否设置为默认地址"
           label-width="14.2rem"
@@ -109,7 +110,8 @@ import {
   CellGroup as VanCellGroup,
   Popup as VanPopup,
   Area as VanArea,
-  Switch as VanSwitch
+  Switch as VanSwitch,
+  showConfirmDialog
 } from 'vant';
 import type { AddressEditInfo } from 'vant';
 import { areaList } from '@vant/area-data';
@@ -118,7 +120,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { AddressInfo } from 'lowcode-platform-h5-renderer/type/address';
 
-defineProps({
+const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false,
@@ -156,7 +158,7 @@ const addressInfo = reactive<AddressInfo>({...defaultAddress});
 const isShowAreaPicker = ref(false);
 // 地区信息 info
 const areaInfo = computed(
-  () => `${addressInfo.city === addressInfo.province ? addressInfo.province : addressInfo.city}${addressInfo.county}`
+  () => `${addressInfo.city === addressInfo.province ? addressInfo.province : addressInfo.city}${addressInfo.county}${addressInfo.addressDetail}`
 );
 
 // 校验地区信息
@@ -181,12 +183,23 @@ const handleSelectConfirmArea = (value: any) => {
 
 // 确定
 const handleSubmit = () => {
-  addressInfo.id = uuidv4();
+  if(props.isEditing &&!addressInfo.id) {
+    addressInfo.id = uuidv4();
+  }
   emits('confirm', addressInfo);
 };
 // 删除
 const handleDelete = () => {
-  emits('delete');
+  showConfirmDialog({
+  title: '删除',
+  message:
+    `是否删除当选中的地址: ${areaInfo.value}`,
+  })
+  .then(() => {
+    emits('delete', addressInfo.id);
+  })
+  .catch(() => {
+  });
 };
 
 </script>

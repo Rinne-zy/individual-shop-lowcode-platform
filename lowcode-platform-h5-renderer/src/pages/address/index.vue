@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="address">
     <nav-bar 
       title="选择地址"
       left-arrow
@@ -36,31 +36,37 @@
 
 <script setup lang="ts">
 import { AddressList as VanAddressList, Popup, NavBar } from 'vant';
-import type { AddressListAddress, AddressEditInfo } from 'vant';
-import { ref, reactive, computed } from 'vue';
-import deepcopy from 'deepcopy';
+import type { AddressListAddress } from 'vant';
+import { ref, reactive, computed, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AddressEdit from 'lowcode-platform-h5-renderer/components/address-edit/index.vue';
-import type { AddressInfo } from 'lowcode-platform-h5-renderer/type/address';
+import type { AddressInfo, UserAddress } from 'lowcode-platform-h5-renderer/type/address';
+import { addAddressInfo, deleteAddressInfo, getAddressInfo, selectAddressInfo, updateAddressInfo } from 'lowcode-platform-h5-renderer/api/address'
 
 // 路由
 const router = useRouter();
-
+// 用户地址记录
+const userAddress = reactive<UserAddress>({
+  _id: '',
+  username: '',
+  selectedAddressId: '',
+  defaultAddressId: '',
+  address: [],
+});
+// 默认地址
+const defaultAddressId = computed(() => userAddress.defaultAddressId)
 // 当前选择的地址
-const chosenAddressId = ref(0);
-// 地址详情信息
-const address = reactive<AddressInfo[]>([]);
-
+const chosenAddressId = computed(() => userAddress.selectedAddressId);
 // 用于展示的地址选择器列表
-const addressList = computed(() => address.map((address) => {
-  const { name, tel, county, city, isDefault, province, addressDetail, id } = address;
+const addressList = computed(() => userAddress.address.map((address) => {
+  const { name, tel, county, city, province, addressDetail, id } = address;
   return {
     id,
     name,
     tel,
     address: `${city === province ? province : `${province}${city}`}${county}${addressDetail}`,
-    isDefault: isDefault || false,
+    isDefault: defaultAddressId.value === id,
   }
 }));
 
@@ -78,20 +84,38 @@ const handleAddAddress = () => {
   isShowEditAddressPopUp.value = true;
 };
 
+let isClickSelect = false;
 // 选择地址
-const handleSelectAddress = (item: AddressListAddress, index: number) => {
-  console.log('item', item, index);
-  // TODO: 接口修改选择地址
-  router.push('/cart')
+const handleSelectAddress = async (item: AddressListAddress) => {
+  // 已选中相同不进行操作
+  if(item.id === chosenAddressId.value) {
+    return;
+  }
+
+  // 节流
+  if(isClickSelect) {
+    return;
+  };
+
+  isClickSelect = true;
+  await selectAddressInfo(userAddress._id, `${item.id}`);
+  isClickSelect = false;
+  router.push('/cart');
 };
 
 // 处理编辑地址
 const handleEditAddress = (item: AddressListAddress, index: number) => {
   // 设置正在编辑的数据
   isEditingIndex = index;
-  addressEditRef.value?.setAddressInfo(address[isEditingIndex]);
   isEditing.value = true;
   isShowEditAddressPopUp.value = true;
+  // 由于此处 popUp 懒加载原因，因此需要在 nextTick 时才能获取到 domRef
+  nextTick(() => {
+    addressEditRef.value?.setAddressInfo({
+      ...userAddress.address[isEditingIndex],
+      isDefault: userAddress.address[isEditingIndex].id === defaultAddressId.value
+    });
+  })
 };
 
 // 重置正在编辑状态
@@ -103,25 +127,31 @@ const resetEditingStatus = () => {
 };
 
 // 处理添加
-const handleSaveAddress = (info: AddressInfo) => {
-  // TODO: 设置默认地址需要重置其余的选择
+const handleSaveAddress =  async (info: AddressInfo) => {
   if(!isEditing.value){
-    // TODO: 后续代替为网络请求
-    address.push(deepcopy(info));
+    await addAddressInfo(info);
   } else {
-      // TODO: 后续代替为网络请求
-    address[isEditingIndex] = deepcopy(info);
+    await updateAddressInfo(userAddress._id, info);
   }
+  getAddress();
   resetEditingStatus();
 };
 
 // 处理删除
-const handleDeleteAddress = () => {
-  // TODO: 使用接口代替删除
-  address.splice(isEditingIndex, 1);
+const handleDeleteAddress = async (id: string) => {
+  if(!id) return
+  await deleteAddressInfo(userAddress._id, id);
   resetEditingStatus();
+  getAddress();
 };
 
+// 获取地址
+const getAddress = async () => {
+  const info = await getAddressInfo();
+  if(!info) return;
+  Object.assign(userAddress, info);
+};
+getAddress();
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>
