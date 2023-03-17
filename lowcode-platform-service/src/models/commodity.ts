@@ -36,7 +36,7 @@ export interface Commodity {
   addTime: number;
 };
 
-// 图片信息 Schema
+// 商品 Schema
 const commoditySchema = new Schema<Commodity>({
   username: String,
   name: String,

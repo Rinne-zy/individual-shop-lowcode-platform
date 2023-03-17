@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 import { getComponentStyleToViewPort } from 'lowcode-platform-h5-renderer/utils/style';
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';

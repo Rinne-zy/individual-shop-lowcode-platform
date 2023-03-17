@@ -4,6 +4,7 @@ import { defineStore } from 'pinia';
 import type { Schema, ComponentsSchema } from 'lowcode-platform-h5-renderer/type/schema';
 import { EditorLayoutMode } from 'lowcode-platform-h5-renderer/type/schema';
 import { TabbarItem } from 'lowcode-platform-h5-renderer/type/index';
+import { getSchemaById } from 'lowcode-platform-h5-renderer/api/get-schema';
 
 // schema store 属性
 export interface ShopStore {
@@ -18,7 +19,6 @@ export interface ShopStore {
   // 激活的 tabbar
   activeTabbar: TabbarItem,
 }
-
 
 export const useShopStore = defineStore('shop', {
   state: (): ShopStore => ({
@@ -51,5 +51,16 @@ export const useShopStore = defineStore('shop', {
      isFixLayoutMode() {
       return this.schema.editor.mode === EditorLayoutMode.Fixed;
     },
+    /** 获取商城组件并注册 */
+    async getComponents() {
+      const { schema } = await getSchemaById(this._id);
+      if(!schema) return;
+      this.schema = schema;
+      schema.components.forEach((component) => {
+        const { key } = component;
+        if(this.components.has(key)) return;
+        this.components.set(key, defineAsyncComponent(() => import(`lowcode-platform-h5-renderer/packages/components/${key.toLocaleLowerCase()}/index.vue`)))
+      })
+    }
   }
 });

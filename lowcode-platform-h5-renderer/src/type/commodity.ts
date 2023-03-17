@@ -7,8 +7,9 @@ export enum CommodityStatus {
   // 售罄
   SoldOut = 2,
 }
-// 商品信息
-export interface Commodity {
+
+// 后台返回的购物车商品信息
+export interface CommodityInfo {
 	// 商品 id
 	_id: string;
 	// 商品名称
@@ -25,14 +26,30 @@ export interface Commodity {
   status: CommodityStatus;
   // 是否被选中
   selected: boolean;
+  // 是否被选中
+  addTime: number
+};
+
+// 后台返回的购物车商城信息
+export interface ShopInfo {
+	// 商城 id
+	_id: string;
+	// 商城名称
+	name: string;
+  // 最近添加商品时间
+  modified: number;
+	// 商品
+	commodities: CommodityInfo[]
 }
 
-// 后端组装返回的
+// 后台返回的购物车信息
 export interface ShoppingCartInfo {
 	// 购物车唯一 id
 	_id: string;
 	// 用户名
 	username: string;
 	// 商品，key 为 商城 id-name
-	commodities: Record<string, Commodity[]>
+	shops: ShopInfo[],
+	// 总价
+	totalPrice: number,
 }

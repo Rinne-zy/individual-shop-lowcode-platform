@@ -1,25 +1,41 @@
 <template>
   <div class="shopping-cart">
-    <address-item :address-info="addressInfo"/>
-    <shopping-cart-card
-      v-for="(cartInfo, key) in data.commodities"
-      :key="key"
-      :title="key.split('-')[1]"
-      :id="key.split('-')[0]"
-      :commodities="cartInfo"
-    />
-   
+   <div class="shopping-content">
+      <address-item :address-info="addressInfo"/>
+      <shopping-cart-card
+        class="shopping-content-card"
+        v-for="shop in shopsOrderByAddTime"
+        :key="shop._id"
+        :title="shop.name"
+        :id="shop._id"
+        :cart-id="shoppingCart._id"
+        :commodities="shop.commodities"
+        @change-commodity-num="handleChangeCommodityNum"
+        @select-commodity="handleSelectCommodity"
+        @select-all-commodities="handleSelectShopAllCommodity"
+      />
+      <div class="tabbar-padding"></div>
+   </div>
+   <van-submit-bar 
+    class="submit-bar"
+    :loading="isLoading"
+    :price="shoppingCart.totalPrice * 100"
+    button-text="提交订单"
+  />
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import { SubmitBar as VanSubmitBar } from 'vant';
 
 import ShoppingCartCard from 'lowcode-platform-h5-renderer/components/shopping-cart-card/index.vue';
 import AddressItem from 'lowcode-platform-h5-renderer/components/address-item/index.vue';
 import type { AddressInfo } from 'lowcode-platform-h5-renderer/type/address';
 import { getSelectedAddressInfo } from 'lowcode-platform-h5-renderer/api/address';
 import type { ShoppingCartInfo } from 'lowcode-platform-h5-renderer/type/commodity';
+import { ChangeNumType, getShoppingCartInfo, selectShopAllCommodities } from 'lowcode-platform-h5-renderer/api/shopping-cart';
+import { changeCommodityNum, selectCommodity } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 
 // 地址信息
 const addressInfo = reactive<AddressInfo>({
@@ -34,6 +50,17 @@ const addressInfo = reactive<AddressInfo>({
   isDefault: false,
   addressDetail: '',
 });
+// 购物车信息
+const shoppingCart = reactive<ShoppingCartInfo>({
+  _id: '',
+  username: '',
+  shops: [],
+  totalPrice: 0
+});
+// 根据添加商品时间顺序排序
+const shopsOrderByAddTime = computed(() => shoppingCart.shops.sort((s1, s2) => s2.modified - s1.modified));
+// 按钮是否正在加载
+const isLoading = ref(true);
 
 // 获取选中的地址
 const getUserSelectedAddress = async () => {
@@ -43,47 +70,51 @@ const getUserSelectedAddress = async () => {
 };
 getUserSelectedAddress();
 
-// 测试数据
-const data = reactive<ShoppingCartInfo>({
-  _id: '',
-  username: '',
-  commodities: {
-    '640ec3edc059730d8e67e706-test2商城': [
-      {
-        _id: '64006cddcfdd8e7bfdb35765',
-        name: 'test',
-        cover: 'http://localhost:3300/images/test/5f64315e9afe841e2fbbe0700.png',
-        price: 10000 * 0.51,
-        number: 1,
-        stock: 100,
-        status: 1,
-        selected: false,
-      },
-      {
-        _id: '64017b9ca8b3a8639b52fda9',
-        name: '测试商品',
-        cover: 'http://localhost:3300/images/test/79e1131560c1cd6b70a86fa02.jpg',
-        price: 10000 * 0.49,
-        stock: 3,
-        number: 3,
-        status: 1,
-        selected: false,
-      },
-    ],
-    '63fc5f5c8cd10a4e3bd5a08e-test商城': [
-      {
-        _id: '6401ed2bb6c69fc690a8115f',
-        name: '测试商品2',
-        cover: 'http://localhost:3300/images/test/79e1131560c1cd6b70a86fa01.png',
-        price: 10000,
-        stock: 100,
-        number: 2,
-        status: 0,
-        selected: false,
-      },
-    ]
-  },
-})
+// 获取购物车
+const getShoppingCart = async () => {
+  isLoading.value = true;
+  const cart = await getShoppingCartInfo();
+  isLoading.value = false;
+  if(!cart) return;
+  Object.assign(shoppingCart, cart);
+};
+getShoppingCart();
+
+// 处理添加/减少商品数目
+let isChangingCommodityNum = false;
+const handleChangeCommodityNum = async (shopId: string, commodityId: string, type: ChangeNumType) => {
+  // 节流
+  if(isChangingCommodityNum) return;
+
+  isChangingCommodityNum = true;
+  await changeCommodityNum(shoppingCart._id, shopId, commodityId, type);
+  await getShoppingCart();
+  isChangingCommodityNum = false;
+};
+
+// 处理商品选择
+let isSelectingCommodity = false;
+const handleSelectCommodity = async (shopId: string, commodityId: string) => {
+  //节流
+  if(isSelectingCommodity) return;
+
+  isSelectingCommodity = true;
+  await selectCommodity(shoppingCart._id, shopId, commodityId);
+  await getShoppingCart();
+  isSelectingCommodity = false;
+};
+
+// 处理选中购物车中该商城所有商品
+let isSelectingAll = false;
+const handleSelectShopAllCommodity = async (shopId: string) => {
+  //节流
+  if(isSelectingAll) return;
+
+  isSelectingAll = true;
+  await selectShopAllCommodities(shoppingCart._id, shopId);
+  await getShoppingCart();
+  isSelectingAll = false;
+};
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

@@ -49,15 +49,13 @@
   }
   // 商品价格
   .price {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     &-number {
       display: inline-block;
+      width: 90px;
       line-height: 20px;
-      padding: 5px 0;
+      padding: 1px 0;
       color: #323233;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
     }
   }
