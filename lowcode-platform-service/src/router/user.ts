@@ -1,3 +1,4 @@
+import { StatusCode } from './../const/index';
 import KoaRouter from 'koa-router';
 
 import { login, register } from '../controller/user';
@@ -18,6 +19,16 @@ router.post('/user/login', async (ctx) => {
   const { username, password } = ctx.request.body as User;
   const res = await login(username, password);
   ctx.body = res;
+})
+
+// 判断是否登录
+router.get('/user/isLogin', async (ctx) => {
+  const { username } = ctx.request.body as User;
+  ctx.body = {
+    code: StatusCode.Success,
+    msg: '已登录',
+    username,
+  };
 })
 
 export default router;

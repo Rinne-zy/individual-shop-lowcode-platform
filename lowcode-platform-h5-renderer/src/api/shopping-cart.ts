@@ -2,6 +2,7 @@ import { showFailToast } from "vant";
 
 import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-h5-renderer/const";
 import type { ShoppingCartInfo } from "lowcode-platform-h5-renderer/type/commodity";
+import { handleNotLogin } from "lowcode-platform-h5-renderer/utils/login";
 
 export enum ChangeNumType {
   Add = 'add',
@@ -24,6 +25,7 @@ export async function getShoppingCartInfo() {
   const { code, msg, cart } = await resp.json();
 
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return;
   };
@@ -58,6 +60,7 @@ export async function changeCommodityNum(cartId: string, shopId: string, commodi
   const { code, msg } = await resp.json();
 
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return code;
   };
@@ -91,6 +94,7 @@ export async function selectCommodity(cartId: string, shopId: string, commodityI
   const { code, msg } = await resp.json();
 
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return code;
   };
@@ -122,6 +126,7 @@ export async function selectShopAllCommodities(cartId: string, shopId: string) {
   const { code, msg } = await resp.json();
 
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return code;
   };

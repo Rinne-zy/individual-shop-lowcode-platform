@@ -1,5 +1,5 @@
 <template>
-  <div class="shopping-cart">
+  <div v-if="isLogin" class="shopping-cart">
    <div class="shopping-content">
       <address-item :address-info="addressInfo"/>
       <shopping-cart-card
@@ -23,11 +23,12 @@
     button-text="提交订单"
   />
   </div>
+  <van-empty v-else description="未登录" />
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
-import { SubmitBar as VanSubmitBar } from 'vant';
+import { SubmitBar as VanSubmitBar, Empty as VanEmpty } from 'vant';
 
 import ShoppingCartCard from 'lowcode-platform-h5-renderer/components/shopping-cart-card/index.vue';
 import AddressItem from 'lowcode-platform-h5-renderer/components/address-item/index.vue';
@@ -36,7 +37,10 @@ import { getSelectedAddressInfo } from 'lowcode-platform-h5-renderer/api/address
 import type { ShoppingCartInfo } from 'lowcode-platform-h5-renderer/type/commodity';
 import { ChangeNumType, getShoppingCartInfo, selectShopAllCommodities } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { changeCommodityNum, selectCommodity } from 'lowcode-platform-h5-renderer/api/shopping-cart';
+import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 
+const userStore = useUserStore();
+const isLogin = computed(() => userStore.isLogin);
 // 地址信息
 const addressInfo = reactive<AddressInfo>({
   id: '',
@@ -64,14 +68,22 @@ const isLoading = ref(true);
 
 // 获取选中的地址
 const getUserSelectedAddress = async () => {
- const info = await getSelectedAddressInfo();
- if(!info) return;
- Object.assign(addressInfo, info);
-};
+  // 非登录情况不需要获取
+  const isLogin = await userStore.checkLogin();
+  if(!isLogin) return;
+
+  const info = await getSelectedAddressInfo();
+  if(!info) return;
+  Object.assign(addressInfo, info);
+  };
 getUserSelectedAddress();
 
 // 获取购物车
 const getShoppingCart = async () => {
+  // 非登录情况不需要获取
+  const isLogin = await userStore.checkLogin();
+  if(!isLogin) return;
+  
   isLoading.value = true;
   const cart = await getShoppingCartInfo();
   isLoading.value = false;

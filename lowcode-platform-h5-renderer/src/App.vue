@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { getSchemaById } from 'lowcode-platform-h5-renderer/api/get-schema';
+import { getSchemaById } from 'lowcode-platform-h5-renderer/api/schema'
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 
 // schema 存储 store

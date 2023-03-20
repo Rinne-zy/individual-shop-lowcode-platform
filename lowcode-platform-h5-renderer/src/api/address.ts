@@ -3,6 +3,7 @@ import { showSuccessToast, showFailToast } from 'vant';
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from '../const/index';
 import { FETCH_URL_PREFIX } from 'lowcode-platform-h5-renderer/const/index';
 import type { AddressInfo, UserAddress } from './../type/address';
+import { handleNotLogin } from 'lowcode-platform-h5-renderer/utils/login';
 
 /**
  * 根据商城 id 获取商城 schema
@@ -23,6 +24,7 @@ export async function getAddressInfo() {
 
   
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return;
   }
@@ -54,6 +56,7 @@ export async function addAddressInfo(addressInfo: AddressInfo) {
   const { code, msg } = await resp.json();
 
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return;
   }
@@ -87,6 +90,7 @@ export async function updateAddressInfo(id: string, addressInfo: AddressInfo) {
   const { code, msg } = await resp.json();
 
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return;
   }
@@ -118,6 +122,7 @@ export async function deleteAddressInfo(id: string, addressInfoId: string) {
   const { code, msg } = await resp.json();
 
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return;
   }
@@ -150,6 +155,7 @@ export async function selectAddressInfo(id: string, addressInfoId: string) {
   const { code, msg } = await resp.json();
   
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return;
   }
@@ -173,8 +179,8 @@ export async function getSelectedAddressInfo() {
   if(resp.status !== 200 || !resp.ok) throw new Error('获取地址请求异常');
   const { code, msg, address } = await resp.json();
 
-  
   if(code) {
+    handleNotLogin(code);
     showFailToast(msg);
     return;
   }

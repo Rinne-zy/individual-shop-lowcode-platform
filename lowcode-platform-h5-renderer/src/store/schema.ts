@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import type { Schema, ComponentsSchema } from 'lowcode-platform-h5-renderer/type/schema';
 import { EditorLayoutMode } from 'lowcode-platform-h5-renderer/type/schema';
 import { TabbarItem } from 'lowcode-platform-h5-renderer/type/index';
-import { getSchemaById } from 'lowcode-platform-h5-renderer/api/get-schema';
+import { getSchemaById } from 'lowcode-platform-h5-renderer/api/schema';
 
 // schema store 属性
 export interface ShopStore {
