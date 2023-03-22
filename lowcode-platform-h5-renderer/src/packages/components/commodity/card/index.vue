@@ -18,7 +18,7 @@
             {{ originPrice.toFixed(2) }}
           </div>
         </div>
-        <div class="cart">
+        <div class="cart" @click="handleAddToCart">
           <van-icon size="20" name="cart-o" color="#ff4444" />
         </div>
       </div>
@@ -31,6 +31,10 @@ import { Icon as VanIcon } from "vant";
 import { computed, PropType } from "vue";
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: "",
+  },
   type: {
     type: String as PropType<'vertical' | 'horizon' | 'inline'>,
     default: 'horizon',
@@ -65,6 +69,8 @@ const props = defineProps({
   },
 });
 
+const emits = defineEmits(['add'])
+
 // 展示的价格文本
 const priceText = computed(() => {
   const priceNumber: string[] = `${props.price}`.split(".");
@@ -73,13 +79,16 @@ const priceText = computed(() => {
     decimal: priceNumber[1] || `00`,
   };
 });
-
 // 是否展示原价
 const isShowOriginPrice = props.isShowOriginPrice && props.type !== 'inline' && props.price !== props.originPrice
-
 // 卡片的样式类
 const cardClass = props.type === 'inline' ? 'vertical inline' : props.type;
 
+// 添加商品至购物车
+const handleAddToCart = (e: MouseEvent) => {
+  e.preventDefault();
+  emits('add', props.id);
+}
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

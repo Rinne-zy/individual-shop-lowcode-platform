@@ -1,7 +1,7 @@
 import type { PiniaPluginContext } from 'pinia';
 
 import { PREFIX_FOR_LOCAL_STORAGE } from 'lowcode-platform/const';
-import { getStorage } from 'lowcode-platform/utils/storage';
+import { getStorage } from 'lowcode-platform-common/utils/storage';
 
 /**
  * 使用 Pinia 持久化存储插件

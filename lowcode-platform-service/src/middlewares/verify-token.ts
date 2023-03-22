@@ -8,6 +8,7 @@ const authWhiteList = [
   '/user/register',
   '/commodity/getByIds',
   '/schema/getById',
+  '/commodity/getDetail',
 ]
 
 // 校验 token

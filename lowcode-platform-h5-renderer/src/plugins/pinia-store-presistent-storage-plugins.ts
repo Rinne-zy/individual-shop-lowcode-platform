@@ -1,6 +1,6 @@
 import type { PiniaPluginContext } from 'pinia';
 
-import { getStorage } from 'lowcode-platform-h5-renderer/utils/storage';
+import { getStorage } from 'lowcode-platform-common/utils/storage';
 import { LOCAL_STORAGE_KEY_OF_TOKEN, LOCAL_STORAGE_KEY_OF_USERINFO } from 'lowcode-platform-h5-renderer/const';
 /**
  * 使用 Pinia 持久化存储插件
@@ -16,7 +16,6 @@ export const usePiniaPersistentStoragePlugin = (context: PiniaPluginContext) => 
 
   return {
     ...userInfo,
-    token,
     isLogin
   }
 }

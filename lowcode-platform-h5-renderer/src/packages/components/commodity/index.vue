@@ -8,7 +8,9 @@
     >
       <card
         v-for="commodity in commodities"
+        :data-id="commodity._id"
         :key="commodity._id"
+        :id="commodity._id"
         :title="commodity.name"
         :cover="commodity.imagesSrc[0]"
         :type="commodityClassByLayout[propValue.layout]"
@@ -19,6 +21,8 @@
         :is-show-desc="propValue.isShowDesc"
         :class="{ round: propValue.isRound }"
         :style="commodityStyleByLayout[propValue.layout]"
+        @add="handleAddToCart"
+        @click="handleGoToCommodity"
       />
     </div>
     <!-- 一行两列 -->
@@ -33,6 +37,8 @@
         <card
           v-for="commodity in data"
           :key="commodity._id"
+          :id="commodity._id"
+          :data-id="commodity._id"
           :title="commodity.name"
           :cover="commodity.imagesSrc[0]"
           :type="commodityClassByLayout[propValue.layout]"
@@ -43,6 +49,8 @@
           :is-show-desc="propValue.isShowDesc"
           :class="{ round: propValue.isRound }"
           :style="{ marginBottom: `${propValue.padding + 5}px`}"
+          @add="handleAddToCart"
+          @click="handleGoToCommodity(commodity._id)"
         />
       </div>
     </div>
@@ -57,6 +65,10 @@ import Card from "./card/index.vue";
 import { FETCH_URL_PREFIX } from 'lowcode-platform-h5-renderer/const/index';
 import { Commodity, CommodityLayout, CommodityPropValue } from "./type";
 import { transformPxToVw } from "lowcode-platform-h5-renderer/utils/transform";
+import { addCommodityToCart } from "lowcode-platform-h5-renderer/api/shopping-cart";
+import { useShopStore } from "lowcode-platform-h5-renderer/store/schema";
+import { useCommodityDetailStore } from "lowcode-platform-h5-renderer/store/commodity";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   // 属性值
@@ -74,6 +86,11 @@ const props = defineProps({
     default: 375,
   }
 });
+
+const shopStore = useShopStore();
+const router = useRouter();
+const commodityDetailStore = useCommodityDetailStore();
+
 const commodities = ref([] as Commodity[]);
 
 // 根据商品布局获取对应的类名
@@ -125,6 +142,25 @@ const getCommodities = async () => {
   }
 };
 getCommodities();
+
+let isAddingToCart = false;
+// 添加到购物车中
+const handleAddToCart = async (commodityId: string) => {
+  if(isAddingToCart) return;
+  isAddingToCart = true;
+  await addCommodityToCart(shopStore._id, commodityId);
+  isAddingToCart = false;
+}
+
+// 前往商品详情
+const handleGoToCommodity = (commodityId: string) => {
+  // 设置商品详情展示所需的信息
+  commodityDetailStore.commodityId = commodityId;
+  commodityDetailStore.shopId = shopStore._id;
+
+  if(!commodityId || !shopStore._id) return;
+  router.push('/commodity');
+}
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

@@ -2,3 +2,4 @@ packages:
   - "lowcode-platform/**"
   - "lowcode-platform-service/**"
   - "lowcode-platform-h5-renderer/**"
+  - "lowcode-platform-common/**"

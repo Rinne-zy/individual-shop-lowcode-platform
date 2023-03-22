@@ -8,7 +8,7 @@
       :model-value="selected && status === CommodityStatus.OnSale"
       @click="handleSelect"
     />
-    <div style="position:relative;">
+    <div style="position:relative;" @click="handleGoToCommodity">
       <img class="img" :src="cover" />
       <div v-if="!canBuy" class="tip"> {{ commodityStatus }}</div>
     </div>
@@ -39,7 +39,7 @@ import { computed } from 'vue';
 import { CommodityStatus } from 'lowcode-platform-h5-renderer/type/commodity';
 import { ChangeNumType } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 
-const emits = defineEmits(['select', 'change'])
+const emits = defineEmits(['select', 'change', 'goToCommodity'])
 
 const props = defineProps({
   _id: {
@@ -87,11 +87,16 @@ const canAdd = computed(() => props.stock > props.number);
 const handleSelect = () => {
   if(!canBuy.value) return;
   emits('select', props._id);
-}
+};
 // 改变商品数量
 const handleChangeNum = (value: number) => {
   emits('change', props._id, value > 0 ? ChangeNumType.Add : ChangeNumType.Reduce);
-}
+};
+const handleGoToCommodity = (e: MouseEvent) => {
+  e.stopPropagation();
+  if(!canBuy.value) return;
+  emits('goToCommodity', props._id);
+};
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

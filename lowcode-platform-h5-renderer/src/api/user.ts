@@ -91,3 +91,27 @@ export async function register(username: string, password: string, userType: num
 
   showSuccessToast(`${msg}，请快去登录吧！`);
 }
+
+/**
+ * 获取用户收藏的商品
+ * @returns 
+ */
+export async function getUserStarCommodities() {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  const resp = await fetch(`${FETCH_URL_PREFIX}user/starCommodities`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('获取地址请求异常');
+  const { code, msg, commodities } = await resp.json();
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  }
+
+  return commodities as Record<string, boolean>;
+};

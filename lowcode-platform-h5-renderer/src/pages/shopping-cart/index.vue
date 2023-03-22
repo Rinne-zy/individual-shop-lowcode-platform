@@ -13,6 +13,7 @@
         @change-commodity-num="handleChangeCommodityNum"
         @select-commodity="handleSelectCommodity"
         @select-all-commodities="handleSelectShopAllCommodity"
+        @delete-commodity="handleDeleteCommodity"
       />
       <div class="tabbar-padding"></div>
    </div>
@@ -35,7 +36,7 @@ import AddressItem from 'lowcode-platform-h5-renderer/components/address-item/in
 import type { AddressInfo } from 'lowcode-platform-h5-renderer/type/address';
 import { getSelectedAddressInfo } from 'lowcode-platform-h5-renderer/api/address';
 import type { ShoppingCartInfo } from 'lowcode-platform-h5-renderer/type/commodity';
-import { ChangeNumType, getShoppingCartInfo, selectShopAllCommodities } from 'lowcode-platform-h5-renderer/api/shopping-cart';
+import { ChangeNumType, deleteCommodityFromCart, getShoppingCartInfo, selectShopAllCommodities } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { changeCommodityNum, selectCommodity } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 
@@ -127,6 +128,16 @@ const handleSelectShopAllCommodity = async (shopId: string) => {
   await getShoppingCart();
   isSelectingAll = false;
 };
+
+// 从购物车中删除商品
+let isDeleting = false;
+const handleDeleteCommodity = async (shopId: string, commodityId: string,) => {
+  if(isDeleting) return;
+  isDeleting = true;
+  await deleteCommodityFromCart(shoppingCart._id, shopId, commodityId)
+  await getShoppingCart();
+  isDeleting = false;
+}
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

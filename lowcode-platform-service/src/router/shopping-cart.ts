@@ -4,7 +4,8 @@ import {
   addShoppingCartInfo,
   getShoppingCartInfo,
   handleSelectCartCommodity,
-  handleSelectCartShopAllCommodities
+  handleSelectCartShopAllCommodities,
+  deleteCommodityFromCart
 } from '../controller/shopping-cart';
 
 // koa 路由实例
@@ -55,5 +56,11 @@ router.post('/shoppingCart/selectShopAllCommodities', async (ctx) => {
   ctx.body = res;
 });
 
+// 从购物车中删除商品
+router.post('/shoppingCart/deleteCommodity', async (ctx) => {
+  const { cartId, shopId, commodityId } = ctx.request.body;
+  const res = await deleteCommodityFromCart(cartId, shopId, commodityId);
+  ctx.body = res;
+});
 
 export default router;

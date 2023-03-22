@@ -13,19 +13,31 @@
         <van-icon class="title-icon" name="arrow" />   
       </div> 
     </div>
-    <commodity-card
+    <van-swipe-cell
       v-for="commodity in commodities"
       :key="commodity._id"
-      v-bind="commodity"
-      @select="handleSelect"
-      @change="handleChangeNum"
     >
-    </commodity-card>
+      <commodity-card 
+        v-bind="commodity"
+        @select="handleSelect"
+        @change="handleChangeNum"
+        @go-to-commodity="handleGoToCommodityDetail"
+      />
+      <template #right>
+        <van-button 
+          square 
+          text="删除"
+          type="danger"
+          class="delete-button"
+          @click="handleDeleteCommodity(commodity._id, commodity.name)"
+        />
+      </template>
+    </van-swipe-cell>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Checkbox as VanCheckbox, Icon as VanIcon } from 'vant';
+import { Checkbox as VanCheckbox, Icon as VanIcon, SwipeCell as VanSwipeCell, Button as VanButton, showConfirmDialog } from 'vant';
 import { computed, PropType } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -35,6 +47,7 @@ import { CommodityStatus } from 'lowcode-platform-h5-renderer/type/commodity';
 import { ChangeNumType } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 import { TabbarItem } from 'lowcode-platform-h5-renderer/type';
+import { useCommodityDetailStore } from 'lowcode-platform-h5-renderer/store/commodity';
 
 const props = defineProps({
   id: {
@@ -50,9 +63,10 @@ const props = defineProps({
     default: () => {},
   }
 });
-const emits = defineEmits(['changeCommodityNum', 'selectCommodity', 'selectAllCommodities'])
+const emits = defineEmits(['changeCommodityNum', 'selectCommodity', 'selectAllCommodities', 'deleteCommodity'])
 
 const router = useRouter();
+const commodityDetailStore = useCommodityDetailStore();
 // 是否能够选择所有
 const canSelectAll = computed(() => props.commodities.every((commodity) => (commodity.status === CommodityStatus.OnSale)));
 // 是否选中购物车中该商城全部商品
@@ -87,7 +101,31 @@ const handleGotoShop = async () =>{
   // 前往商城
   stop.activeTabbar = TabbarItem.Home;
   router.push('/');
+};
+
+/** 处理前往商品详情 */
+const handleGoToCommodityDetail = (commodityId: string) => {
+  // 设置商品详情展示所需的信息
+  commodityDetailStore.commodityId = commodityId;
+  commodityDetailStore.shopId = props.id;
+
+  router.push('/commodity');
+};
+
+// 删除商品
+const handleDeleteCommodity = (commodityId: string, commodityName: string) => {
+  showConfirmDialog({
+    title: '删除',
+    message:
+      `是否删除该商品:${commodityName}`,
+    })
+    .then(() => {
+      emits('deleteCommodity', props.id, commodityId);
+    })
+    .catch(() => {
+    });
 }
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

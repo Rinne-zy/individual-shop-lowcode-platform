@@ -4,13 +4,19 @@ export interface User {
   username: string,
   password: string,
   userType: number,
+  avatar: string,
+  starCommodities: Record<string, boolean>,
+  starShops: Record<string, boolean>,
 }
 
 // 用户信息 Schema
-const userSchema = new Schema({
+const userSchema = new Schema<User>({
   username: String,
   password: String,
   userType: Number,
+  avatar: String,
+  starCommodities: Object,
+  starShops: Object,
 });
 
 export default model('user', userSchema);

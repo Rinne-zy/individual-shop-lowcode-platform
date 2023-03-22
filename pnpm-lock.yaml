@@ -43,17 +43,24 @@ importers:
     specifiers:
       axios: ^1.2.2
       element-plus: ^2.2.28
+      lowcode-platform-common: workspace:*
     dependencies:
       axios: registry.npmmirror.com/axios/1.2.2
       element-plus: registry.npmmirror.com/element-plus/2.2.28_vue@3.2.45
+      lowcode-platform-common: link:../lowcode-platform-common
+
+  lowcode-platform-common:
+    specifiers: {}
 
   lowcode-platform-h5-renderer:
     specifiers:
       '@vant/area-data': ^1.4.1
+      lowcode-platform-common: workspace:*
       postcss-px-to-viewport-8-plugin: ^1.2.0
       whatwg-fetch: ^3.6.2
     dependencies:
       '@vant/area-data': registry.npmmirror.com/@vant/area-data/1.4.1
+      lowcode-platform-common: link:../lowcode-platform-common
       postcss-px-to-viewport-8-plugin: registry.npmmirror.com/postcss-px-to-viewport-8-plugin/1.2.0
       whatwg-fetch: registry.npmmirror.com/whatwg-fetch/3.6.2
 

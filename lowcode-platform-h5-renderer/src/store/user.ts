@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
-import { toRaw } from 'vue';
 
 import { LOCAL_STORAGE_KEY_OF_TOKEN, LOCAL_STORAGE_KEY_OF_USERINFO } from 'lowcode-platform-h5-renderer/const';
-import { setStorage, clearStorage } from 'lowcode-platform-h5-renderer/utils/storage';
+import { setStorage, clearStorage } from 'lowcode-platform-common/utils/storage';
 import { checkIsLogin } from 'lowcode-platform-h5-renderer/api/user';
 
 /** 用户 Store */

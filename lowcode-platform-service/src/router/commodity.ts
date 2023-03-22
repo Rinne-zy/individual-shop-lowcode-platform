@@ -1,5 +1,6 @@
 import KoaRouter from 'koa-router';
-import { changeCommodityStatus, createCommodity, deleteCommodity, getCommodities, getCommoditiesById, updateCommodity } from '../controller/commodity';
+import { changeCommodityStatus, createCommodity, deleteCommodity, getCommodities, getCommoditiesById, getCommodityDetail, updateCommodity } from '../controller/commodity';
+import { starCommodity } from '../controller/commodity';
 
 // koa 路由实例
 const router = new KoaRouter();
@@ -56,6 +57,21 @@ router.post('/commodity/getByIds', async (ctx) => {
   const { ids } = ctx.request.body;
   const res = await getCommoditiesById(ids);
 
+  ctx.body = res;
+});
+
+// 获取商品详情页信息
+router.get('/commodity/getDetail', async (ctx) => {
+  const { shopId, commodityId } = ctx.query;
+  const res = await getCommodityDetail(shopId as string, commodityId as string);
+  ctx.body = res;
+});
+
+// 收藏商品
+router.post('/commodity/star', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const { commodityId } = ctx.request.body;
+  const res = await starCommodity(username, commodityId);
   ctx.body = res;
 });
 

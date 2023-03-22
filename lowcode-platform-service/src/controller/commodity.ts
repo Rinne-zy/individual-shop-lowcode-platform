@@ -1,5 +1,7 @@
 import { Commodity as CommodityType } from './../models/commodity';
+import ShopSchema from '../models/schema';
 import Commodity  from './../models/commodity';
+import User from './../models/user';
 import { StatusCode } from '../const';
 
 /**
@@ -98,3 +100,60 @@ export async function getCommoditiesById(id: string | string[]) {
     msg: '获取成功',
   }
 }
+
+/**
+ * 获取商品详情页信息
+ * @param shopId 商城 id
+ * @param commodityId 商品 id 
+ * @returns 
+ */
+export async function getCommodityDetail(shopId: string, commodityId: string) {
+  // TODO: 后续改为部署的商场信息
+ const [shop, commodity] =  await Promise.all([
+    ShopSchema.findById(shopId),
+    Commodity.findById(commodityId),
+  ]);
+
+  if(!commodity) throw new Error('商品不存在');
+  if(!shop) throw new Error('当前商场不存在该商品');
+
+  const data = {
+    shop: {
+      id: shop._id,
+      name: shop.name,
+    },
+    commodity
+  }
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    data,
+  }
+}
+
+/**
+ * 收藏商品
+ * @param username 用户名
+ * @param commodityId 商品 id
+ */
+export async function starCommodity(username: string, commodityId: string) {
+  const user = await User.findOne({ username });
+  if(!user) throw new Error('用户名不存在');
+
+  if(!user.starCommodities) {
+    user.starCommodities = {};
+  };
+
+  const starStatus = user.starCommodities[commodityId] || false;
+  user.starCommodities[commodityId] = !starStatus;
+
+  user.markModified('starCommodities');
+  await user.save();
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    status: !starStatus,
+  }
+};

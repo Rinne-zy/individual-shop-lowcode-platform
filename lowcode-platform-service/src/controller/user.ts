@@ -66,3 +66,19 @@ export async function login(username: string, password: string) {
     token,
   }
 }
+
+/**
+ * 获取用户收藏的店铺信息
+ * @param username 用户名
+ * @returns 
+ */
+export async function getUserStarCommodities(username: string) {
+  const user = await User.findOne({ username });
+  if(!user) throw new Error('用户信息不存在');
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    commodities: user.starCommodities,
+  }
+}

@@ -54,6 +54,7 @@ type ShoppingCartInfoDocument = (Document<unknown, any, ShoppingCartInfo> & Shop
  * @returns 
  */
 export async function addShoppingCartInfo(username: string, shopId: string, commodityId: string) {
+  if(!commodityId) throw new Error('商品信息错误，添加失败');
   const userShoppingCart = await ShoppingCart.findOne({ username });
   const shop = await ShopSchema.findById(shopId);
   if(!shop) throw new Error('商城信息错误，添加失败');
@@ -83,17 +84,26 @@ export async function addShoppingCartInfo(username: string, shopId: string, comm
     return {
       code: StatusCode.Success,
       msg: '添加购物车成功',
+      isAdd: true,
     }
   };
 
-  addCommodityToShoppingCart(userShoppingCart, shopId, shop.name as string, commodity);
+  const res = addCommodityToShoppingCart(userShoppingCart, shopId, shop.name as string, commodity);
+  if(!res) {
+    return {
+      code: StatusCode.Success,
+      msg: '当前商品已存在购物车，去购物车结算吧',
+      isAdd: false,
+    }
+  }
   userShoppingCart.markModified('shops');
   await userShoppingCart.save();
 
   return {
     code: StatusCode.Success,
     msg: '添加购物车成功',
-  }
+    isAdd: true,
+  };
 };
 
 /**
@@ -194,7 +204,7 @@ export async function handleSelectCartCommodity(cartId: string, shopId: string, 
  * @returns 
  */
 export async function handleSelectCartShopAllCommodities(cartId: string, shopId: string) {
-    // 查找购物车商品列表
+  // 查找购物车商品列表
   const cart = await ShoppingCart.findOne({
     _id: cartId,
   });
@@ -218,6 +228,24 @@ export async function handleSelectCartShopAllCommodities(cartId: string, shopId:
 }
 
 /**
+ * 从购物车中删除商品
+ * @param cartId 购物车 id
+ * @param shopId 商城 id
+ * @param commodityId 商品 id 
+ */
+export async function deleteCommodityFromCart(cartId: string, shopId: string, commodityId: string) {
+  const { cart, shopIndex, commodityIndex } = await findCommodityInfoFromCart(cartId, shopId, commodityId, false);
+  cart.shops[shopIndex].commodities.splice(commodityIndex, 1);
+  cart.markModified('shops');
+  cart.save();
+
+  return {
+    code: StatusCode.Success,
+    msg: '删除成功',
+  };
+}
+
+/**
  * 获取购物车中的商品详情信息以及选中商品的总价
  * @param shopInShoppingCart 购物车中商品信息
  * @returns 
@@ -228,6 +256,8 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
     shopInShoppingCart.map(async (shop) => {
       // 最近购物车中添加该商城的时间戳
       let lastModified = 0;
+      // 若当前商城不存在商品，直接过滤掉
+      if(shop.commodities.length === 0) return null;
       const commodities = await Promise.all(
         shop.commodities.map((commodityInCart) => new Promise<CommodityInfo | null>(async (resolve, reject) => {
           // 根据每一个商城中的商品 id 获取购物车中商品展示所需要的信息
@@ -243,7 +273,7 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
 
             // 计算当前购物车总价
             if(status === CommodityStatus.OnSale && selected) {
-              totalPrice += actualPrice;
+              totalPrice += actualPrice * number;
             };
 
             resolve({
@@ -272,7 +302,7 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
   );
 
   return {
-    shopsInShoppingCart: shops,
+    shopsInShoppingCart: shops.filter(shop => shop) as ShopInfo[],
     totalPrice,
   };
 };
@@ -293,19 +323,16 @@ function addCommodityToShoppingCart(shoppingCart: ShoppingCartInfoDocument, shop
       name,
       commodities: [commodity],
     });
-    return;
+    return true;
   }
 
   const index = shops[shopIndex].commodities.findIndex((c) => c._id === commodity._id);
-  if(index === -1) {
-    // 已存在该商店信息，直接添加商品
-    shops[shopIndex].commodities.push(commodity);
-    return;
+  if(index !== -1) {
+    return false;
   }
 
-  // 存在同一个商品，数量加一
-  shops[shopIndex].commodities[index].number += 1;
-  return;
+  shops[shopIndex].commodities.push(commodity);
+  return true;
 };
 
 /**

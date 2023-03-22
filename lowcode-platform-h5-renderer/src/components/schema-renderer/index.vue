@@ -10,7 +10,7 @@
     >
       <component
         class="component"
-        :is="shopStore.components.get(component.key)"
+        :is="shopStore.getComponentByKey(component.key)"
         :prop-value="component.propValue"
         :prop-style="component.style"
         :viewport-width="shopStore.getWidthPxNumber()"

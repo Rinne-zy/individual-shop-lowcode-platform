@@ -1,4 +1,4 @@
-import { showFailToast } from "vant";
+import { showFailToast, showSuccessToast } from "vant";
 
 import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-h5-renderer/const";
 import type { ShoppingCartInfo } from "lowcode-platform-h5-renderer/type/commodity";
@@ -133,3 +133,68 @@ export async function selectShopAllCommodities(cartId: string, shopId: string) {
 
   return code;
 };
+
+
+/**
+ * 向购物车添加商品
+ * @param shopId 商城 id
+ * @param commodityId 商品 id
+ * @returns 
+ */
+export async function addCommodityToCart(shopId: string, commodityId: string) {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+  const resp = await fetch(`${FETCH_URL_PREFIX}shoppingCart/add`, {
+    method: 'post',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      shopId,
+      commodityId,
+    })
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('添加商品请求异常');
+  const { code, msg, isAdd } = await resp.json();
+
+  if(code) {
+    handleNotLogin(code);
+    showFailToast(msg);
+    throw new Error(msg);
+  };
+
+  showSuccessToast(isAdd ? '添加成功' : '当前商品已存在购物车中，快去结算吧！');
+};
+
+/**
+ * 从购物车中删除商品
+ * @param cartId 购物车 id
+ * @param shopId 商城 id
+ * @param commodityId 商品 id
+ */
+export async function deleteCommodityFromCart(cartId: string, shopId: string, commodityId: string) {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+  const resp = await fetch(`${FETCH_URL_PREFIX}shoppingCart/deleteCommodity`, {
+    method: 'post',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      cartId,
+      shopId,
+      commodityId,
+    })
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('删除商品请求异常');
+  const { code, msg, isAdd } = await resp.json();
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  };
+
+  showSuccessToast(msg);
+}

@@ -1,6 +1,6 @@
-import { clearStorage } from 'lowcode-platform/utils/storage';
+import { clearStorage } from 'lowcode-platform-common/utils/storage';
 import { PREFIX_FOR_LOCAL_STORAGE } from 'lowcode-platform/const';
-import { setStorage } from 'lowcode-platform/utils/storage';
+import { setStorage } from 'lowcode-platform-common/utils/storage';
 import { defineStore } from 'pinia';
 import { toRaw } from 'vue';
 

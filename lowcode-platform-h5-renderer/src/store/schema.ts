@@ -6,6 +6,9 @@ import { EditorLayoutMode } from 'lowcode-platform-h5-renderer/type/schema';
 import { TabbarItem } from 'lowcode-platform-h5-renderer/type/index';
 import { getSchemaById } from 'lowcode-platform-h5-renderer/api/schema';
 
+// 动态懒加载组件
+const components = new Map<string, any>();
+
 // schema store 属性
 export interface ShopStore {
   // 商城 id
@@ -14,8 +17,6 @@ export interface ShopStore {
   name: string;
   // 商城 schema
   schema: Schema,
-  // 动态懒加载组件
-  components: Map<string, any>,
   // 激活的 tabbar
   activeTabbar: TabbarItem,
 }
@@ -31,7 +32,6 @@ export const useShopStore = defineStore('shop', {
       },
       components: [] as ComponentsSchema[],
     },
-    components: new Map(),
     activeTabbar: TabbarItem.Home,
   }),
   actions: {
@@ -44,7 +44,7 @@ export const useShopStore = defineStore('shop', {
       this.schema = schema;
       schema.components.forEach((component) => {
         const { key } = component;
-        this.components.set(key, defineAsyncComponent(() => import(`lowcode-platform-h5-renderer/packages/components/${key.toLocaleLowerCase()}/index.vue`)))
+        components.set(key, defineAsyncComponent(() => import(`lowcode-platform-h5-renderer/packages/components/${key.toLocaleLowerCase()}/index.vue`)))
       })
     },
      /** 判断是否为固定布局 */
@@ -58,9 +58,13 @@ export const useShopStore = defineStore('shop', {
       this.schema = schema;
       schema.components.forEach((component) => {
         const { key } = component;
-        if(this.components.has(key)) return;
-        this.components.set(key, defineAsyncComponent(() => import(`lowcode-platform-h5-renderer/packages/components/${key.toLocaleLowerCase()}/index.vue`)))
+        if(components.has(key)) return;
+        components.set(key, defineAsyncComponent(() => import(`lowcode-platform-h5-renderer/packages/components/${key.toLocaleLowerCase()}/index.vue`)))
       })
+    },
+    /** 根据 key 获取相应的组件 */
+    getComponentByKey(key:string) {
+      return components.get(key);
     }
   }
 });
