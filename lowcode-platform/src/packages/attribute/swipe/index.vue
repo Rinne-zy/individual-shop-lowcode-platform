@@ -53,7 +53,7 @@
   </div>
   <select-image-dialog 
     :is-visible="isVisible"
-    :is-editing="editingIndex !== -1"
+    :is-single-select="editingIndex !== -1"
     @confirm="handleConfirm"
     @close="handleClose"
   />

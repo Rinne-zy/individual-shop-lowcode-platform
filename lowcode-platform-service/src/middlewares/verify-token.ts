@@ -7,7 +7,7 @@ const authWhiteList = [
   '/user/login',
   '/user/register',
   '/commodity/getByIds',
-  '/schema/getById',
+  '/shop/get/dep',
   '/commodity/getDetail',
 ]
 

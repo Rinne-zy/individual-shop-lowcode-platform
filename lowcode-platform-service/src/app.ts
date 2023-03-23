@@ -5,9 +5,10 @@ import koaStatic from 'koa-static';
 import path from 'path';
 import type { Server } from 'http';
 
+import schemaRouter from './router/schema';
+import shopRouter from './router/shop'
 import shoppingCartRouter from './router/shopping-cart';
 import addressRouter from './router/address';
-import schemaRouter from './router/schema';
 import userRouter from './router/user';
 import fileRouter from './router/file';
 import typeRouter from './router/type';
@@ -52,10 +53,6 @@ app.use(router.allowedMethods());
 app.use(fileRouter.routes());
 app.use(fileRouter.allowedMethods());
 
-// schema 相关路由
-app.use(schemaRouter.routes());
-app.use(schemaRouter.allowedMethods());
-
 // 类型相关路由
 app.use(typeRouter.routes());
 app.use(typeRouter.allowedMethods());
@@ -71,6 +68,14 @@ app.use(addressRouter.allowedMethods());
 // 购物车相关路由
 app.use(shoppingCartRouter.routes());
 app.use(shoppingCartRouter.allowedMethods());
+
+// 商城相关路由
+app.use(shopRouter.routes());
+app.use(shopRouter.allowedMethods());
+
+// schema 相关路由
+app.use(schemaRouter.routes());
+app.use(schemaRouter.allowedMethods());
 
 // 启动服务
 const runServer = (port: number): Server => {

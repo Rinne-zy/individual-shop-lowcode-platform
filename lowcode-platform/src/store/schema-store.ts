@@ -52,12 +52,15 @@ export enum EditorLayoutMode {
 
 /** schema store */
 interface SchemaStore {
+  // 商城 id
   id: string;
-  name: string;
   // schema
   schema: Schema,
+  // schema 快照
   snapshotSchema: Schema[],
+  // schema 快照索引
   snapshotIndex: number,
+  // 是否已保存
   isSave: boolean,
 }
 
@@ -74,9 +77,7 @@ const defaultSchema =  {
 // 使用组件物料
 export const useSchemaStore = defineStore('schema', {
   state: (): SchemaStore => ({
-    // 标识唯一 schema 的 id
     id: '',
-    name: '',
     schema: deepcopy(defaultSchema),
     snapshotSchema: [
       deepcopy(defaultSchema),
@@ -204,8 +205,7 @@ export const useSchemaStore = defineStore('schema', {
         this.schema = deepcopy(defaultSchema);
         this.snapshotSchema = [
           deepcopy(defaultSchema),
-        ],
-        this.name = '';
+        ];
         this.id = '';
       };
 
@@ -214,13 +214,12 @@ export const useSchemaStore = defineStore('schema', {
       const editorStatusStore = useEditorStatusStore();
       editorStatusStore.reset();
     },
-    init(schema: Schema, id: string, name: string) {
+    init(schema: Schema, id: string) {
       this.schema = deepcopy(schema);
       this.snapshotSchema = [
         deepcopy(schema),
       ];
       this.id = id;
-      this.name = name;
       this.reset(true);
     },
     isSavedSchema() {

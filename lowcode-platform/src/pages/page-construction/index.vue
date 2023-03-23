@@ -53,8 +53,9 @@ import { useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 import { useComponentsMaterialClick } from 'lowcode-platform/hooks/use-material-click-hook';
 import { showConfirmMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
-import { saveSchema, updateSchema } from 'lowcode-platform/api/schema';
 import { StatusCode } from 'lowcode-platform/api/type';
+import type { ShopInfo } from 'lowcode-platform/api/shop';
+import { createShop, updateShopSchema } from 'lowcode-platform/api/shop';
 
 const schemaStore = useSchemaStore();
 const editorStatusStore = useEditorStatusStore();
@@ -135,7 +136,7 @@ onBeforeRouteLeave(async (to, from) => {
     };
 
     // 当处于编辑商城状态（非新商场）
-    const { data } = await updateSchema(schemaStore.id, undefined, schemaStore.schema);
+    const { data } = await updateShopSchema(schemaStore.id, schemaStore.schema);
     if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
     showSuccessMessage(data.msg);
     // 保存操作
@@ -155,16 +156,17 @@ onBeforeRouteLeave(async (to, from) => {
  * 处理确认保存回调
  * @param name 
  */
-const handleSaveConfirm = async (name: string) => {
-  const { data } = await saveSchema(name, schemaStore.schema);
+const handleSaveConfirm = async (formData: ShopInfo) => {
+  const { data } = await createShop(formData, schemaStore.schema);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
   schemaStore.reset();
+  isVisible.value = false;
   // 路由控制
   if(pathRouterTo) {;
     router.push(pathRouterTo as RouteLocationNormalized);
     pathRouterTo = null;
-  }
+  };
 }
 </script>
 

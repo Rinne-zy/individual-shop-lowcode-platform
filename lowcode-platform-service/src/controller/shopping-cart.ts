@@ -4,9 +4,10 @@ import { StatusCode } from '../const';
 import ShoppingCart from '../models/shopping-cart';
 import type { ShoppingCartInfo, ShopInShoppingCart } from '../models/shopping-cart';
 import type { CommodityInShoppingCart } from '../models/shopping-cart';
-import ShopSchema from '../models/schema';
+import Shop from '../models/shop';
 import Commodity from './../models/commodity';
 import { CommodityStatus }  from './../models/commodity';
+import { getCommoditiesFromShop } from './shop';
 
 // 接口返回的购物车商品信息
 interface CommodityInfo {
@@ -56,7 +57,7 @@ type ShoppingCartInfoDocument = (Document<unknown, any, ShoppingCartInfo> & Shop
 export async function addShoppingCartInfo(username: string, shopId: string, commodityId: string) {
   if(!commodityId) throw new Error('商品信息错误，添加失败');
   const userShoppingCart = await ShoppingCart.findOne({ username });
-  const shop = await ShopSchema.findById(shopId);
+  const shop = await Shop.findById(shopId);
   if(!shop) throw new Error('商城信息错误，添加失败');
 
   // 新添加至购物车的商品
@@ -71,7 +72,8 @@ export async function addShoppingCartInfo(username: string, shopId: string, comm
     // 购物车中商城信息
     const shopInfo: ShopInShoppingCart = {
       _id: shopId,
-      name: shop.name as string,
+      name: shop.name,
+      avatar: shop.avatar,
       commodities: [
         commodity,
       ]
@@ -88,7 +90,7 @@ export async function addShoppingCartInfo(username: string, shopId: string, comm
     }
   };
 
-  const res = addCommodityToShoppingCart(userShoppingCart, shopId, shop.name as string, commodity);
+  const res = addCommodityToShoppingCart(userShoppingCart, shopId, shop.name, shop.avatar, commodity);
   if(!res) {
     return {
       code: StatusCode.Success,
@@ -258,6 +260,14 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
       let lastModified = 0;
       // 若当前商城不存在商品，直接过滤掉
       if(shop.commodities.length === 0) return null;
+      const ids = await getCommoditiesFromShop(shop._id);
+
+      // 设置用于判断该商城是否存在相应商品的 Map
+      const isOnSalesIds :Record<string, boolean> = {}
+      if(ids && ids.length) {
+        ids.forEach((value) => isOnSalesIds[value] = true);
+      };
+
       const commodities = await Promise.all(
         shop.commodities.map((commodityInCart) => new Promise<CommodityInfo | null>(async (resolve, reject) => {
           // 根据每一个商城中的商品 id 获取购物车中商品展示所需要的信息
@@ -271,8 +281,11 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
             const actualPrice = price * discount * 0.01;
             lastModified = Math.max(addTime, lastModified);
 
+            // 获取当前商品的状态，若商城 schema 中已取消该商品则需要表示为已下架
+            let actualStatus = isOnSalesIds[commodity._id.toString()] ? status : CommodityStatus.OnStore
+
             // 计算当前购物车总价
-            if(status === CommodityStatus.OnSale && selected) {
+            if(actualStatus === CommodityStatus.OnSale && selected) {
               totalPrice += actualPrice * number;
             };
 
@@ -282,7 +295,7 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
               price: actualPrice,
               stock,
               cover: imagesSrc[0],
-              status,
+              status: actualStatus,
               selected,
               number,
               addTime
@@ -313,7 +326,7 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
  * @param commodity 商品
  * @returns 
  */
-function addCommodityToShoppingCart(shoppingCart: ShoppingCartInfoDocument, shopId: string, name: string, commodity: CommodityInShoppingCart) {
+function addCommodityToShoppingCart(shoppingCart: ShoppingCartInfoDocument, shopId: string, name: string, avatar: string, commodity: CommodityInShoppingCart) {
   const { shops } = shoppingCart;
   // 购物车中不存在该商城的商品信息
   const shopIndex = shops.findIndex((shop) => shop._id === shopId);
@@ -321,6 +334,7 @@ function addCommodityToShoppingCart(shoppingCart: ShoppingCartInfoDocument, shop
     shops.push({
       _id: shopId,
       name,
+      avatar,
       commodities: [commodity],
     });
     return true;

@@ -6,8 +6,9 @@ import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-h
 /** 商品详情页信息 */
 export interface CommodityDetail {
   shop: {
-    id: string,
-    name: string,
+    id: string;
+    name: string;
+    avatar: string;
   },
   commodity: Commodity,
 }

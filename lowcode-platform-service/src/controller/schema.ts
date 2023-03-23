@@ -1,99 +1,78 @@
-import { StatusCode } from "../const";
-import ShopSchema from '../models/schema';
-import type { ShopSchemaType } from '../models/schema';
+import { Schema } from 'mongoose';
+import ShopSchema, { SchemaType } from '../models/schema';
+import type { ComponentSchema } from '../models/schema';
+import { findCommoditiesFromSchema } from '../utils/commodity';
 
-export interface schema {
-  // 编辑器样式
-  editor: Record<string, string>;
-  // 组件 schema
-  components: Array<object>;
+// 默认的商城 schema
+const defaultShopSchema: ComponentSchema = {
+  editor: {},
+  components: [],
 }
 
 /**
- * 创建并保存 schema
- * @param username 用户名
- * @param name 商城名
- * @param schema 商城对应的 schema
+ * 创建商城 schema
+ * @param schema schema
  * @returns 
  */
-export async function createSchema(username: string, name: string, schema: schema) {
-  if(!schema || !schema.editor || !schema.components) {
-    return  {
-      code: StatusCode.Error,
-      msg: '保存失败, schema 数据异常',
-    }
+export async function createShopSchema(schema: ComponentSchema | undefined, type = SchemaType.Develop) {
+  let commodities: string[] | undefined = undefined;
+  if(type === SchemaType.Deploy) {
+    const ids = findCommoditiesFromSchema(schema);
+    commodities = ids.size ? Array.from(ids) : undefined;
   };
 
-  // 保存 schema
-  await ShopSchema.create({
-    username,
-    name,
-    schema: schema,
-    created: Date.now(),
+  const newShopSchema = await ShopSchema.create({
+    schema: schema || defaultShopSchema,
     modified: Date.now(),
+    version: 1,
+    type,
+    commodities,
   });
 
-  return {
-    code: StatusCode.Success,
-    msg: '保存成功',
-  }
-}
+  return newShopSchema;
+};
 
 /**
- * 根据用户名获取相应的 schema
- * @param username 用户名
+ * 更新 schema
+ * @param schemaId schemaId
+ * @param schema 最新的 schema
+ * @returns 
  */
-export async function getByUsername(username: string) {
- const shopSchema = await ShopSchema.find({
-    username,
+export async function updateShopSchemaById(schemaId: string, schema: ComponentSchema, type = SchemaType.Develop) {
+  let commodities: string[] | undefined = undefined;
+  if(type === SchemaType.Deploy) {
+    const ids = findCommoditiesFromSchema(schema);
+    commodities = ids.size ? Array.from(ids) : undefined;
+  };
+  
+  const shopSchema = await ShopSchema.findByIdAndUpdate(schemaId, {
+    schema,
+    modified: Date.now(),
+    $inc: { version: + 1 }, 
+    commodities,
   });
 
-  return {
-    code: StatusCode.Success,
-    shops: shopSchema,
-    msg: '获取商城成功',
-  }
-}
+  return shopSchema;
+};
 
 /**
- * 根据 id 获取 schema
- * @param id 商城 id
+ * 根据 id 删除商城 schema
+ * @param schemaId 商城 schema ID
  * @returns 
  */
-export async function getSchemaById(id: string) {
- const shopSchema = await ShopSchema.findById(id);
-
-  return {
-    code: StatusCode.Success,
-    shop: shopSchema,
-    msg: '获取商城成功',
-  }
-}
+export async function deleteShopSchemaById(schemaId: string) {
+  return await ShopSchema.findByIdAndDelete(schemaId);
+};
 
 /**
- * 根据 id 更新商城 schema
- * @param id 商城 id
- * @param name 商城名称
- * @param schema 商城 schema
+ * 根据 id 获取商城 schema
+ * @param schemaId 商城 schema ID
  * @returns 
  */
-export async function updatedSchemaById(id: string, name: string | undefined, schema: schema | undefined) {
-  const newComponentSchema: Partial<ShopSchemaType> = {
-    modified: Date.now(),
-  };
-
-  if(name) {
-    newComponentSchema.name = name;
-  };
-
-  if(schema) {
-    newComponentSchema.schema = schema;
-  };
-
-  await ShopSchema.findByIdAndUpdate(id, newComponentSchema);
-
-  return {
-    code: StatusCode.Success,
-    msg: '更新成功',
+export async function getShopSchemaById(schemaId: string, isIncludeSchema = true) {
+  if(!isIncludeSchema) {
+    return await ShopSchema.findById(schemaId, { schema: 0 });
   }
-}
+
+  return await ShopSchema.findById(schemaId);
+};

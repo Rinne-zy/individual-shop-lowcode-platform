@@ -71,6 +71,10 @@ const props = defineProps({
 
 const emits = defineEmits(['add'])
 
+// 是否展示原价
+const isShowOriginPrice = props.isShowOriginPrice && props.type !== 'inline' && props.price !== props.originPrice
+// 卡片的样式类
+const cardClass = props.type === 'inline' ? 'vertical inline' : props.type;
 // 展示的价格文本
 const priceText = computed(() => {
   const priceNumber: string[] = `${props.price}`.split(".");
@@ -79,14 +83,10 @@ const priceText = computed(() => {
     decimal: priceNumber[1] || `00`,
   };
 });
-// 是否展示原价
-const isShowOriginPrice = props.isShowOriginPrice && props.type !== 'inline' && props.price !== props.originPrice
-// 卡片的样式类
-const cardClass = props.type === 'inline' ? 'vertical inline' : props.type;
 
 // 添加商品至购物车
 const handleAddToCart = (e: MouseEvent) => {
-  e.preventDefault();
+  e.stopPropagation();
   emits('add', props.id);
 }
 </script>

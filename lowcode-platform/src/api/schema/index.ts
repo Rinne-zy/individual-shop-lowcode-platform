@@ -3,68 +3,30 @@ import axios from 'axios';
 import type { BaseResp } from './../type';
 import type { Schema } from 'lowcode-platform/store/schema-store';
 
-export interface Shop {
-  _id: string,
-  username: string,
-  name: string,
-  schema: Schema,
-  created: number,
-  modified: number,
+export interface ShopSchema {
+  // schema 的 id
+  _id: string;
+  // 版本号
+  version: number;
+  // 组件 schema
+  schema: Schema;
+  // 最近修改时间
+  modified: number;
 }
 
-export interface SchemaResp extends BaseResp {
-  shops: Shop[],
+export interface ShopsResp extends BaseResp {
+  shopSchema: ShopSchema,
 };
 
 /**
- * 保存 schema
- * @param schema 需要保存的 schema 
+ * 根据 id 获取 schema
+ * @param id schema id
  * @returns 
  */
-export async function saveSchema(name: string, schema: Schema) {
-  const res = await axios<BaseResp>({
-    method: 'post',
-    url: '/schema/create',
-    data: {
-      schema,
-      name
-    }
-  });
-
-  return res;
-}
-
-/**
- * 更新商城信息
- * @param id 商城 id
- * @param name 商城名
- * @param schema 商城 schema
- * @returns 
- */
-export async function updateSchema(id: string, name: string | undefined, schema: Schema | undefined) {
-  const res = await axios<BaseResp>({
-    method: 'post',
-    url: '/schema/updateById',
-    data: {
-      id,
-      schema,
-      name
-    }
-  });
-
-  return res;
-}
-
-
-/**
- * 获取当前用户下所有商城 schema
- * @param username 用户名
- * @returns 
- */
-export async function getSchema() {
-  const res = await axios<SchemaResp>({
+export async function getSchemaById(id: string) {
+  const res = await axios<ShopsResp>({
     method: 'get',
-    url: '/schema/get',
+    url: `schema/get?schemaId=${id}`,
   });
 
   return res;

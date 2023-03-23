@@ -29,6 +29,7 @@
       :data="picturesNeedToShow"
       ref="table"
       style="width: 100%"
+      :height="600"
     >
       <el-table-column type="selection" width="65" />
       <el-table-column prop="name" label="名称" width="300" />

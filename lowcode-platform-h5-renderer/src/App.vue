@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { getSchemaById } from 'lowcode-platform-h5-renderer/api/schema'
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
+import { getShopById } from './api/shop';
 
 // schema 存储 store
 const shopStore = useShopStore();
@@ -18,10 +18,10 @@ const init = async () => {
   const id = query.get('id') || shopStore._id;
   if(!id) return;
 
-  const { _id, name, schema } = await getSchemaById(id);
+  const { _id, name, avatar, schema, commodities  } = await getShopById(id);
   if(!_id || !name || !schema) return;
 
-  shopStore.initSchemaStore(_id, name, schema);
+  shopStore.initSchemaStore(_id, name, avatar, schema, commodities);
   document.title = name;
 };
 init();

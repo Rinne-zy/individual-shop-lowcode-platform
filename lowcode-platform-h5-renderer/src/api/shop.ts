@@ -6,12 +6,12 @@ import type { ShopStore } from 'lowcode-platform-h5-renderer/store/schema';
  * @param id 商城 id
  * @returns 
  */
-export async function getSchemaById(id: string) {
-  const resp = await fetch(`${FETCH_URL_PREFIX}schema/getById?id=${id}`);
+export async function getShopById(id: string) {
+  const resp = await fetch(`${FETCH_URL_PREFIX}shop/get/dep?shopId=${id}`);
   if(resp.status !== 200 || !resp.ok) throw new Error('获取商城请求异常');
 
   const { code, shop } = await resp.json();
   if(code) return {} as ShopStore;
   
   return shop as ShopStore;
-}
+};

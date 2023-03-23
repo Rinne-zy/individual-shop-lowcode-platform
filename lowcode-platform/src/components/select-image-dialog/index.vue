@@ -27,10 +27,10 @@
         ref="table"
         style="width: 100%"
         max-height="600"
-        :highlight-current-row="isEditing"
+        :highlight-current-row="isSingleSelect"
         @current-change="handleCurrentChange"
       >
-        <el-table-column v-if="!isEditing" type="selection" width="65" />
+        <el-table-column v-if="!isSingleSelect" type="selection" width="65" />
         <el-table-column prop="name" label="名称" width="200" />
         <el-table-column
           prop="type"
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onUnmounted, onMounted } from 'vue';
+import { computed, ref, watch, onUnmounted } from 'vue';
 import { ElDialog, ElTable, ElTableColumn, ElInput, ElButton } from 'element-plus';
 
 import UploadImageDialog from 'lowcode-platform/components/upload-image-dialog/index.vue';
@@ -88,7 +88,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  isEditing: {
+  isSingleSelect: {
     type: Boolean,
     default: false,
   }
@@ -103,7 +103,7 @@ const isUploadImageDialogVisible = ref(false);
 // 当前选择框是否可见
 const isVisible = computed(() => props.isVisible);
 // 是否处于编辑状态，编辑状态则为单选模式
-const isEditing = computed(() => props.isEditing);
+const isSingleSelect = computed(() => props.isSingleSelect);
 
 // el-table 表格 hook
 const {
@@ -178,7 +178,7 @@ const handleClose = () => {
 // 处理确认选择
 const handleConfirm = () => {
   const selectedRows = table.value?.getSelectionRows() as Image[];
-  emits('confirm', isEditing.value ? currentRow.value : selectedRows);
+  emits('confirm', isSingleSelect.value ? currentRow.value : selectedRows);
 };
 
 onUnmounted(() => {

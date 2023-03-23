@@ -30,7 +30,7 @@
     </div>
     <div class="shop">
       <!-- 到时候正式部署的商城 schema 中存在该商城图片头像信息 -->
-      <img src="/cover.png">
+      <img :src="data?.shop.avatar || '/cover.png'">
       <div class="shop-info">
         <p class="shop-info-name">{{ data?.shop.name }}</p>
         <p class="shop-info-star">xxx 人关注该店铺</p>
@@ -79,8 +79,10 @@ import { useCommodityDetailStore } from 'lowcode-platform-h5-renderer/store/comm
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 import { TabbarItem } from 'lowcode-platform-h5-renderer/type';
 import { addCommodityToCart } from 'lowcode-platform-h5-renderer/api/shopping-cart';
+import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 
 const commodityDetailStore = useCommodityDetailStore();
+const userStore = useUserStore();
 const router = useRouter();
 
 const data = ref<CommodityDetail>();
@@ -125,13 +127,24 @@ const handleGotoShop = async () => {
   const stop = useShopStore();
   stop._id = commodityDetailStore.shopId;
   stop.name = data.value?.shop.name || ''
-  await stop.getComponents();
+  await stop.getShop();
   // 前往商城
   stop.activeTabbar = TabbarItem.Home;
   commodityDetailStore.reset();
 
   router.replace('/');
 };
+
+// 判断是否登录
+const checkIsLogin = async () => {
+  const isLogin = await userStore.checkLogin();
+  if(!isLogin) {
+    router.push('/login');
+    return false;
+  };
+  return isLogin;
+}
+
 // 点击收藏
 let isStaring = false;
 const handleClickStar = async () => {
@@ -142,13 +155,18 @@ const handleClickStar = async () => {
   showSuccessToast(status ? '收藏成功✔' : '取消收藏');
   isStaring = false; 
 };
+
 // 点击立即购买
 const handleClickBuy = async () => {
+  if(await checkIsLogin()) return;
+
   await handleClickCart();
   router.replace('/cart');
 };
 // 加入购物车
 const handleClickCart = async () => {
+  if(await checkIsLogin()) return;
+
   const { commodityId, shopId } = commodityDetailStore;
   await addCommodityToCart(shopId, commodityId);
 }

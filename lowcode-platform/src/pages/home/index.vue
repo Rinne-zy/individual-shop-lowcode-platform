@@ -25,7 +25,8 @@
           </div>
           <div class="home-header-btns">
             <template v-if="activeMenuItem.value === '/shop'">
-              <el-button type="primary"><i class='iconfont icon-phone' />一键部署</el-button>
+              <el-button type="primary" @click="isVisible = true"><i class='iconfont icon-home' />创建商场</el-button>
+              <el-button type="primary" :disabled="!shopsStore.selectShopId" @click="deploy"><i class='iconfont icon-phone' />一键部署</el-button>
             </template>
             <template v-if="activeMenuItem.value === '/construction'">
               <el-button type="primary" @click="handleClickSave()" :disabled="isSaved"><i class='iconfont icon-save' />保存页面</el-button>
@@ -48,15 +49,7 @@
       :is-visible="isVisible"
       :is-editing="!isNewShop"
       @cancel="isVisible = false"
-      @confirm="(name) => {
-        if(isNewShop) {
-          handleSaveConfirm(name);
-          isVisible = false;
-        } else {
-          handleUpdateConfirm();
-          isVisible = false;
-        }
-      }"
+      @confirm="handleSaveConfirm"
     />
   </div>
 </template>
@@ -69,18 +62,21 @@ import CreateShopDialog from 'lowcode-platform/components/create-shop-dialog/ind
 import { useMenuStore } from 'lowcode-platform/store/menu-store';
 import { useUserStore } from 'lowcode-platform/store/user-store';
 import { useRoute, useRouter } from 'vue-router';
-import { saveSchema, updateSchema } from 'lowcode-platform/api/schema';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { showSuccessMessage } from 'lowcode-platform/utils/toast';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
+import { createShop, deployShop, ShopInfo, updateShopSchema } from 'lowcode-platform/api/shop';
+import { showConfirmDialog } from 'vant';
+import { useShopsStore } from 'lowcode-platform/store/shop-store';
 
 // 用户信息 store
 const userStore = useUserStore();
-
 // 菜单信息
 const menuStore = useMenuStore();
 // schema 信息
 const schemaStore = useSchemaStore();
+// 商城
+const shopsStore = useShopsStore();
 // 路由
 const route = useRoute();
 const router = useRouter();
@@ -92,17 +88,12 @@ const activeMenuItem = computed(() => menuStore.menu[activeMenuItemIndex.value])
 const activatedMenu  = computed(() => menuStore.activatedMenu);
 
 const createShopDialogRef = ref<null | InstanceType<typeof CreateShopDialog> >();
-const handleClickSave = (name = schemaStore.name) => {
-  isVisible.value = true;
-  createShopDialogRef.value?.setShopForm(name);
-};
-
 // 对话框是否可见
 const isVisible = ref(false);
 // 是否已经保存
 const isSaved = computed(() => schemaStore.isSavedSchema());
 // 是否是新商城
-const isNewShop = computed(() => !schemaStore.id && !schemaStore.name);
+const isNewShop = computed(() => !schemaStore.id);
 
 onMounted(() => {
   // 设置正在激活的路由
@@ -118,23 +109,71 @@ router.afterEach(() => {
   activeMenuItemIndex.value = activeIndex;
 })
 
-/**
- * 处理确认保存回调
- * @param name 
- */
-const handleSaveConfirm = async (name: string) => {
-  const { data } = await saveSchema(name, schemaStore.schema);
-  if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
-  showSuccessMessage(data.msg);
-  schemaStore.reset(true);
-}
+// 需要前往商城页面
+let needToGoToShopPage = false;
+const goToShopPage = () => {
+  needToGoToShopPage = false;
+  router.push('/shop');
+};
 
-/** 处理更新 */
-const handleUpdateConfirm = async () => {
-  const { data } = await updateSchema(schemaStore.id, undefined, schemaStore.schema);
+// 点击页面保存按钮
+const handleClickSave = () => {
+  // 若为新商城
+  if(isNewShop.value) {
+    showConfirmDialog({
+      title: '提示',
+      message:'当前编辑信息未绑定商城，是否创建新商城?',
+    })
+      .then(() => {
+        isVisible.value = true;
+        needToGoToShopPage = true;
+      })
+      .catch(() => {});
+    
+    return;
+  }
+
+  // 非新商城直接保存
+  updateShopSchema(schemaStore.id, schemaStore.schema).then(({ data }) => {
+    if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+    showSuccessMessage(data.msg);
+  });
+  schemaStore.isSave = true;
+};
+
+// 确认保存
+const handleSaveConfirm = async (formData: ShopInfo) => {
+  const { data } = await createShop(formData, schemaStore.schema);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
-  schemaStore.reset(true);
+  schemaStore.reset();
+  isVisible.value = false;
+  // 编辑器页面前往商城页面
+  if(needToGoToShopPage) {
+    goToShopPage();
+    return;
+  }
+
+  shopsStore.getMyShops();
+};
+
+// 发布商城
+let isDeploying = false;
+const deploy = () => {
+  if(isDeploying) return;
+  isDeploying = true;
+
+  showConfirmDialog({
+      title: '提示',
+      message:'是否要部署当前商城',
+  })
+    .then(async () => {
+      const { data } = await deployShop(shopsStore.selectShopId);
+      if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
+      showSuccessMessage(data.msg);
+      isDeploying = false;
+    })
+    .catch(() => {});
 }
 
 </script>

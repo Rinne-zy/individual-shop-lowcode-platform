@@ -96,7 +96,7 @@ const handleGotoShop = async () =>{
   const stop = useShopStore();
   stop.name = props.title;
   stop._id = props.id;
-  await stop.getComponents();
+  await stop.getShop();
 
   // 前往商城
   stop.activeTabbar = TabbarItem.Home;

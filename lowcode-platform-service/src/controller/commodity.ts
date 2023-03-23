@@ -1,5 +1,5 @@
 import { Commodity as CommodityType } from './../models/commodity';
-import ShopSchema from '../models/schema';
+import Shop from '../models/shop';
 import Commodity  from './../models/commodity';
 import User from './../models/user';
 import { StatusCode } from '../const';
@@ -108,9 +108,8 @@ export async function getCommoditiesById(id: string | string[]) {
  * @returns 
  */
 export async function getCommodityDetail(shopId: string, commodityId: string) {
-  // TODO: 后续改为部署的商场信息
  const [shop, commodity] =  await Promise.all([
-    ShopSchema.findById(shopId),
+    Shop.findById(shopId),
     Commodity.findById(commodityId),
   ]);
 
@@ -121,6 +120,7 @@ export async function getCommodityDetail(shopId: string, commodityId: string) {
     shop: {
       id: shop._id,
       name: shop.name,
+      avatar: shop.avatar,
     },
     commodity
   }
