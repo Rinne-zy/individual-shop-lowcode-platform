@@ -30,7 +30,7 @@
             </template>
             <template v-if="activeMenuItem.value === '/construction'">
               <el-button type="primary" @click="handleClickSave()" :disabled="isSaved"><i class='iconfont icon-save' />保存页面</el-button>
-              <el-button type="primary"><i class='iconfont icon-phone' />实时预览</el-button>   
+              <el-button type="primary"  @click="handlePreview"><i class='iconfont icon-phone' />实时预览</el-button>   
             </template>
           </div>
           <div class="home-header-user-info">
@@ -52,6 +52,7 @@
       @confirm="handleSaveConfirm"
     />
   </div>
+  <realtime-preview ref="realTimePreviewRef" />
 </template>
 
 <script setup lang="ts">
@@ -59,6 +60,7 @@ import { ref, computed, onMounted } from 'vue';
 import { ElContainer, ElAside, ElHeader, ElMain, ElMenu, ElMenuItem, ElButton } from 'element-plus';
 
 import CreateShopDialog from 'lowcode-platform/components/create-shop-dialog/index.vue';
+import RealtimePreview from 'lowcode-platform/components/realtime-preview/index.vue';
 import { useMenuStore } from 'lowcode-platform/store/menu-store';
 import { useUserStore } from 'lowcode-platform/store/user-store';
 import { useRoute, useRouter } from 'vue-router';
@@ -86,7 +88,7 @@ const activeMenuItemIndex = ref(0);
 const menu = computed(() => menuStore.menu);
 const activeMenuItem = computed(() => menuStore.menu[activeMenuItemIndex.value]);
 const activatedMenu  = computed(() => menuStore.activatedMenu);
-
+const realTimePreviewRef = ref<InstanceType<typeof RealtimePreview>>();
 const createShopDialogRef = ref<null | InstanceType<typeof CreateShopDialog> >();
 // 对话框是否可见
 const isVisible = ref(false);
@@ -171,9 +173,19 @@ const deploy = () => {
       const { data } = await deployShop(shopsStore.selectShopId);
       if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
       showSuccessMessage(data.msg);
+      shopsStore.getMyShops();
       isDeploying = false;
     })
     .catch(() => {});
+};
+
+// 处理预览
+const handlePreview = (e: MouseEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  console.log('test');
+  console.log(realTimePreviewRef.value);
+  realTimePreviewRef.value?.show();
 }
 
 </script>

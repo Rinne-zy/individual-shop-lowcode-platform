@@ -15,14 +15,22 @@
           <div class="checkbox" :class="{selected: shop._id === selectShopId }" @click="handleSelectShop(shop._id, $event)" >
             <span class="iconfont" :class="shop._id === selectShopId ? 'icon-selected': 'icon-not-selected'" />
           </div>
-          <div class="delete-btn" @click="handleDeleteShop(shop._id, $event)"><span class="iconfont icon-delete"/></div>
+          <div>
+            <span class="share-btn" :data-clipboard-text="shop._id"  @click="handleShareShop(shop._id, $event)"><span class="iconfont icon-share"/></span>
+            <span class="delete-btn" @click="handleDeleteShop(shop._id, $event)"><span class="iconfont icon-delete"/></span>
+          </div>
         </div>
       </transition>
         <img :src="shop.avatar" class="shop-image" />
         <div style="padding: 14px">
           <span class="shop-title">{{ shop.name }}</span>
           <div class="shop-bottom">
-            <time class="shop-bottom-time">最近修改：{{ getDate(shop.devModified) }}</time>
+            <div class="shop-bottom-info">
+              <time class="shop-bottom-info-item">最近修改：{{ getDate(shop.devModified) }}</time>
+              <time class="shop-bottom-info-item">{{ shop.depModified ? `最近部署：${getDate(shop.depModified)}` : '未部署' }}</time>
+              <div class="shop-bottom-info-item">开发版本：v{{ shop.devVersion }}</div>
+              <div class="shop-bottom-info-item">{{ shop.depVersion ? `线上版本：v${ shop.depVersion }` : '未部署' }}</div>
+            </div>
             <el-button type="primary" text class="shop-bottom-button" @click="handleClickEdit(index, $event)">编辑</el-button>
           </div>
         </div>
@@ -51,6 +59,7 @@ import { useShopsStore } from 'lowcode-platform/store/shop-store';
 import { deleteShop, ShopInfo } from 'lowcode-platform/api/shop';
 import { updateShopBasicInfo } from 'lowcode-platform/api/shop';
 import { showSuccessMessage } from 'lowcode-platform/utils/toast';
+import { copy } from 'lowcode-platform/utils/copy';
 
 const schemaStore = useSchemaStore();
 const router = useRouter();
@@ -130,10 +139,16 @@ const handleSelectShop = (id: string, e: MouseEvent) => {
     return;
    };
    shopsStore.selectShopId = id;
-}
+};
+// 分享商城
+const handleShareShop =  async (id: string, e: MouseEvent) => {
+  e.stopPropagation();
+  const url = `http://localhost:5174/home?id=${id}`
+  await copy(url);
+  showSuccessMessage('复制线上链接成功，快去分享给你的好友吧');
+};
 
 shopsStore.getMyShops();
-
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

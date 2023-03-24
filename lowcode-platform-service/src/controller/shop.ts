@@ -95,7 +95,7 @@ export async function deployShop(shopId: string) {
   if(!shop.deployId) {
     schema = await createShopSchema(devSchema.schema, SchemaType.Deploy);
   } else {
-    schema = await updateShopSchemaById(shop.developedId, devSchema.schema, SchemaType.Deploy);
+    schema = await updateShopSchemaById(shop.deployId, devSchema.schema, SchemaType.Deploy);
   }
 
   if(!schema) throw new Error('部署失败');
@@ -127,7 +127,7 @@ export async function getShops(username: string) {
       if(!devSchema) throw new Error('获取 schema 失败');
   
       const { _id, name, username, avatar } = shop;
-  
+
       return {
         _id,
         name,

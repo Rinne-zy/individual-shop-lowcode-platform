@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3868218 */
-  src: url('iconfont.woff2?t=1679565324633') format('woff2'),
-       url('iconfont.woff?t=1679565324633') format('woff'),
-       url('iconfont.ttf?t=1679565324633') format('truetype');
+  src: url('iconfont.woff2?t=1679629749329') format('woff2'),
+       url('iconfont.woff?t=1679629749329') format('woff'),
+       url('iconfont.ttf?t=1679629749329') format('truetype');
 }
 
 .iconfont {
@@ -84,4 +84,8 @@
 
 .icon-selected:before {
   content: "\e62d";
+}
+
+.icon-share:before {
+  content: "\e739";
 }

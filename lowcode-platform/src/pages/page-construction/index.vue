@@ -69,7 +69,7 @@ const { dragStart, dragEnd } = useComponentsMaterialDrag(canvasContentRef as Ref
 // 拖拽开始
 const handleDragStart = (key: string) => {
   dragStart(key);
-}
+};
 
 // 处理组件物料区点击
 const { handleComponentsMaterialClick } = useComponentsMaterialClick();
