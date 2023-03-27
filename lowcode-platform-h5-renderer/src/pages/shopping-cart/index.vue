@@ -1,28 +1,29 @@
 <template>
   <div v-if="isLogin" class="shopping-cart">
-   <div class="shopping-content">
-      <address-item :address-info="addressInfo"/>
-      <shopping-cart-card
-        class="shopping-content-card"
-        v-for="shop in shopsOrderByAddTime"
-        :key="shop._id"
-        :title="shop.name"
-        :id="shop._id"
-        :cart-id="shoppingCart._id"
-        :commodities="shop.commodities"
-        @change-commodity-num="handleChangeCommodityNum"
-        @select-commodity="handleSelectCommodity"
-        @select-all-commodities="handleSelectShopAllCommodity"
-        @delete-commodity="handleDeleteCommodity"
-      />
-      <div class="tabbar-padding"></div>
-   </div>
-   <van-submit-bar 
-    class="submit-bar"
-    :loading="isLoading"
-    :price="shoppingCart.totalPrice * 100"
-    button-text="提交订单"
-  />
+    <div class="shopping-content">
+        <address-item :address-info="addressInfo"/>
+        <shopping-cart-card
+          class="shopping-content-card"
+          v-for="shop in shopsOrderByAddTime"
+          :key="shop._id"
+          :title="shop.name"
+          :id="shop._id"
+          :cart-id="shoppingCart._id"
+          :commodities="shop.commodities"
+          @change-commodity-num="handleChangeCommodityNum"
+          @select-commodity="handleSelectCommodity"
+          @select-all-commodities="handleSelectShopAllCommodity"
+          @delete-commodity="handleDeleteCommodity"
+        />
+        <div class="tabbar-padding"></div>
+    </div>
+    <van-submit-bar 
+      class="submit-bar"
+      :loading="isLoading"
+      :price="shoppingCart.totalPrice * 100"
+      @submit="handleSubmit"
+      button-text="提交订单"
+    />
   </div>
   <van-empty v-else description="未登录" />
 </template>
@@ -39,6 +40,8 @@ import type { ShoppingCartInfo } from 'lowcode-platform-h5-renderer/type/commodi
 import { ChangeNumType, deleteCommodityFromCart, getShoppingCartInfo, selectShopAllCommodities } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { changeCommodityNum, selectCommodity } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
+import { useOrderStore } from 'lowcode-platform-h5-renderer/store/order';
+import router from 'lowcode-platform-h5-renderer/router';
 
 const userStore = useUserStore();
 const isLogin = computed(() => userStore.isLogin);
@@ -137,6 +140,14 @@ const handleDeleteCommodity = async (shopId: string, commodityId: string,) => {
   await deleteCommodityFromCart(shoppingCart._id, shopId, commodityId)
   await getShoppingCart();
   isDeleting = false;
+}
+// 提交订单
+const handleSubmit = () => {
+  const orderStore = useOrderStore();
+  orderStore.addressInfo = addressInfo;
+  orderStore.shopsInfo = shopsOrderByAddTime.value;
+  orderStore.totalPrice = shoppingCart.totalPrice;
+  router.push('/order');
 }
 </script>
 

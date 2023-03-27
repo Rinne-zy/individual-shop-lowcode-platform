@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { ElCollapse, ElCollapseItem, ElRadio, ElRadioGroup, ElButton } from 'element-plus';
-import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import type { PropType } from 'vue';
 
 import CommonAttr  from '../common/index.vue';

@@ -16,10 +16,6 @@ export interface CommodityInShoppingCart {
 export interface ShopInShoppingCart {
 	// 商城 id
 	_id: string;
-	// 商城名称
-	name: string;
-	// 商城头像
-	avatar: string
 	// 商品
 	commodities: CommodityInShoppingCart[]
 }

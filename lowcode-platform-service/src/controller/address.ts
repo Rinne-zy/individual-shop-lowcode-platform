@@ -162,3 +162,25 @@ export async function selectAddress(id: string, addressInfoId: string) {
     msg: '修改选中地址成功',
   }
 };
+
+
+/**
+ * 获取用户的地址详情信息信息
+ * @param username 用户名
+ * @returns 
+ */
+export async function getAddressDetailInfo(username: string) {
+  const userAddress = await Address.findOne({ username });
+  if(!userAddress) throw new Error('当前用户的地址不存在地址');
+  
+
+  const { selectedAddressId, address } = userAddress;
+  const addressInfo = address.find((info) => info.id === selectedAddressId);
+
+  if(!addressInfo) throw new Error('当前用户选中的地址信息错误');
+
+  const { city, province, county, addressDetail } = addressInfo
+
+  if(!city && !province && !county) return ''
+  return `${addressInfo.city === addressInfo.province ? addressInfo.province : addressInfo.city}${addressInfo.county}${addressDetail}`
+}

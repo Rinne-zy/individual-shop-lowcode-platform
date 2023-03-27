@@ -10,7 +10,7 @@ import { CommodityStatus }  from './../models/commodity';
 import { getCommoditiesFromShop } from './shop';
 
 // 接口返回的购物车商品信息
-interface CommodityInfo {
+export interface CommodityInfo {
 	// 商品 id
 	_id: string;
 	// 商品名称
@@ -32,7 +32,7 @@ interface CommodityInfo {
 };
 
 // 接口返回的购物车商城信息
-interface ShopInfo {
+export interface ShopInfo {
 	// 商城 id
 	_id: string;
 	// 商城名称
@@ -72,8 +72,6 @@ export async function addShoppingCartInfo(username: string, shopId: string, comm
     // 购物车中商城信息
     const shopInfo: ShopInShoppingCart = {
       _id: shopId,
-      name: shop.name,
-      avatar: shop.avatar,
       commodities: [
         commodity,
       ]
@@ -90,7 +88,7 @@ export async function addShoppingCartInfo(username: string, shopId: string, comm
     }
   };
 
-  const res = addCommodityToShoppingCart(userShoppingCart, shopId, shop.name, shop.avatar, commodity);
+  const res = addCommodityToShoppingCart(userShoppingCart, shopId, commodity);
   if(!res) {
     return {
       code: StatusCode.Success,
@@ -258,8 +256,14 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
     shopInShoppingCart.map(async (shop) => {
       // 最近购物车中添加该商城的时间戳
       let lastModified = 0;
+
       // 若当前商城不存在商品，直接过滤掉
       if(shop.commodities.length === 0) return null;
+
+      // 获取商城信息
+      const shopInfo = await Shop.findById(shop._id);
+      if(!shopInfo) return null;
+
       const ids = await getCommoditiesFromShop(shop._id);
 
       // 设置用于判断该商城是否存在相应商品的 Map
@@ -273,7 +277,7 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
           // 根据每一个商城中的商品 id 获取购物车中商品展示所需要的信息
           try {
             // 原来购物车中的商品数据
-            const { _id, selected, number, addTime } = commodityInCart;
+            const { _id, selected, number, addTime, } = commodityInCart;
             const commodity = await Commodity.findById(_id);
             if(!commodity) return null;
   
@@ -307,7 +311,8 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
 
         return {
           _id: shop._id,
-          name: shop.name,
+          name: shopInfo.name,
+          avatar: shopInfo.avatar,
           modified: lastModified,
           commodities:  commodities.filter((commodity) => commodity) as CommodityInfo[] ,
         };
@@ -326,15 +331,13 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
  * @param commodity 商品
  * @returns 
  */
-function addCommodityToShoppingCart(shoppingCart: ShoppingCartInfoDocument, shopId: string, name: string, avatar: string, commodity: CommodityInShoppingCart) {
+function addCommodityToShoppingCart(shoppingCart: ShoppingCartInfoDocument, shopId: string, commodity: CommodityInShoppingCart) {
   const { shops } = shoppingCart;
   // 购物车中不存在该商城的商品信息
   const shopIndex = shops.findIndex((shop) => shop._id === shopId);
   if(shopIndex === -1) {
     shops.push({
       _id: shopId,
-      name,
-      avatar,
       commodities: [commodity],
     });
     return true;

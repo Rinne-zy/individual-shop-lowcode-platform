@@ -14,7 +14,7 @@
     <div class="divider">
       <div v-for="num in 12" :class="['divider-item', num % 2 === 0 ? 'origen' : 'blue']"></div>
     </div>
-    <van-icon class="arrow-icon" name="arrow" @click="goToAddressSelectPage"/>
+    <van-icon v-if="canSelect" class="arrow-icon" name="arrow" @click="goToAddressSelectPage"/>
   </div>
 </template>
 
@@ -29,11 +29,19 @@ const props = defineProps({
   addressInfo: {
     type: Object as PropType<AddressInfo>,
     default: () => {}
+  },
+  canSelect: {
+    type: Boolean,
+    default: true,
   }
 });
 
 // 地区信息
-const areaInfo = computed(() => ` ${props.addressInfo.city === props.addressInfo.province ? props.addressInfo.province : props.addressInfo.city}${props.addressInfo.county}`)
+const areaInfo = computed(() => {
+  const { city, province, country } = props.addressInfo
+  if(!city && !province && !country) return ''
+  return `${props.addressInfo.city === props.addressInfo.province ? props.addressInfo.province : props.addressInfo.city}${props.addressInfo.county}`
+})
 // 路由
 const router = useRouter();
 

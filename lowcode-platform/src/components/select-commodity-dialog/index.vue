@@ -141,8 +141,10 @@ const {
 
 // 需要展示的商品
 const commoditiesNeedToShow = computed(() => {
-  // 过滤已选择的商品
-  const leftCommodity = commodities.value.filter((commodity) => !props.selectedIds.includes(commodity._id));
+  // 过滤已选择的商品和不在销售状态的商品
+  const leftCommodity = commodities.value.filter((commodity) =>
+  !props.selectedIds.includes(commodity._id) && commodity.status === CommodityStatus.OnSale
+);
 
   if(!search.value) {
     return leftCommodity;

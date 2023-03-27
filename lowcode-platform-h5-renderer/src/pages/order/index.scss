@@ -1,0 +1,10 @@
+.order {
+  height: 100vh;
+  overflow: auto;
+  background-color: #f7f8fa;
+  &-commodities {
+    margin-top: 10px;
+    padding: 0 5px;
+  }
+}
+

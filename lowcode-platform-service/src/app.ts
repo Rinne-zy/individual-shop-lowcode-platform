@@ -5,6 +5,7 @@ import koaStatic from 'koa-static';
 import path from 'path';
 import type { Server } from 'http';
 
+import orderRouter from './router/order';
 import schemaRouter from './router/schema';
 import shopRouter from './router/shop'
 import shoppingCartRouter from './router/shopping-cart';
@@ -76,6 +77,10 @@ app.use(shopRouter.allowedMethods());
 // schema 相关路由
 app.use(schemaRouter.routes());
 app.use(schemaRouter.allowedMethods());
+
+// 订单相关路由
+app.use(orderRouter.routes());
+app.use(orderRouter.allowedMethods());
 
 // 启动服务
 const runServer = (port: number): Server => {

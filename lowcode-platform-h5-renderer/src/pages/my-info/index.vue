@@ -22,18 +22,24 @@
       <div class="my-buy-order">
         <van-badge :content="5">
           <div class="my-buy-order-item">
-            <van-icon name="credit-pay" :size="30"/>
+            <van-icon name="credit-pay" :size="30" @click="handleGotoMyOrder(OrderFormType.Paying)"/>
             <div>待付款</div>
           </div>
         </van-badge>
         <van-badge :content="2">
           <div class="my-buy-order-item ml">
-            <van-icon name="logistics" :size="30"/>
+            <van-icon name="send-gift-o" :size="30" @click="handleGotoMyOrder(OrderFormType.Preparing)"/>
             <div>待发货</div>
           </div>
         </van-badge>
-        <van-badge>
+        <van-badge :content="2">
           <div class="my-buy-order-item ml">
+            <van-icon name="logistics" :size="30" @click="handleGotoMyOrder(OrderFormType.Delivering)"/>
+            <div>已发货</div>
+          </div>
+        </van-badge>
+        <van-badge>
+          <div class="my-buy-order-item ml" @click="handleGotoMyOrder(OrderFormType.All)">
             <van-icon name="orders-o" :size="30"/>
             <div>全部订单</div>
           </div>
@@ -49,6 +55,7 @@ import { computed } from 'vue';
 
 import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 import { useRouter } from 'vue-router';
+import { OrderFormType, useOrderStore } from 'lowcode-platform-h5-renderer/store/order';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -69,7 +76,14 @@ const handleLogin = () => {
 
   // 注销登录
   userStore.clearLoginUserInfo();
-}
+};
+
+// 处理前往订单
+const handleGotoMyOrder = (type: OrderFormType) => {
+  const orderStore = useOrderStore();
+  orderStore.activeTab = type;
+  router.push('/my-order')
+};
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

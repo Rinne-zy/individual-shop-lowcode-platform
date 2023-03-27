@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 
+import MyOrder from 'lowcode-platform-h5-renderer/pages/my-order/index.vue';
 import Login from 'lowcode-platform-h5-renderer/pages/login/index.vue';
+import Order from 'lowcode-platform-h5-renderer/pages/order/index.vue';
 import Address from 'lowcode-platform-h5-renderer/pages/address/index.vue';
 import Shop from 'lowcode-platform-h5-renderer/pages/shop/index.vue';
 import Commodity from 'lowcode-platform-h5-renderer/pages/commodity/index.vue';
@@ -43,6 +45,16 @@ const routes: RouteRecordRaw[] = [
     path: '/address',
     name: 'address',
     component: () => Address,
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: () => Order,
+  },
+  {
+    path: '/my-order',
+    name: 'my-order',
+    component: () => MyOrder,
   },
   {
     path: '/login',
