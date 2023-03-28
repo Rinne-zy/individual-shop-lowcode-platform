@@ -1,24 +1,30 @@
-import { Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 import { StatusCode } from '../const';
 import ShoppingCart from '../models/shopping-cart';
 import type { ShopInShoppingCart } from '../models/shopping-cart';
 import Shop from '../models/shop';
 import Commodity from './../models/commodity';
-import Order, { OrderStatus } from './../models/order'
+import Order, { CommodityInOrder, CustomerInOrder, OrderStatus } from './../models/order'
+import type { Order as OrderFormType } from './../models/order';
 import { CommodityStatus }  from './../models/commodity';
 import { getCommoditiesFromShop } from './shop';
 import { getAddressDetailInfo } from './address';
 
-interface ShopsInOrder {
+interface OrderForm {
+  _id: Types.ObjectId
   shop: {
       _id: string;
       ownerId: string;
       name: string;
       avatar: string;
   };
-  commodities: CommodityInfoInOrder[];
-  selectedIds: any[];
+  totalPrice: string;
+  status: OrderStatus;
+  created: number;
+  trackingNumber: string;
+  commodities: CommodityInOrder[];
+  customer: CustomerInOrder;
 }
 
 interface CommodityInfoInOrder {
@@ -35,6 +41,10 @@ interface CommodityInfoInOrder {
   // 分类
   type: string;
 }
+
+type OrderDocumentType = (Document<unknown, any, OrderFormType> & OrderFormType & {
+  _id: Types.ObjectId;
+})[]
 
 /**
  * 创建订单
@@ -95,16 +105,44 @@ export async function createOrder(username: string) {
 };
 
 /**
- * 获取用户的订单信息
+ * 用户获取的订单信息
  * @param username 
  * @returns 
  */
 export async function getOrderByCustomerUserName(username: string) {
   const orderForms = await Order.find({ 'customer.username': username });
+
+  let orders: OrderForm[] | null = null;
+
+  if(!orderForms) return orders;
+
+  orders = await getOrderForms(orderForms);
+
   return {
     code: StatusCode.Success,
     msg: '获取订单成功',
-    orders: orderForms,
+    orders,
+  }
+}
+
+/**
+ * 商家获取的订单信息
+ * @param username 
+ * @returns 
+ */
+export async function getOrderByMerchantUserName(username: string) {
+  const orderForms = await Order.find({ 'shop.ownerId': username });
+  
+  let orders: OrderForm[] | null = null;
+
+  if(!orderForms) return orders;
+
+  orders = await getOrderForms(orderForms);
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取订单成功',
+    orders,
   }
 }
 
@@ -113,7 +151,7 @@ export async function getOrderByCustomerUserName(username: string) {
  * @param ids 支付的订单号
  * @returns 
  */
-export async function payOrderByOrderId(ids: string[] | string) {
+export async function payOrderByOrderId(ids: string[] | string, username: string) {
   let orderIds: string[] | string = ids;
   if(!Array.isArray(ids)) {
     orderIds = [ids];
@@ -122,6 +160,7 @@ export async function payOrderByOrderId(ids: string[] | string) {
   await Promise.all((orderIds as string[]).map( async (id) => {
     const order = await Order.findByIdAndUpdate(id, { status: OrderStatus.Preparing });
     if(!order) throw new Error('支付订单失败');
+    if(order.customer.username !== username) throw new Error('用户名有误');
     // 增加商品销量
     await Promise.all(order.commodities.map((commodity) => Commodity.findByIdAndUpdate(commodity._id, { $inc: { sales: + 1 } })));
   }));
@@ -137,13 +176,66 @@ export async function payOrderByOrderId(ids: string[] | string) {
  * @param id 订单 id
  * @returns 
  */
-export async function cancelOrderByOrderId(id: string) {
+export async function cancelOrderByOrderId(id: string, username: string) {
+  const order = await Order.findById(id);
+  if(!order) throw new Error('订单错误');
+  if(order.customer.username !== username) throw new Error('用户名有误');
+
   const deleteOrder = await Order.findByIdAndDelete(id);
-  console.log('id', id);
   if(!deleteOrder) throw new Error('删除失败');
   return {
     code: StatusCode.Success,
     msg: '取消订单成功',
+  }
+}
+
+/**
+ * 发货
+ * @param id 订单 id
+ * @param username 商家用户名
+ * @param trackingNumber 订单号
+ * @returns 
+ */
+export async function deliverOrderByOrderId(id: string, username: string, trackingNumber: string) {
+  if(!trackingNumber) throw new Error('订单号不能为空');
+
+  const order = await Order.findById(id);
+  if(!order) throw new Error('订单错误');
+  if(order.shop.ownerId !== username) throw new Error('用户名有误');
+  if(order.status !== OrderStatus.Preparing) throw new Error('订单状态错误');
+
+  // 更新为已发货
+  order.status = OrderStatus.Delivering;
+  order.trackingNumber = trackingNumber;
+  order.markModified('status');
+  order.markModified('trackingNumber');
+  await order.save();
+
+  return {
+    code: StatusCode.Success,
+    msg: '发货成功',
+  }
+}
+
+/**
+ * 完成订单
+ * @param id 订单 id
+ * @param username 商家用户名
+ * @returns 
+ */
+export async function finishOrderByOrderId(id: string, username: string) {
+  const order = await Order.findById(id);
+  if(!order) throw new Error('订单错误');
+  if(order.customer.username !== username) throw new Error('用户名有误');
+  if(order.status !== OrderStatus.Delivering) throw new Error('订单状态错误');
+
+  order.status = OrderStatus.Finished;
+  order.markModified('status');
+  await order.save();
+
+  return {
+    code: StatusCode.Success,
+    msg: '已确认收货',
   }
 }
 
@@ -228,3 +320,33 @@ async function getOrderInfoFromShoppingCart(shopInShoppingCart: ShopInShoppingCa
 
   return shopsInOrder.filter((shop) => shop);
 };
+
+
+function getOrderForms(orderForms: OrderDocumentType) {
+  return Promise.all(orderForms.map(async (orderForm) => {
+    const { commodities, totalPrice, trackingNumber, created, status, customer  } = orderForm
+    let { _id, name, avatar, ownerId } = orderForm.shop;
+    const shop = await Shop.findById(_id);
+    // 获取最新商城的信息
+    if(shop) {
+      name = shop.name;
+      avatar = shop.avatar;
+    }
+
+    return {
+      _id: orderForm._id,
+      totalPrice,
+      status,
+      created,
+      trackingNumber,
+      commodities,
+      customer,
+      shop: {
+        _id,
+        name,
+        avatar,
+        ownerId
+      }
+    }
+  }));
+}

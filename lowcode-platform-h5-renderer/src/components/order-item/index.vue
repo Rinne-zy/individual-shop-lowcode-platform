@@ -27,6 +27,11 @@
           <van-button class="paying-operation-button" type="default" size="small" round plain @click="handleCancel">取消订单</van-button>
         </div>
       </div>
+      <div v-if="canFinish" class="finish">
+        <div class="finish-operation">
+          <van-button class="paying-operation-button" type="success" size="small" round plain @click="handleFinish">确认收货</van-button>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -45,6 +50,10 @@ const props = defineProps({
     default: true,
   },
   isPaying: {
+    type: Boolean,
+    default: false,
+  },
+  canFinish: {
     type: Boolean,
     default: false,
   },
@@ -74,7 +83,7 @@ const props = defineProps({
   }
 });
 
-const emits = defineEmits(['pay', 'cancel'])
+const emits = defineEmits(['pay', 'cancel', 'finish'])
 
 // 需要展示的商品
 const needToShowCommodities = computed(() => {
@@ -92,6 +101,9 @@ const handlePay = () => {
 // 处理取消
 const handleCancel = () => {
   emits('cancel', props.id);
+};
+const handleFinish = () => {
+  emits('finish', props.id);
 }
 </script>
 

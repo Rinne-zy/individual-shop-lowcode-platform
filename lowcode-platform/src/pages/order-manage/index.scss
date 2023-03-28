@@ -1,0 +1,23 @@
+.order-manage {
+  background-color: #fff;
+  padding: 30px 20px;
+  &-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .commodity-table {
+    padding: 0 40px;
+  }
+}
+
+.input-with-select {
+  width: 500px;
+  margin-bottom: 20px;
+}
+
+.expand-operation {
+  padding: 10px 40px;
+  display: flex;
+  justify-content: flex-end;
+}

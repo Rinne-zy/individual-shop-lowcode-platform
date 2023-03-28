@@ -43,6 +43,8 @@
           :commodities-info="order.commodities"
           :name="order.shop.name"
           :ellipsis="false"
+          :can-finish="true"
+          @finish="handleFinish"
         />
       </van-tab>
       <van-tab :title="textByOrderFormType[OrderFormType.All]" :name="OrderFormType.All">
@@ -69,8 +71,9 @@ import { Tab as VanTab, Tabs as VanTabs, NavBar, showConfirmDialog } from 'vant'
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { cancelOrderForm, getOrderForm, OrderStatus, payOrderForm } from 'lowcode-platform-h5-renderer/api/order';
-import type { Order } from 'lowcode-platform-h5-renderer/api/order';
+import { cancelOrderForm, getOrderForm, payOrderForm, finishOrder } from 'lowcode-platform-h5-renderer/api/order';
+import { OrderStatus } from 'lowcode-platform-common/type/order';
+import type { Order } from 'lowcode-platform-common/type/order';
 import OrderItem from 'lowcode-platform-h5-renderer/components/order-item/index.vue';
 import { useOrderStore, OrderFormType } from 'lowcode-platform-h5-renderer/store/order';
 
@@ -122,6 +125,21 @@ const handleCancel = (id: string) => {
     })
     .then(async () => {
       await cancelOrderForm(id);
+      getOrder();
+    })
+    .catch(() => {
+    })
+};
+
+// 确认收货
+const handleFinish = (id: string) => {
+  showConfirmDialog({
+    title: '确认收货',
+    message:
+      '确定当前订单已经收货了么？',
+    })
+    .then(async () => {
+      await finishOrder(id);
       getOrder();
     })
     .catch(() => {
