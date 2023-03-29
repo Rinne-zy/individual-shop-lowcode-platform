@@ -1,0 +1,55 @@
+.shop {
+  position: relative;
+  display: flex;
+  align-items: end;
+  max-width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  &-info {
+    display: flex;
+    padding: 10px 20px;
+    &-text {
+      margin-left: 20px;
+      .title {
+        font-size: 16px;
+        font-weight: bolder;
+      }
+      .desc {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.star-shop {
+  position: absolute;
+  background-color: #fff;
+  right: 20px;
+  bottom: 37px;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 0 6px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.share-shop {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 2px;
+  font-weight: 700;
+}
+
+.isStar {
+  color: red;
+}

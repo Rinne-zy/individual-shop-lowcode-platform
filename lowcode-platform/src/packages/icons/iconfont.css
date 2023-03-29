@@ -1,8 +1,24 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('./iconfont.woff2?t=1677827453324') format('woff2'),
-       url('./iconfont.woff?t=1677827453324') format('woff'),
-       url('./iconfont.ttf?t=1677827453324') format('truetype');
+  src: url('iconfont.woff2?t=1680074015130') format('woff2'),
+       url('iconfont.woff?t=1680074015130') format('woff'),
+       url('iconfont.ttf?t=1680074015130') format('truetype');
+}
+
+.icon-share:before {
+  content: "\e624";
+}
+
+.icon-love-full:before {
+  content: "\e62b";
+}
+
+.icon-love:before {
+  content: "\e643";
+}
+
+.icon-shop-info:before {
+  content: "\e895";
 }
 
 .icon-image:before {

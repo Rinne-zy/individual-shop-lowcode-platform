@@ -1,5 +1,15 @@
 import KoaRouter from 'koa-router';
-import { createShop, deleteShop, deployShop, getDeployShopById, getDevelopShopById, getShops, updateShopBasicInfo, updateShopSchema } from '../controller/shop';
+import { 
+  createShop,
+  deleteShop,
+  deployShop,
+  getDeployShopById,
+  getDevelopShopById,
+  getShops,
+  updateShopBasicInfo,
+  updateShopSchema,
+  starShop,
+} from '../controller/shop';
 
 const router = new KoaRouter();
 
@@ -57,6 +67,13 @@ router.get('/shop/get', async (ctx) => {
 router.post('/shop/delete', async (ctx) => {
   const { shopId } = ctx.request.body;
   ctx.body = await deleteShop(shopId);
-})
+});
+
+// 删除商城信息
+router.post('/shop/star', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const { shopId } = ctx.request.body;
+  ctx.body = await starShop(shopId, username);
+});
 
 export default router;

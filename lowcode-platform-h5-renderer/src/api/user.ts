@@ -115,3 +115,28 @@ export async function getUserStarCommodities() {
 
   return commodities as Record<string, boolean>;
 };
+
+
+/**
+ * 获取用户收藏的商品
+ * @returns 
+ */
+export async function getUserStarShops() {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  const resp = await fetch(`${FETCH_URL_PREFIX}user/starShops`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('获取地址请求异常');
+  const { code, msg, shops } = await resp.json();
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  }
+
+  return shops as Record<string, boolean>;
+};

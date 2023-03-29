@@ -59,7 +59,7 @@ import { useShopsStore } from 'lowcode-platform/store/shop-store';
 import { deleteShop, ShopInfo } from 'lowcode-platform/api/shop';
 import { updateShopBasicInfo } from 'lowcode-platform/api/shop';
 import { showSuccessMessage } from 'lowcode-platform/utils/toast';
-import { copy } from 'lowcode-platform/utils/copy';
+import { copy } from 'lowcode-platform-common/utils/copy';
 
 const schemaStore = useSchemaStore();
 const router = useRouter();

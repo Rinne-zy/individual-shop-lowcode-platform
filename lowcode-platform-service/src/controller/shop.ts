@@ -1,3 +1,4 @@
+import  User from './../models/user';
 import type { Document, Types } from 'mongoose';
 
 import { SchemaType, ShopSchema } from './../models/schema';
@@ -28,6 +29,7 @@ export async function createShop(username: string, shopInfo: ShopInfo, schema: C
     avatar,
     deployId: '',
     developedId: shopSchema._id,
+    starNum: 0,
   });
 
   return {
@@ -126,7 +128,7 @@ export async function getShops(username: string) {
   
       if(!devSchema) throw new Error('获取 schema 失败');
   
-      const { _id, name, username, avatar } = shop;
+      const { _id, name, username, avatar, starNum } = shop;
 
       return {
         _id,
@@ -137,7 +139,8 @@ export async function getShops(username: string) {
         devVersion: devSchema.version,
         depVersion: depSchema?.version || null,
         devModified: devSchema.modified,
-        depModified: depSchema?.modified || null
+        depModified: depSchema?.modified || null,
+        starNum,
       }
    }));
 
@@ -215,13 +218,14 @@ export async function getDeployShopById(shopId: string) {
 export async function getShopBasicInfo(shopId: string) {
   const shop = await Shop.findById(shopId);
   if(!shop) throw new Error('商城不存在');
-  const { _id, name, username, avatar } = shop;
+  const { _id, name, username, avatar, starNum } = shop;
 
   return {
     _id,
     name,
     username,
     avatar,
+    starNum,
   }
 }
 
@@ -260,4 +264,48 @@ export async function getCommoditiesFromShop(shopId: string) {
   if(!schema) throw new Error('商城未部署');
 
   return schema.commodities;
+}
+
+/**
+ * 收藏商店
+ * @param shopId 商店 id
+ * @param username 用户名
+ * @returns 
+ */
+export async function starShop(shopId: string, username: string) {
+  const shop = await Shop.findById(shopId);
+  if(!shop) throw new Error('商城不存在');
+  const user = await User.findOne({ username });
+  if(!user) throw new Error('用户信息异常');
+
+  let isStar = false;
+
+  // 若不存在收藏商城的 map 则创建
+  if(!user.starShops) {
+    user.starShops = {};
+  };
+
+  // 若已收藏则取消收藏
+  if(user.starShops[shopId]) {
+    delete user.starShops[shopId];
+    shop.starNum -= 1;
+  } else {
+    isStar = true;
+    user.starShops[shopId] = true;
+    shop.starNum += 1;
+  }
+
+  shop.markModified('startNum');
+  user.markModified('starShops');
+
+  await Promise.all([
+    shop.save(),
+    user.save()
+  ]);
+
+  return {
+    code: StatusCode.Success,
+    msg: `${isStar ? '取消收藏' : '收藏'}成功`,
+    status: isStar,
+  };
 }

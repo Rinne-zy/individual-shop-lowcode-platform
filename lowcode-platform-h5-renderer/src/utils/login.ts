@@ -1,4 +1,5 @@
 import { useUserStore } from "lowcode-platform-h5-renderer/store/user";
+import { useRouter } from "vue-router";
 
 /**
  * 处理未登录的情况

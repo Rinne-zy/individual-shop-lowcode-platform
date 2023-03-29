@@ -12,6 +12,8 @@ export interface Shop {
   developedId: string;
   // 部署的 schema Id
   deployId: string;
+  // 收藏数量
+  starNum: number;
 };
 
 // 商城信息 Schema
@@ -21,6 +23,7 @@ const shop = new Schema<Shop>({
   avatar: String,
   deployId: String,
   developedId: String,
+  starNum: Number,
 });
 
 export default model('shop', shop);

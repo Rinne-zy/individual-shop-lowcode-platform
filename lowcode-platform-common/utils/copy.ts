@@ -1,3 +1,7 @@
+/**
+ * 复制到剪切板
+ * @param val 需要复制的值
+ */
 export async function copy(val: string) {
   if (navigator.clipboard && navigator.permissions) {
     await navigator.clipboard.writeText(val)

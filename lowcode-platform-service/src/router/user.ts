@@ -1,7 +1,7 @@
 import { StatusCode } from './../const/index';
 import KoaRouter from 'koa-router';
 
-import { getUserStarCommodities, login, register } from '../controller/user';
+import { getUserStarCommodities, login, register, getUserStarShops } from '../controller/user';
 import type { User } from '../models/user';
 
 // koa 路由实例
@@ -35,6 +35,13 @@ router.get('/user/isLogin', async (ctx) => {
 router.get('/user/starCommodities', async (ctx) => {
   const { username } = ctx.state.userInfo;
   const res = await getUserStarCommodities(username);
+  ctx.body = res;
+})
+
+// 获取用户收藏的商品
+router.get('/user/starShops', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const res = await getUserStarShops(username);
   ctx.body = res;
 })
 

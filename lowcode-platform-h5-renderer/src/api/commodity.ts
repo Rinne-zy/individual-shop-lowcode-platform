@@ -52,7 +52,7 @@ export async function starCommodity(commodityId: string) {
     })
   });
 
-  if(resp.status !== 200 || !resp.ok) throw new Error('获取地址请求异常');
+  if(resp.status !== 200 || !resp.ok) throw new Error('收藏商品请求异常');
   const { code, msg, status } = await resp.json();
 
   if(code) {

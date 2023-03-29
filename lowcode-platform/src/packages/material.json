@@ -92,5 +92,30 @@
         "isRound": false
       }
     }  
+  },
+  "shop": {
+    "key": "Shop",
+    "label": "店铺信息",
+    "icon": "shop-info",
+    "type": "e-commerce",
+    "schema": {
+      "isProportion": false,
+      "componentName": "店铺信息",
+      "isEdited": false,
+      "style": {
+        "width": 375,
+        "height": 180,
+        "left": 0,
+        "top": 0,
+        "rotate": 0
+      },
+      "propValue": {
+        "title": "商品店铺标题",
+        "desc": "商品店铺描述",
+        "icon": "./default.webp",
+        "useDefault": false,
+        "color": "#fff"
+      }
+    }  
   }
 }

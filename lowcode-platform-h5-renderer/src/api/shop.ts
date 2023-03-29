@@ -1,5 +1,6 @@
-import { FETCH_URL_PREFIX } from 'lowcode-platform-h5-renderer/const/index';
+import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from 'lowcode-platform-h5-renderer/const/index';
 import type { ShopStore } from 'lowcode-platform-h5-renderer/store/schema';
+import { showFailToast } from 'vant';
 
 /**
  * 根据商城 id 获取商城 schema
@@ -15,3 +16,33 @@ export async function getShopById(id: string) {
   
   return shop as ShopStore;
 };
+
+/**
+ * 收藏商城
+ * @param shopId 商城 id
+ * @returns 
+ */
+export async function starShop(shopId: string) {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  const resp = await fetch(`${FETCH_URL_PREFIX}shop/star`, {
+    method: 'post',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      shopId,
+    })
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('收藏店铺请求异常');
+  const { code, msg, status } = await resp.json();
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  }
+
+  return status;
+}

@@ -73,7 +73,8 @@ const checkIsLogin = async () => {
     return false;
   };
   return isLogin;
-}
+};
+
 // 点击商城
 const handleClickShop = () => {
   emits('clickShop');
