@@ -98,3 +98,22 @@ export async function getUserStarShops(username: string) {
     shops: user.starShops,
   }
 }
+
+/**
+ * 获取用户收藏信息
+ * @param username 用户名
+ * @returns 
+ */
+export async function getUserStarInfo(username: string) {
+  const user = await User.findOne({ username });
+  if(!user) throw new Error('用户信息不存在');
+
+  const { starShops, starCommodities } = user;
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    shops: Object.keys(starShops),
+    commodities: Object.keys(starCommodities)
+  }
+}

@@ -141,12 +141,19 @@ export async function starCommodity(username: string, commodityId: string) {
   const user = await User.findOne({ username });
   if(!user) throw new Error('用户名不存在');
 
+  let isStar = false;
+
   if(!user.starCommodities) {
     user.starCommodities = {};
   };
 
-  const starStatus = user.starCommodities[commodityId] || false;
-  user.starCommodities[commodityId] = !starStatus;
+  // 若已收藏则取消收藏
+  if(user.starCommodities[commodityId]) {
+    delete user.starCommodities[commodityId];
+  } else {
+    isStar = true;
+    user.starCommodities[commodityId] = true;
+  }
 
   user.markModified('starCommodities');
   await user.save();
@@ -154,6 +161,6 @@ export async function starCommodity(username: string, commodityId: string) {
   return {
     code: StatusCode.Success,
     msg: '获取成功',
-    status: !starStatus,
+    status: isStar,
   }
 };

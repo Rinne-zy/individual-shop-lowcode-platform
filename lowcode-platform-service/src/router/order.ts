@@ -7,6 +7,7 @@ import {
   getOrderByMerchantUserName,
   payOrderByOrderId,
   finishOrderByOrderId,
+  getOrderTypeNumber,
 } from '../controller/order';
 
 // koa 路由实例
@@ -56,5 +57,11 @@ router.post('/order/customer/finish',  async (ctx) => {
   const { username } = ctx.state.userInfo;
   const { id } = ctx.request.body;
   ctx.body = await finishOrderByOrderId(id, username);
+})
+
+// 商家获取的订单数据
+router.get('/order/customer/typeNumber',  async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  ctx.body = await getOrderTypeNumber(username);
 })
 export default router;

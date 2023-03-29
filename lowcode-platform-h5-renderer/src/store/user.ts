@@ -10,6 +10,11 @@ export interface UserStore {
   checkLoginPromise: Promise<boolean> | null;
   username: string;
   avatar: string;
+  starCommodities: string[],
+  starShops: string[],
+  payingOrderNumber: number;
+  preparingOrderNumber: number;
+  deliveringOrderNumber: number;
 }
 
 export const useUserStore = defineStore('user', {
@@ -19,6 +24,11 @@ export const useUserStore = defineStore('user', {
       checkLoginPromise: null,
       username: '',
       avatar: '',
+      starCommodities: [],
+      starShops: [],
+      payingOrderNumber: 0,
+      preparingOrderNumber: 0,
+      deliveringOrderNumber: 0,
     }
   },
   actions: {
@@ -40,6 +50,11 @@ export const useUserStore = defineStore('user', {
       this.isLogin = false;
       this.username = '';
       this.avatar = '';
+      this.starCommodities = [];
+      this.starShops = [];
+      this.payingOrderNumber = 0;
+      this.preparingOrderNumber = 0;
+      this.deliveringOrderNumber = 0;
       // 清除存储在 LocalStorage 的登录信息
       clearStorage(`${LOCAL_STORAGE_KEY_OF_USERINFO}`);
       clearStorage(`${LOCAL_STORAGE_KEY_OF_TOKEN}`);

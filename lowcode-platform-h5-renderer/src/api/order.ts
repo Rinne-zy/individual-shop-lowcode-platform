@@ -144,3 +144,30 @@ export async function finishOrder(id: string) {
 
   showSuccessToast(msg);
 }
+
+/** 获取顾客的订单数据类型 */
+export async function getOrderFormTypeNumber() {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+  const resp = await fetch(`${FETCH_URL_PREFIX}order/customer/typeNumber`, {
+    headers: {
+      Authorization: token
+    }
+  });
+
+  if(resp.status !== 200 || !resp.ok) {
+    throw new Error('网络错误');
+  };
+
+  const { code, msg, status } = await resp.json();
+
+  if(code !== 0) {
+    showFailToast(msg);
+    throw new Error('获取订单失败');
+  };
+
+  return status as {
+    paying: number;
+    preparing: number;
+    delivering: number;
+  };
+}

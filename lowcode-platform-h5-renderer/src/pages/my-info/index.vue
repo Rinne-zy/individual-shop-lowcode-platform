@@ -15,24 +15,24 @@
     </div>
     <div class="my-buy">
       <div class="my-buy-like">
-        <span><van-icon name="star-o" :size="20" />商品收藏<span class="num">12</span></span>
-        <span><van-icon name="shop-collect-o" :size="20" />店铺关注<span class="num">5</span></span>
+        <span><van-icon name="star-o" :size="20" />商品收藏<span class="num">{{ userStore.starCommodities.length }}</span></span>
+        <span><van-icon name="shop-collect-o" :size="20" />店铺关注<span class="num">{{ userStore.starShops.length }}</span></span>
       </div>
       <van-divider>我的订单</van-divider>
       <div class="my-buy-order">
-        <van-badge :content="5">
+        <van-badge :content="userStore.payingOrderNumber">
           <div class="my-buy-order-item">
             <van-icon name="credit-pay" :size="30" @click="handleGotoMyOrder(OrderFormType.Paying)"/>
             <div>待付款</div>
           </div>
         </van-badge>
-        <van-badge :content="2">
+        <van-badge :content="userStore.preparingOrderNumber">
           <div class="my-buy-order-item ml">
             <van-icon name="send-gift-o" :size="30" @click="handleGotoMyOrder(OrderFormType.Preparing)"/>
             <div>待发货</div>
           </div>
         </van-badge>
-        <van-badge :content="2">
+        <van-badge :content="userStore.deliveringOrderNumber">
           <div class="my-buy-order-item ml">
             <van-icon name="logistics" :size="30" @click="handleGotoMyOrder(OrderFormType.Delivering)"/>
             <div>已发货</div>
@@ -56,6 +56,8 @@ import { computed } from 'vue';
 import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 import { useRouter } from 'vue-router';
 import { OrderFormType, useOrderStore } from 'lowcode-platform-h5-renderer/store/order';
+import { getUserStarInfo } from 'lowcode-platform-h5-renderer/api/user';
+import { getOrderFormTypeNumber } from 'lowcode-platform-h5-renderer/api/order';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -84,6 +86,26 @@ const handleGotoMyOrder = (type: OrderFormType) => {
   orderStore.activeTab = type;
   router.push('/my-order')
 };
+
+// 获取用户收藏信息
+const getStarInfo = async () => {
+  if(!isLogin.value) return;
+  const { shops, commodities} = await getUserStarInfo();
+  userStore.starShops = shops;
+  userStore.starCommodities = commodities;
+};
+getStarInfo();
+
+// 获取用户订单类型
+const getOrderInfo = async () => {
+  if(!isLogin.value) return;
+  const { paying, preparing, delivering } = await getOrderFormTypeNumber();
+  userStore.payingOrderNumber = paying;
+  userStore.preparingOrderNumber = preparing;
+  userStore.deliveringOrderNumber = delivering;
+}
+getOrderInfo();
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

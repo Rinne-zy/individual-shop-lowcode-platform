@@ -240,6 +240,37 @@ export async function finishOrderByOrderId(id: string, username: string) {
 }
 
 /**
+ * 获取订单类型数量
+ * @param username 用户名
+ * @returns 
+ */
+export async function getOrderTypeNumber(username: string) {
+  const orderForms = await Order.find({ 'customer.username': username });
+
+  let paying = 0, preparing = 0, delivering = 0;
+
+  orderForms.forEach((orderForm) => {
+    if(orderForm.status === OrderStatus.Paying) {
+      paying += 1;
+    } else if (orderForm.status === OrderStatus.Preparing) {
+      preparing += 1;
+    } else if (orderForm.status === OrderStatus.Delivering) {
+      delivering +=1;
+    }
+  })
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    status: {
+      paying,
+      preparing,
+      delivering,
+    }
+  }
+}
+
+/**
  * 从购物车中获取订单数据
  * @param shopInShoppingCart 购物车中商城信息
  * @returns 

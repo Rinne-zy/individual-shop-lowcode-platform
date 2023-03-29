@@ -130,7 +130,7 @@ export async function getUserStarShops() {
     },
   });
 
-  if(resp.status !== 200 || !resp.ok) throw new Error('获取地址请求异常');
+  if(resp.status !== 200 || !resp.ok) throw new Error('获取用户收藏商店请求异常');
   const { code, msg, shops } = await resp.json();
 
   if(code) {
@@ -139,4 +139,35 @@ export async function getUserStarShops() {
   }
 
   return shops as Record<string, boolean>;
+};
+
+
+/**
+ * 获取用户收藏的商品
+ * @returns 
+ */
+export async function getUserStarInfo() {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  const resp = await fetch(`${FETCH_URL_PREFIX}user/starInfo`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('获取用户收藏信息异常');
+  const { code, msg, shops, commodities } = await resp.json();
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  }
+
+  return {
+    shops,
+    commodities
+  } as {
+    shops: string[]
+    commodities: string[]
+  }
 };
