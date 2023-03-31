@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@vant/area-data": "^1.4.1",
-    "postcss-px-to-viewport-8-plugin": "^1.2.0",
     "whatwg-fetch": "^3.6.2",
     "lowcode-platform-common": "workspace:*"
   }

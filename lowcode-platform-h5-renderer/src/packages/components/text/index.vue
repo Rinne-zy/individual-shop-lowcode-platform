@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { transformPxToVw } from 'lowcode-platform-h5-renderer/utils/transform';
+import { transformPxToVw } from 'lowcode-platform-common/utils/style';
 import { PropType } from 'vue';
 import type { TextPropValue } from './type';
 

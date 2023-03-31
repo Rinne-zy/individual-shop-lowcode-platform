@@ -1,5 +1,5 @@
 import type { Order } from 'lowcode-platform-common/type/order';
-import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-h5-renderer/const";
+import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
 import { showFailToast, showSuccessToast } from "vant";
 
 /**

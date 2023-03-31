@@ -19,7 +19,7 @@ const isShowShop = computed(() => {
   // 获取 query 中和 store 中的 id 值
   const id = query.get('id');
   return !!(id || schemaStore._id);
-})
+});
 
 </script>
 

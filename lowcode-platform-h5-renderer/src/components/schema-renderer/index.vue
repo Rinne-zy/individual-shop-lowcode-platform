@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { getComponentStyleToViewPort } from 'lowcode-platform-h5-renderer/utils/style';
+import { getComponentStyleToViewPort } from 'lowcode-platform-common/utils/style';
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 
 // schema 存储 store

@@ -1,6 +1,6 @@
 import { showFailToast, showSuccessToast } from "vant";
 
-import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-h5-renderer/const";
+import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
 import type { ShoppingCartInfo } from "lowcode-platform-h5-renderer/type/commodity";
 import { handleNotLogin } from "lowcode-platform-h5-renderer/utils/login";
 

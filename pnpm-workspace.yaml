@@ -3,3 +3,4 @@ packages:
   - "lowcode-platform-service/**"
   - "lowcode-platform-h5-renderer/**"
   - "lowcode-platform-common/**"
+  - "lowcode-platform-weixin-renderer/**"

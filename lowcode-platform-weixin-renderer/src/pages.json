@@ -1,0 +1,21 @@
+{
+	"pages": [
+		{
+			"path": "pages/shop/index",
+			"style": {
+				"navigationBarTitleText": "index"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"usingComponents": {
+			"van-button": "/wxcomponents/vant/button/index",
+			"van-image": "/wxcomponents/vant/image/index",
+			"van-icon": "wxcomponents/vant/icon/index"
+		}
+	}
+}

@@ -1,7 +1,7 @@
 import { showFailToast } from "vant";
 
 import type { Commodity } from "lowcode-platform-common/type/commodity";
-import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-h5-renderer/const";
+import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 
 /** 商品详情页信息 */
 export interface CommodityDetail {

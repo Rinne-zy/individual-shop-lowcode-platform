@@ -27,6 +27,7 @@
     "pinia": "^2.0.28",
     "vue-router": "^4.1.6",
     "deepcopy": "^2.1.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "postcss-px-to-viewport-8-plugin": "^1.2.0"
   }
 }

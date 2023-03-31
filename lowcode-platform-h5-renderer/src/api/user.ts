@@ -1,6 +1,6 @@
 import { showFailToast, showSuccessToast } from "vant";
 
-import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-h5-renderer/const";
+import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
 
 /**
  * 判断是否登录
@@ -118,7 +118,7 @@ export async function getUserStarCommodities() {
 
 
 /**
- * 获取用户收藏的商品
+ * 获取用户收藏的商城
  * @returns 
  */
 export async function getUserStarShops() {

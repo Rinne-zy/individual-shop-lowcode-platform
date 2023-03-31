@@ -1,7 +1,7 @@
 import type { PiniaPluginContext } from 'pinia';
 
 import { getStorage } from 'lowcode-platform-common/utils/storage';
-import { LOCAL_STORAGE_KEY_OF_TOKEN, LOCAL_STORAGE_KEY_OF_USERINFO } from 'lowcode-platform-h5-renderer/const';
+import { LOCAL_STORAGE_KEY_OF_TOKEN, LOCAL_STORAGE_KEY_OF_USERINFO } from 'lowcode-platform-common/common/index';
 /**
  * 使用 Pinia 持久化存储插件
  * @param context pinia store 上下文

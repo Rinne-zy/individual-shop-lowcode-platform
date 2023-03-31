@@ -22,7 +22,7 @@ import { PropType, computed } from 'vue';
 import { Swipe, SwipeItem, Image as VanImage} from 'vant';
 
 import type { SwipePropValue } from './type';
-import { transformPxToVw } from 'lowcode-platform-h5-renderer/utils/transform';
+import { transformPxToVw } from 'lowcode-platform-common/utils/style';
 
 const props = defineProps({
   // 属性值

@@ -62,9 +62,9 @@ import { computed, ref } from "vue";
 import type { PropType } from "vue";
 
 import Card from "./card/index.vue";
-import { FETCH_URL_PREFIX } from 'lowcode-platform-h5-renderer/const/index';
+import { FETCH_URL_PREFIX } from 'lowcode-platform-common/common/index';
 import { Commodity, CommodityLayout, CommodityPropValue } from "./type";
-import { transformPxToVw } from "lowcode-platform-h5-renderer/utils/transform";
+import { transformPxToVw } from "lowcode-platform-common/utils/style";
 import { addCommodityToCart } from "lowcode-platform-h5-renderer/api/shopping-cart";
 import { useShopStore } from "lowcode-platform-h5-renderer/store/schema";
 import { useCommodityDetailStore } from "lowcode-platform-h5-renderer/store/commodity";

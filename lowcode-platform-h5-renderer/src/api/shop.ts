@@ -1,4 +1,4 @@
-import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from 'lowcode-platform-h5-renderer/const/index';
+import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from 'lowcode-platform-common/common/index';
 import type { ShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 import { showFailToast } from 'vant';
 
