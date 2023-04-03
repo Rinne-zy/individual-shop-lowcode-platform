@@ -29,5 +29,5 @@ export default defineConfig({
         landscape: false // 是否处理横屏情况
       })]
     }
-  }
+  },
 });

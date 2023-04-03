@@ -10,11 +10,10 @@
         v-for="(swipeItem, index) in propValue.swipeItems"
         :key="index"
       >
-        <van-image
+        <img
           style="max-width: 100%;"
           :src="swipeItem.src"
-          :width="swipeItemStyle.width"
-          :height="swipeItemStyle.height"
+          :style="swipeItemStyle"
         />
       </swiper-item>
     </swiper>

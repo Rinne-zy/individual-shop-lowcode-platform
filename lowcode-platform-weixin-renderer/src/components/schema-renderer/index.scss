@@ -1,7 +1,6 @@
 .schema-renderer {
   position: relative;
-  // 基于底部 padding 避免遮住
-  height: calc(100vh - 50px);
+  height: 100vh;
   overflow: scroll;
   background-color: #f7f8fa;
 }

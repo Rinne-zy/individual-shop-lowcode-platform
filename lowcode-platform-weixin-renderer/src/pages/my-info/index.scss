@@ -1,0 +1,96 @@
+.my {
+  height: 100vh;
+  background-color: #f5f5f5;
+  &-info {
+    position: relative;
+    display: flex;
+    padding: 30px 10px;
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+    border-radius: 0 0 10px 10px;
+    &-name {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 38px;
+      margin-left: 12px;
+    }
+    &-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+    }
+  }
+  &-buy {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    margin-top: 40px;
+    padding: 20px 10px;
+    border-radius: 15px 15px 0 0;
+    &-like {
+      display: flex;
+      font-size: 16px;
+      view {
+        padding-left: 10px;
+        padding-right: 20px;
+      }
+      view:not(:last-child) {
+        margin-right: 10px;
+        border-right: 1px solid #ccc;
+      }
+    }
+    &-order {
+      display: flex;
+      padding: 5px 10px;
+      font-size: 16px;
+      &-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.logout {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.border-bottom {
+  height: 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.ml {
+ margin-left: 40px;
+}
+
+.num {
+  padding: 0 !important;
+  margin-left: 2px;
+  font-size: 14px;
+}
+
+.notLogin {
+ line-height: 80px;
+}
+
+.divider {
+  padding: 20px 0;
+  font-size: 12px;
+  text-align: center;
+}
+
+.item-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+.form {
+  padding: 5px 10px;
+}

@@ -1,42 +1,32 @@
-import { isFunction } from '../common/validator';
-import { getCurrentPage, isDef } from '../common/utils';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function getCurrentPage() {
+    var pages = getCurrentPages();
+    return pages[pages.length - 1] || {};
+}
 function onPageScroll(event) {
-    const { vanPageScroller = [] } = getCurrentPage();
-    vanPageScroller.forEach((scroller) => {
+    var _a = getCurrentPage().vanPageScroller, vanPageScroller = _a === void 0 ? [] : _a;
+    vanPageScroller.forEach(function (scroller) {
         if (typeof scroller === 'function') {
-            // @ts-ignore
             scroller(event);
         }
     });
 }
-export function pageScrollMixin(scroller) {
+exports.pageScrollMixin = function (scroller) {
     return Behavior({
-        attached() {
-            const page = getCurrentPage();
-            if (!isDef(page)) {
-                return;
+        attached: function () {
+            var page = getCurrentPage();
+            if (Array.isArray(page.vanPageScroller)) {
+                page.vanPageScroller.push(scroller.bind(this));
             }
-            const _scroller = scroller.bind(this);
-            const { vanPageScroller = [] } = page;
-            if (isFunction(page.onPageScroll) && page.onPageScroll !== onPageScroll) {
-                vanPageScroller.push(page.onPageScroll.bind(page));
+            else {
+                page.vanPageScroller = [page.onPageScroll, scroller.bind(this)];
             }
-            vanPageScroller.push(_scroller);
-            page.vanPageScroller = vanPageScroller;
             page.onPageScroll = onPageScroll;
-            this._scroller = _scroller;
         },
-        detached() {
-            const page = getCurrentPage();
-            if (!isDef(page) || !isDef(page.vanPageScroller)) {
-                return;
-            }
-            const { vanPageScroller } = page;
-            const index = vanPageScroller.findIndex((v) => v === this._scroller);
-            if (index > -1) {
-                page.vanPageScroller.splice(index, 1);
-            }
-            this._scroller = undefined;
-        },
+        detached: function () {
+            var page = getCurrentPage();
+            page.vanPageScroller = (page.vanPageScroller || []).filter(function (item) { return item !== scroller; });
+        }
     });
-}
+};

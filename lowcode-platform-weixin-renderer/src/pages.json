@@ -1,21 +1,69 @@
 {
 	"pages": [
 		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录&注册"
+			}
+		},
+		{
 			"path": "pages/shop/index",
 			"style": {
-				"navigationBarTitleText": "index"
+				"navigationBarTitleText": "商城主页"
+			}
+		},
+		{
+			"path": "pages/my-info/index",
+			"style": {
+				"navigationBarTitleText": "我的主页"
+			}
+		},
+		{
+			"path": "pages/shopping-cart/index",
+			"style": {
+				"navigationBarTitleText": "我的购物车"
 			}
 		}
 	],
 	"globalStyle": {
+		"navigationBarTitleText": "Vant For Uni-app",
+		"navigationBarBackgroundColor": "#f8f8f8",
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
+		"backgroundTextStyle": "dark",
+		"backgroundColor": "#f8f8f8",
 		"usingComponents": {
-			"van-button": "/wxcomponents/vant/button/index",
-			"van-image": "/wxcomponents/vant/image/index",
-			"van-icon": "wxcomponents/vant/icon/index"
+			"van-icon": "/wxcomponents/vant/icon/index",
+			"van-image": "/wxcomponents/vant/image/index"
+		}
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#1989fa",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/shop/index",
+				"text": "商城主页",
+				"iconPath": "static/icons/home.png",
+				"selectedIconPath": "static/icons/home-selected.png"
+			},
+			{
+				"pagePath": "pages/shopping-cart/index",
+				"text": "我的购物车",
+				"iconPath": "static/icons/cart.png",
+				"selectedIconPath": "static/icons/cart-selected.png"
+			},
+			{
+				"pagePath": "pages/my-info/index",
+				"text": "我的",
+				"iconPath": "static/icons/my.png",
+				"selectedIconPath": "static/icons/my-selected.png"
+			}
+		]
+	},
+	"easycom": {
+		"custom": {  
+	    "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue" 
 		}
 	}
 }
