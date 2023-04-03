@@ -5,3 +5,4 @@
 - lowcode-platform-common 低码平台通用
 - lowcode-platform-service 低码平台后台服务
 - lowcode-platform-h5-renderer 低码平台 H5 渲染器
+- lowcode-platform-weixin-renderer 低码平台微信小程序渲染器

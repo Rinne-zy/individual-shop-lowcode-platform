@@ -1,53 +1,52 @@
 <template>
-  <div class="shopping-cart-card">
-    <div class="title">
-      <van-checkbox 
-        :model-value="isSelectedAll"
-        class="title-radio"
-        :icon-size="18"
-        :disabled="!canSelectAll"
-        @click="handleSelectAll"
-      />
-      <div @click="handleGotoShop">
-        <span class="title-text">{{ title }}</span>
-        <van-icon class="title-icon" name="arrow" />   
-      </div> 
-    </div>
-    <van-swipe-cell
-      v-for="commodity in commodities"
-      :key="commodity._id"
-    >
-      <commodity-card 
-        v-bind="commodity"
-        @select="handleSelect"
-        @change="handleChangeNum"
-        @go-to-commodity="handleGoToCommodityDetail"
-      />
-      <template #right>
-        <van-button 
-          square 
-          text="删除"
-          type="danger"
-          class="delete-button"
-          @click="handleDeleteCommodity(commodity._id, commodity.name)"
+  <view class="shopping-cart-card">
+    <view class="title">
+      <view class="title-radio">
+        <u-checkbox
+          :disabled="!canSelectAll"
+          :checked="isSelectedAll"
+          @change="handleSelectAll"
         />
-      </template>
-    </van-swipe-cell>
-  </div>
+      </view>
+      <view @click="handleGotoShop">
+        <text class="title-text">{{ title }}</text>
+        <van-icon class="title-icon" name="arrow" />   
+      </view> 
+    </view>
+      <u-swipe-action>
+        <u-swipe-action-item
+          v-for="commodity in commodities"
+          :key="commodity._id"
+          :options="[{
+            text: '删除',
+            style: {
+              backgroundColor: '#f56c6c'
+            }
+          }]"
+          @click="handleDeleteCommodity(commodity._id, commodity.name)"
+        >
+        <commodity-card 
+          v-bind="commodity"
+          @select="handleSelect"
+          @change="handleChangeNum"
+          @go-to-commodity="handleGoToCommodityDetail"
+        />
+        </u-swipe-action-item>
+    </u-swipe-action>
+  </view>
 </template>
 
 <script setup lang="ts">
-import { Checkbox as VanCheckbox, Icon as VanIcon, SwipeCell as VanSwipeCell, Button as VanButton, showConfirmDialog } from 'vant';
-import { computed, PropType } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import type { PropType } from 'vue';
 
 import CommodityCard from '../commodity-card/index.vue';
 import type { CommodityInfo } from 'lowcode-platform-common/type/commodity';
 import { CommodityStatus } from 'lowcode-platform-common/type/commodity';
 import type { ChangeNumType } from 'lowcode-platform-common/type/shopping-cart';
-import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
-import { TabbarItem } from 'lowcode-platform-h5-renderer/type';
-import { useCommodityDetailStore } from 'lowcode-platform-h5-renderer/store/commodity';
+import { useShopStore } from 'lowcode-platform-weixin-renderer/store/schema';
+import { useCommodityDetailStore } from 'lowcode-platform-weixin-renderer/store/commodity';
+import { switchTab } from 'lowcode-platform-weixin-renderer/utils/router';
 
 const props = defineProps({
   id: {
@@ -65,7 +64,6 @@ const props = defineProps({
 });
 const emits = defineEmits(['changeCommodityNum', 'selectCommodity', 'selectAllCommodities', 'deleteCommodity'])
 
-const router = useRouter();
 const commodityDetailStore = useCommodityDetailStore();
 // 是否能够选择所有
 const canSelectAll = computed(() => props.commodities.every((commodity) => (commodity.status === CommodityStatus.OnSale)));
@@ -76,7 +74,7 @@ const isSelectedAll = computed(
 );
 
 // 选中全部商品
-const handleSelectAll = async () => {
+const handleSelectAll = () => {
   if(!canSelectAll.value) return
   emits('selectAllCommodities',props.id);
 };
@@ -93,14 +91,12 @@ const handleChangeNum = async (commodityId: string, type: ChangeNumType) => {
 
 // 处理转跳商城逻辑
 const handleGotoShop = async () =>{
+  console.log('test');
   const stop = useShopStore();
   stop.name = props.title;
   stop._id = props.id;
   await stop.getShop();
-
-  // 前往商城
-  stop.activeTabbar = TabbarItem.Home;
-  router.push('/');
+  switchTab('shop');
 };
 
 /** 处理前往商品详情 */
@@ -109,21 +105,19 @@ const handleGoToCommodityDetail = (commodityId: string) => {
   commodityDetailStore.commodityId = commodityId;
   commodityDetailStore.shopId = props.id;
 
-  router.push('/commodity');
+  // TODO: 前往商品详情页
 };
 
 // 删除商品
 const handleDeleteCommodity = (commodityId: string, commodityName: string) => {
-  showConfirmDialog({
+  uni.showModal({
     title: '删除',
-    message:
-      `是否删除该商品:${commodityName}`,
-    })
-    .then(() => {
+    content: `是否删除该商品:${commodityName}`,
+    success: function (res) {
+      if(res.cancel) return;
       emits('deleteCommodity', props.id, commodityId);
-    })
-    .catch(() => {
-    });
+    }
+  });
 }
 
 </script>

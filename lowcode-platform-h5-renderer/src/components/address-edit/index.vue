@@ -118,7 +118,7 @@ import { areaList } from '@vant/area-data';
 import { computed, reactive, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { AddressInfo } from 'lowcode-platform-h5-renderer/type/address';
+import type { AddressInfo } from 'lowcode-platform-common/type/address';
 
 const props = defineProps({
   isEditing: {

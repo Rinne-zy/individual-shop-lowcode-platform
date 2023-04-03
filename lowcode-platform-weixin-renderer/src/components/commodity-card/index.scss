@@ -1,0 +1,80 @@
+// 水平模式的布局
+.horizon {
+  display: flex;
+  font-size: 12px;
+  overflow: hidden;
+  margin-top: 10px;
+  .img {
+    width: 125px;
+    height: 125px;
+  }
+  .tip {
+    position: absolute;
+    width: 125px;
+    height: 25px;
+    bottom: 0;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 25px;
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .info {
+    flex: 1;
+  }
+  .many-line-ellipsis{
+    -webkit-line-clamp: 3;
+  }
+  .radio {
+    margin: 0 8px;
+  }
+}
+
+// 商品描述信息
+.info {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px;
+  background-color: #fff;
+  .title {
+    font-size: 16px;
+    padding: 5px 0;
+  }
+  .buy {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin: 10px 0;
+  }
+  // 商品价格
+  .price {
+    &-number {
+      display: inline-block;
+      width: 90px;
+      line-height: 20px;
+      padding: 1px 0;
+      color: #323233;
+      font-size: 14px;
+      font-weight: 700;
+    }
+  }
+  .cart {
+    line-height: 20px;
+  }
+}
+
+// 多行文本省略号
+.many-line-ellipsis{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.number-box {
+  display: flex;
+  justify-content: flex-end;
+}

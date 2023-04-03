@@ -1,39 +1,38 @@
 <template>
-  <div class="horizon">
-    <van-checkbox
-      class="radio"
-      checked-color="#ff0000"
-      icon-size="16"
-      :disabled="!canBuy" 
-      :model-value="selected && status === CommodityStatus.OnSale"
-      @click="handleSelect"
-    />
-    <div style="position:relative;" @click="handleGoToCommodity">
+  <view class="horizon">
+    <view class="radio">
+      <u-checkbox
+        :disabled="!canBuy"
+        :checked="selected && status === CommodityStatus.OnSale"
+        @change="handleSelect"
+      />
+    </view>
+    <view style="position:relative;" @click="handleGoToCommodity">
       <img class="img" :src="cover" />
-      <div v-if="!canBuy" class="tip"> {{ commodityStatus }}</div>
-    </div>
-    <div class="info">
-      <div class="title">{{ name }}</div>
-      <div class="buy">
-        <div class="price">
-          <div class="price-number">￥{{ price }}</div>
-        </div>
-        <stepper
-          disable-input
-          button-size="24"
-          :model-value="props.number"
+      <view v-if="!canBuy" class="tip"> {{ commodityStatus }}</view>
+    </view>
+    <view class="info">
+      <view class="title">{{ name }}</view>
+      <view class="buy">
+        <view class="price">
+          <view class="price-number">￥{{ price }}</view>
+        </view>
+      </view>
+      <view class="number-box">
+        <u-number-box 
+          disabledInput
+          :disablePlus="!canAdd"
           :disabled="!canBuy"
-          :disable-plus="!canAdd"
-          @plus="handleChangeNum(1)"
-          @minus="handleChangeNum(-1)"
+          :longPress="false"
+          :model-value="props.number" 
+          @change="handleChangeNum"
         />
-      </div>
-    </div>
-  </div>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script setup lang="ts">
-import { Checkbox as VanCheckbox, Stepper } from 'vant';
 import { computed } from 'vue';
 
 import { CommodityStatus } from 'lowcode-platform-common/type/commodity';
@@ -89,8 +88,8 @@ const handleSelect = () => {
   emits('select', props._id);
 };
 // 改变商品数量
-const handleChangeNum = (value: number) => {
-  emits('change', props._id, value > 0 ? ChangeNumType.Add : ChangeNumType.Reduce);
+const handleChangeNum = (data: any) => {
+  emits('change', props._id, data.value - props.number > 0 ? ChangeNumType.Add : ChangeNumType.Reduce);
 };
 const handleGoToCommodity = (e: MouseEvent) => {
   e.stopPropagation();

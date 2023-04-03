@@ -1,13 +1,10 @@
 import { showFailToast, showSuccessToast } from "vant";
 
 import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
-import type { ShoppingCartInfo } from "lowcode-platform-h5-renderer/type/commodity";
+import type { ShoppingCartInfo } from "lowcode-platform-common/type/commodity";
 import { handleNotLogin } from "lowcode-platform-h5-renderer/utils/login";
 
-export enum ChangeNumType {
-  Add = 'add',
-  Reduce = 'reduce'
-}
+import type { ChangeNumType } from 'lowcode-platform-common/type/shopping-cart';
 
 /**
  * 获取购物车列表

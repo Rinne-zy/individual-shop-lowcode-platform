@@ -31,19 +31,21 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { SubmitBar as VanSubmitBar, Empty as VanEmpty } from 'vant';
+import { useRouter } from 'vue-router';
 
 import ShoppingCartCard from 'lowcode-platform-h5-renderer/components/shopping-cart-card/index.vue';
 import AddressItem from 'lowcode-platform-h5-renderer/components/address-item/index.vue';
-import type { AddressInfo } from 'lowcode-platform-h5-renderer/type/address';
+import type { AddressInfo } from 'lowcode-platform-common/type/address';
 import { getSelectedAddressInfo } from 'lowcode-platform-h5-renderer/api/address';
-import type { ShoppingCartInfo } from 'lowcode-platform-h5-renderer/type/commodity';
-import { ChangeNumType, deleteCommodityFromCart, getShoppingCartInfo, selectShopAllCommodities } from 'lowcode-platform-h5-renderer/api/shopping-cart';
+import type { ShoppingCartInfo } from 'lowcode-platform-common/type/commodity';
+import { deleteCommodityFromCart, getShoppingCartInfo, selectShopAllCommodities } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { changeCommodityNum, selectCommodity } from 'lowcode-platform-h5-renderer/api/shopping-cart';
 import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 import { useOrderStore } from 'lowcode-platform-h5-renderer/store/order';
-import router from 'lowcode-platform-h5-renderer/router';
+import type { ChangeNumType } from 'lowcode-platform-common/type/shopping-cart';
 
 const userStore = useUserStore();
+const router = useRouter()
 const isLogin = computed(() => userStore.isLogin);
 // 地址信息
 const addressInfo = reactive<AddressInfo>({

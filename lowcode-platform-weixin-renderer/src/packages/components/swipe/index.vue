@@ -47,7 +47,7 @@ const props = defineProps({
 // 轮播图样式
 const swipeItemStyle = computed(() => ({
   width: `${transformPxToVw(props.propStyle.width, props.viewportWidth)}`,
-  height: `${transformPxToVw(props.propStyle.height, props.viewportWidth)}`,
+  height: `${props.propStyle.height}px`,
 }));
 
 // 是否懒加载

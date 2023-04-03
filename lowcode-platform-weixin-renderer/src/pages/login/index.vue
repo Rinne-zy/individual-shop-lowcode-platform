@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <view>
     <u-tabs :list="tabs" @click="changeTabBar"></u-tabs>
     <view class="form">
       <u-form
@@ -37,7 +37,7 @@
         <u-button type="success" :text="active === Status.Login ? '登录': '注册'" @click="submit" />
       </view>
     </view>
-  </div>
+  </view>
 </template>
 
 <script setup lang="ts">
@@ -51,6 +51,7 @@ enum Status {
   Login = 0,
   Register = 1,
 };
+
 // tab 数据
 const tabs = [
   {

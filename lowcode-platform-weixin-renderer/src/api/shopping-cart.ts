@@ -1,13 +1,9 @@
-import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
+import { showFailToast, showSuccessToast } from 'lowcode-platform-weixin-renderer/utils/toast';
+import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 import type { ShoppingCartInfo } from "lowcode-platform-common/type/commodity";
 import { handleNotLogin } from "lowcode-platform-weixin-renderer/utils/login";
+import type { ChangeNumType } from 'lowcode-platform-common/type/shopping-cart';
 import { get, post } from "./request";
-
-
-export enum ChangeNumType {
-  Add = 'add',
-  Reduce = 'reduce'
-}
 
 /**
  * 获取购物车列表
@@ -27,6 +23,7 @@ export async function getShoppingCartInfo() {
 
   if(code) {
     handleNotLogin(code);
+    showFailToast(msg)
     return;
   };
 
@@ -93,6 +90,7 @@ export async function selectCommodity(cartId: string, shopId: string, commodityI
 
   if(code) {
     handleNotLogin(code);
+    showFailToast(msg);
     return code;
   };
 
@@ -123,6 +121,7 @@ export async function selectShopAllCommodities(cartId: string, shopId: string) {
 
   if(code) {
     handleNotLogin(code);
+    showFailToast(msg);
     return code;
   };
 
@@ -157,6 +156,7 @@ export async function addCommodityToCart(shopId: string, commodityId: string) {
     throw new Error(msg);
   };
 
+  showSuccessToast(isAdd ? '添加成功' : '当前商品已存在购物车中，快去结算吧！');
 };
 
 /**
@@ -183,7 +183,9 @@ export async function deleteCommodityFromCart(cartId: string, shopId: string, co
   const { code, msg, isAdd } = await resp as any;
 
   if(code) {
+    showFailToast(msg);
     throw new Error(msg);
   };
 
+  showSuccessToast(msg);
 }

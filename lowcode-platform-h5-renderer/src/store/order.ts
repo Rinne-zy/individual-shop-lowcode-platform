@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 
-import type { AddressInfo } from 'lowcode-platform-h5-renderer/type/address';
-import type { ShopInfo } from 'lowcode-platform-h5-renderer/type/commodity';
+import type { AddressInfo } from 'lowcode-platform-common/type/address';
+import type { ShopInfo } from 'lowcode-platform-common/type/commodity';
 
 export enum OrderFormType {
   // 待付款

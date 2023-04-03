@@ -49,6 +49,7 @@ import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
 import { OrderFormType, useOrderStore } from 'lowcode-platform-weixin-renderer/store/order';
 import { getUserStarInfo } from 'lowcode-platform-weixin-renderer/api/user';
 import { getOrderFormTypeNumber } from 'lowcode-platform-weixin-renderer/api/order';
+import { onShow } from '@dcloudio/uni-app';
 
 const userStore = useUserStore();
 // 用户名
@@ -84,7 +85,6 @@ const getStarInfo = async () => {
   userStore.starShops = shops;
   userStore.starCommodities = commodities;
 };
-getStarInfo();
 
 // 获取用户订单类型
 const getOrderInfo = async () => {
@@ -94,7 +94,11 @@ const getOrderInfo = async () => {
   userStore.preparingOrderNumber = preparing;
   userStore.deliveringOrderNumber = delivering;
 }
-getOrderInfo();
+
+onShow(() => {
+  getOrderInfo();
+  getStarInfo();
+});
 
 </script>
 

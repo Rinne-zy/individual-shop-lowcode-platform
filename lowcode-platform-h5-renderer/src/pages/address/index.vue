@@ -41,7 +41,7 @@ import { ref, reactive, computed, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AddressEdit from 'lowcode-platform-h5-renderer/components/address-edit/index.vue';
-import type { AddressInfo, UserAddress } from 'lowcode-platform-h5-renderer/type/address';
+import type { AddressInfo, UserAddress } from 'lowcode-platform-common/type/address';
 import { addAddressInfo, deleteAddressInfo, getAddressInfo, selectAddressInfo, updateAddressInfo } from 'lowcode-platform-h5-renderer/api/address'
 
 // 路由

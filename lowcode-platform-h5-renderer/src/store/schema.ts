@@ -1,8 +1,8 @@
 import { defineAsyncComponent } from 'vue';
 import { defineStore } from 'pinia';
 
-import type { Schema, ComponentsSchema } from 'lowcode-platform-h5-renderer/type/schema';
-import { EditorLayoutMode } from 'lowcode-platform-h5-renderer/type/schema';
+import type { Schema, ComponentsSchema } from 'lowcode-platform-common/type/schema';
+import { EditorLayoutMode } from 'lowcode-platform-common/type/schema';
 import { TabbarItem } from 'lowcode-platform-h5-renderer/type/index';
 import { getShopById } from 'lowcode-platform-h5-renderer/api/shop';
 

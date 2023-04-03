@@ -1,0 +1,33 @@
+.submit {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  width: 100%;
+  background: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+  display: flex;
+  height: 50px;
+  justify-content: flex-end;
+  align-items: center;
+  &-text {
+    font-size: 16px;
+    margin-right: 20px;
+    .price {
+      font-size: 14px;
+      .integer {
+        font-size: 20px;
+        color: #ee0a24;
+        font-weight: 700;
+      }
+      .not {
+        color: #000 !important;
+        font-weight: normal !important;
+      }
+    }
+  }
+  &-btn {
+    margin-right: 10px;
+  }
+}

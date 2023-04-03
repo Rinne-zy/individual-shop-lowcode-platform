@@ -1,3 +1,6 @@
+const base_url = '/pages/#page#/index'
+
+
 const routerConfig = {
   isTabBar: false,
   url: ''
@@ -8,14 +11,14 @@ export function navigateBack() {
   if(!routerConfig.url) return;
   if(routerConfig.isTabBar) {
     uni.switchTab({
-      url: routerConfig.url
+      url: base_url.replace('#page#', routerConfig.url)
     });
 
     return;
   };
 
   uni.redirectTo({
-    url: routerConfig.url
+    url: base_url.replace('#page#', routerConfig.url)
   });
 }
 
@@ -33,4 +36,10 @@ export function setRouterConfig(url: string, isTabBar = false) {
 export function resetRouterConfig() {
   routerConfig.isTabBar = false;
   routerConfig.url = '';
+}
+
+export function switchTab(url: string) {
+  uni.switchTab({
+    url: base_url.replace('#page#', url)
+  });
 }
