@@ -1,10 +1,9 @@
 <template>
   <div>
-    <van-image
+    <img
+      class="image"
       :src="propValue.src"
-      width="100%"
-      height="100%"
-      :round="propValue.isRound"
+      :class="{ 'image-round': propValue.isRound}"
     />
   </div>
 </template>

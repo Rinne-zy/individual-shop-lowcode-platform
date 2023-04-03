@@ -16,7 +16,7 @@
         <view><van-icon name="star-o" :size="20" />商品收藏<text class="num">{{ userStore.starCommodities.length }}</text></view>
         <view><van-icon name="shop-collect-o" :size="20" />店铺关注<text class="num">{{ userStore.starShops.length }}</text></view>
       </view>
-      <view class="divider">我的订单</view>
+      <u-divider text="我的订单"></u-divider>
       <view class="my-buy-order">
         <view class="my-buy-order-item">
           <view class="item-badge"><u-badge max="99" :value="userStore.payingOrderNumber" /></view>

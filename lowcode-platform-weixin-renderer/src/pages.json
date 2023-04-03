@@ -32,8 +32,7 @@
 		"backgroundTextStyle": "dark",
 		"backgroundColor": "#f8f8f8",
 		"usingComponents": {
-			"van-icon": "/wxcomponents/vant/icon/index",
-			"van-image": "/wxcomponents/vant/image/index"
+			"van-icon": "/wxcomponents/vant/icon/index"
 		}
 	},
 	"tabBar": {
