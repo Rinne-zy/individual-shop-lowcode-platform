@@ -1,6 +1,12 @@
 {
 	"pages": [
 		{
+			"path": "pages/shop/index",
+			"style": {
+				"navigationBarTitleText": "商城主页"
+			}
+		},
+		{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录&注册"
@@ -13,9 +19,9 @@
 			}
 		},
 		{
-			"path": "pages/shop/index",
+			"path": "pages/commodity/index",
 			"style": {
-				"navigationBarTitleText": "商城主页"
+				"navigationBarTitleText": "商品详情"
 			}
 		},
 		{

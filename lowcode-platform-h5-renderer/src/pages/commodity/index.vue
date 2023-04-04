@@ -33,7 +33,7 @@
       <img :src="data?.shop.avatar || '/cover.png'">
       <div class="shop-info">
         <p class="shop-info-name">{{ data?.shop.name }}</p>
-        <p class="shop-info-star">xxx 人关注该店铺</p>
+        <p class="shop-info-star">已有{{ data?.shop.starNum }}人关注该店铺人关注该店铺</p>
       </div>
       <van-icon class="shop-info-arrow" name="arrow" />
     </div>
@@ -148,6 +148,8 @@ const checkIsLogin = async () => {
 // 点击收藏
 let isStaring = false;
 const handleClickStar = async () => {
+  if(!await checkIsLogin()) return;
+
   if(isStaring) return;
   isStaring = true;
   const status = await starCommodity(commodityDetailStore.commodityId);
@@ -158,14 +160,14 @@ const handleClickStar = async () => {
 
 // 点击立即购买
 const handleClickBuy = async () => {
-  if(await checkIsLogin()) return;
+  if(!await checkIsLogin()) return;
 
   await handleClickCart();
   router.replace('/cart');
 };
 // 加入购物车
 const handleClickCart = async () => {
-  if(await checkIsLogin()) return;
+  if(!await checkIsLogin()) return;
 
   const { commodityId, shopId } = commodityDetailStore;
   await addCommodityToCart(shopId, commodityId);

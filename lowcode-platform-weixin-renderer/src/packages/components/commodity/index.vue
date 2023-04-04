@@ -69,6 +69,7 @@ import { addCommodityToCart } from "lowcode-platform-weixin-renderer/api/shoppin
 import { useShopStore } from "lowcode-platform-weixin-renderer/store/schema";
 import { useCommodityDetailStore } from "lowcode-platform-weixin-renderer/store/commodity";
 import { post } from "lowcode-platform-weixin-renderer/api/request";
+import { navigateTo, setRouterConfig } from "lowcode-platform-weixin-renderer/utils/router";
 
 const props = defineProps({
   // 属性值
@@ -155,9 +156,10 @@ const handleGoToCommodity = (commodityId: string) => {
   // 设置商品详情展示所需的信息
   commodityDetailStore.commodityId = commodityId;
   commodityDetailStore.shopId = shopStore._id;
-
+  
   if(!commodityId || !shopStore._id) return;
-  // TODO: 前往商品详情页
+  setRouterConfig('shop', true);
+  navigateTo('commodity')
 }
 </script>
 

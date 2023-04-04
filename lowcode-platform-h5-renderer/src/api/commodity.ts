@@ -9,6 +9,7 @@ export interface CommodityDetail {
     id: string;
     name: string;
     avatar: string;
+    starNum: number;
   },
   commodity: Commodity,
 }

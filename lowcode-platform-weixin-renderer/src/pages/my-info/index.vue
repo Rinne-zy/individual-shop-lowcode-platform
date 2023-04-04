@@ -3,7 +3,7 @@
     <view class="my-info">
       <img
         class="my-info-avatar"
-        :src="avatar || 'static/no-login.png'" 
+        :src="avatar || '/static/no-login.png'" 
       />
       <view class="my-info-name" :class="{ notLogin: !isLogin }">{{ isLogin ? username : '未登录' }}</view>
       <view class="logout" @click="handleLogin">

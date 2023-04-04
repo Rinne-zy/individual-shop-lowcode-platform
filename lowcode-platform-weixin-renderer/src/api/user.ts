@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
+import { showFailToast } from "lowcode-platform-weixin-renderer/utils/toast";
 import { get, post } from "./request";
 
 /**
@@ -23,7 +24,6 @@ export async function checkIsLogin() {
 
   return true;
 };
-
 
 /**
  * 登录
@@ -135,4 +135,27 @@ export async function getUserStarInfo() {
     shops: string[]
     commodities: string[]
   }
+};
+
+/**
+ * 获取用户收藏的商品
+ * @returns 
+ */
+export async function getUserStarCommodities() {
+  const token = uni.getStorageSync(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+  const resp = await get({
+    url: 'user/starCommodities',
+    header: {
+      Authorization: token,
+    }
+  });
+
+  const { code, msg, commodities } = await resp as any;
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  }
+
+  return commodities as Record<string, boolean>;
 };

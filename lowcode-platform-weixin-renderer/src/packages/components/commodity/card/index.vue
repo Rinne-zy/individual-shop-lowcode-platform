@@ -1,5 +1,5 @@
 <template>
-  <view :class="cardClass">
+  <view :class="cardClass" @click="handleGoToCommodity(props.id)">
     <view class="img-warp">
       <img class="img" :src="cover" />
     </view>
@@ -20,7 +20,7 @@
             {{ originPrice.toFixed(2) }}
           </view>
         </view>
-        <view class="cart" @click="handleAddToCart">
+        <view class="cart" @click.stop="handleAddToCart">
           <van-icon size="20" name="cart-o" color="#ff4444" />
         </view>
       </view>
@@ -29,6 +29,8 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from "lowcode-platform-weixin-renderer/store/user";
+import { navigateTo, setRouterConfig } from "lowcode-platform-weixin-renderer/utils/router";
 import type { PropType } from "vue";
 import { computed } from "vue";
 
@@ -71,8 +73,8 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['add'])
-
+const emits = defineEmits(['add', 'click']);
+const userStore = useUserStore();
 // 是否展示原价
 const isShowOriginPrice = props.isShowOriginPrice && props.type !== 'inline' && props.price !== props.originPrice
 // 卡片的样式类
@@ -86,11 +88,28 @@ const priceText = computed(() => {
   };
 });
 
+// 判断是否登录
+const checkIsLogin = async () => {
+  const isLogin = await userStore.checkLogin();
+  if(!isLogin) {
+    setRouterConfig('shop', true);
+    navigateTo('login');
+    return false;
+  };
+  return isLogin;
+};
+
 // 添加商品至购物车
-const handleAddToCart = (e: MouseEvent) => {
-  e.stopPropagation();
+const handleAddToCart = async () => {
+  if(!await checkIsLogin()) return;
   emits('add', props.id);
 };
+
+// 处理点击事件
+const handleGoToCommodity = (id: string) => {
+  emits('click', id);
+} 
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

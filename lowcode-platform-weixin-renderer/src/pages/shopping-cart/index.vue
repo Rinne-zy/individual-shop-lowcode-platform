@@ -1,28 +1,36 @@
 <template>
-  <view v-if="isLogin" class="shopping-cart">
-    <view class="shopping-content">
-        <address-item :address-info="addressInfo"/>
-        <shopping-cart-card
-          class="shopping-content-card"
-          v-for="shop in shopsOrderByAddTime"
-          :key="shop._id"
-          :title="shop.name"
-          :id="shop._id"
-          :cart-id="shoppingCart._id"
-          :commodities="shop.commodities"
-          @change-commodity-num="handleChangeCommodityNum"
-          @select-commodity="handleSelectCommodity"
-          @select-all-commodities="handleSelectShopAllCommodity"
-          @delete-commodity="handleDeleteCommodity"
-        />
-        <view class="tabbar-padding" />
+  <view>
+    <view v-if="isLogin" class="shopping-cart">
+      <view class="shopping-content">
+          <address-item :address-info="addressInfo"/>
+          <shopping-cart-card
+            class="shopping-content-card"
+            v-for="shop in shopsOrderByAddTime"
+            :key="shop._id"
+            :title="shop.name"
+            :id="shop._id"
+            :cart-id="shoppingCart._id"
+            :commodities="shop.commodities"
+            @change-commodity-num="handleChangeCommodityNum"
+            @select-commodity="handleSelectCommodity"
+            @select-all-commodities="handleSelectShopAllCommodity"
+            @delete-commodity="handleDeleteCommodity"
+          />
+          <view class="tabbar-padding" />
+      </view>
+      <submit-bar 
+        :price="shoppingCart.totalPrice"
+        :canSubmit="canSubmit"
+        @submit="handleSubmit"
+      />
     </view>
-    <submit-bar 
-      :price="shoppingCart.totalPrice"
-      :canSubmit="canSubmit"
-      @submit="handleSubmit"
+    <u-empty
+      v-else="isLogin"
+      mode="car"
+      text="快去登录查看购物车吧"
     />
   </view>
+
 </template>
 
 <script setup lang="ts">

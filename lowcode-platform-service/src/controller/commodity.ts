@@ -121,6 +121,7 @@ export async function getCommodityDetail(shopId: string, commodityId: string) {
       id: shop._id,
       name: shop.name,
       avatar: shop.avatar,
+      starNum: shop.starNum,
     },
     commodity
   }

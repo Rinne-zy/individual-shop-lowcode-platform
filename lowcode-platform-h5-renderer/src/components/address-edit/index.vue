@@ -1,8 +1,6 @@
 <template>
   <div class="address-form">
-    <van-form
-      @submit="handleSubmit"
-    >
+    <van-form @submit="handleSubmit">
       <van-cell-group inset>
         <van-field
           v-model="addressInfo.name"
@@ -183,7 +181,8 @@ const handleSelectConfirmArea = (value: any) => {
 
 // 确定
 const handleSubmit = () => {
-  if(props.isEditing &&!addressInfo.id) {
+  // 当不是编辑状态且 id 为空时需要重新添加
+  if(!props.isEditing && !addressInfo.id) {
     addressInfo.id = uuidv4();
   }
   emits('confirm', addressInfo);

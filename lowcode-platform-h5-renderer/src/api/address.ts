@@ -1,7 +1,7 @@
 import { showSuccessToast, showFailToast } from 'vant';
 
 import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from 'lowcode-platform-common/common/index';
-import type { AddressInfo, UserAddress } from './../type/address';
+import type { AddressInfo, UserAddress } from 'lowcode-platform-common/type/address';
 import { handleNotLogin } from 'lowcode-platform-h5-renderer/utils/login';
 
 /**
