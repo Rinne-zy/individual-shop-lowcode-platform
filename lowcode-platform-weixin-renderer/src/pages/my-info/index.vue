@@ -77,7 +77,7 @@ const handleLogin = () => {
 const handleGotoMyOrder = (type: OrderFormType) => {
   const orderStore = useOrderStore();
   orderStore.activeTab = type;
-  // TODO: 转跳至我的订单页面
+  navigateTo('my-order');
 };
 
 // 获取用户收藏信息
