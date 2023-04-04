@@ -1,11 +1,13 @@
 <template>
   <view class="horizon">
     <view class="radio">
-      <u-checkbox
-        :disabled="!canBuy"
-        :checked="selected && status === CommodityStatus.OnSale"
-        @change="handleSelect"
-      />
+      <u-checkbox-group>
+        <u-checkbox
+          :disabled="!canBuy"
+          :checked="selected && status === CommodityStatus.OnSale"
+          @change="handleSelect"
+        />
+      </u-checkbox-group>
     </view>
     <view style="position:relative;" @click="handleGoToCommodity">
       <img class="img" :src="cover" />
@@ -20,7 +22,7 @@
       </view>
       <view class="number-box">
         <u-number-box 
-          disabledInput
+          :disabledInput="true"
           :disablePlus="!canAdd"
           :disabled="!canBuy"
           :longPress="false"

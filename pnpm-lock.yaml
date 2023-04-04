@@ -6,6 +6,7 @@ importers:
     specifiers:
       '@types/node': ^18.11.18
       '@types/uuid': ^9.0.0
+      '@vant/area-data': ^1.4.1
       '@vitejs/plugin-vue': ^4.0.0
       deepcopy: ^2.1.0
       pinia: ^2.0.28
@@ -22,6 +23,7 @@ importers:
       vue-router: ^4.1.6
       vue-tsc: ^1.0.11
     dependencies:
+      '@vant/area-data': registry.npmmirror.com/@vant/area-data/1.4.1
       deepcopy: registry.npmmirror.com/deepcopy/2.1.0
       pinia: registry.npmmirror.com/pinia/2.0.29_prq2uz4lho2pwp6irk4cfkrxwu
       postcss-px-to-viewport-8-plugin: registry.npmmirror.com/postcss-px-to-viewport-8-plugin/1.2.0
@@ -58,11 +60,9 @@ importers:
 
   lowcode-platform-h5-renderer:
     specifiers:
-      '@vant/area-data': ^1.4.1
       lowcode-platform-common: workspace:*
       whatwg-fetch: ^3.6.2
     dependencies:
-      '@vant/area-data': registry.npmmirror.com/@vant/area-data/1.4.1
       lowcode-platform-common: link:../lowcode-platform-common
       whatwg-fetch: registry.npmmirror.com/whatwg-fetch/3.6.2
 

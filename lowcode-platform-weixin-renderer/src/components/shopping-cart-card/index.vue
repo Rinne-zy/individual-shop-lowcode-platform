@@ -2,11 +2,13 @@
   <view class="shopping-cart-card">
     <view class="title">
       <view class="title-radio">
-        <u-checkbox
-          :disabled="!canSelectAll"
-          :checked="isSelectedAll"
-          @change="handleSelectAll"
-        />
+        <u-checkbox-group>
+          <u-checkbox
+            :disabled="!canSelectAll"
+            :checked="isSelectedAll"
+            @change="handleSelectAll"
+          />
+        </u-checkbox-group>
       </view>
       <view @click="handleGotoShop">
         <text class="title-text">{{ title }}</text>
@@ -15,7 +17,8 @@
     </view>
       <u-swipe-action>
         <u-swipe-action-item
-          v-for="commodity in commodities"
+          v-for="(commodity, index) in commodities"
+          :index="index"
           :key="commodity._id"
           :options="[{
             text: '删除',

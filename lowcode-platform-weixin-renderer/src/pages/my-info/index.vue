@@ -50,6 +50,7 @@ import { OrderFormType, useOrderStore } from 'lowcode-platform-weixin-renderer/s
 import { getUserStarInfo } from 'lowcode-platform-weixin-renderer/api/user';
 import { getOrderFormTypeNumber } from 'lowcode-platform-weixin-renderer/api/order';
 import { onShow } from '@dcloudio/uni-app';
+import { navigateTo, setRouterConfig } from 'lowcode-platform-weixin-renderer/utils/router';
 
 const userStore = useUserStore();
 // 用户名
@@ -63,7 +64,8 @@ const isLogin = computed(() => userStore.isLogin);
 const handleLogin = () => {
   // 未登录转调至登录界面
   if(!isLogin.value) {
-    // TODO: 转跳至登录页面
+    setRouterConfig('my-info', true);
+    navigateTo('login');
     return;
   };
 

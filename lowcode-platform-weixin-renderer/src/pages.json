@@ -7,6 +7,12 @@
 			}
 		},
 		{
+			"path": "pages/address/index",
+			"style": {
+				"navigationBarTitleText": "地址选择"
+			}
+		},
+		{
 			"path": "pages/shop/index",
 			"style": {
 				"navigationBarTitleText": "商城主页"
@@ -32,7 +38,8 @@
 		"backgroundTextStyle": "dark",
 		"backgroundColor": "#f8f8f8",
 		"usingComponents": {
-			"van-icon": "/wxcomponents/vant/icon/index"
+			"van-icon": "/wxcomponents/vant/icon/index",
+			"van-area": "/wxcomponents/vant/area/index"
 		}
 	},
 	"tabBar": {

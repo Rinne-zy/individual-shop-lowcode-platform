@@ -23,6 +23,7 @@ import { computed } from 'vue';
 import type { PropType } from 'vue';
 
 import type { AddressInfo } from 'lowcode-platform-common/type/address';
+import { navigateTo } from 'lowcode-platform-weixin-renderer/utils/router';
 
 const props = defineProps({
   addressInfo: {
@@ -44,6 +45,7 @@ const areaInfo = computed(() => {
 
 // 前往选择地址详情页
 const goToAddressSelectPage = () => {
+  navigateTo('address');
 }
 
 </script>

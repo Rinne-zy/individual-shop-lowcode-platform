@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vant/area-data": "^1.4.1",
     "whatwg-fetch": "^3.6.2",
     "lowcode-platform-common": "workspace:*"
   }

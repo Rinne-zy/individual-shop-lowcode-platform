@@ -1,6 +1,6 @@
 const base_url = '/pages/#page#/index'
 
-
+// 路由配置
 const routerConfig = {
   isTabBar: false,
   url: ''
@@ -38,8 +38,22 @@ export function resetRouterConfig() {
   routerConfig.url = '';
 }
 
+/**
+ * 关闭当前页面转调至 tabBar 页
+ * @param url 
+ */
 export function switchTab(url: string) {
   uni.switchTab({
     url: base_url.replace('#page#', url)
   });
+}
+
+/**
+ * 路由转跳，保留当前页面
+ * @param url
+ */
+export function navigateTo(url: string) {
+  uni.navigateTo({
+    url: base_url.replace('#page#', url)
+  })
 }

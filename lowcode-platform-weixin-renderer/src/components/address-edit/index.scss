@@ -1,0 +1,28 @@
+.address-form {
+  width: 100vw;
+  box-sizing: border-box;
+  height: calc(100% - 60px);
+  padding-top: 60px;
+  background-color: #f7f8fa;
+  padding: 40px 15px;
+  &-operation {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+    .group {
+      display: flex;
+      justify-content: space-between;
+      .operation-button {
+        width: 120px;
+      }
+    }  
+  }
+}
+
+.address-default-switch {
+  margin-top: 12px;
+}
+
+.address-form-operation-delete {
+  margin-left: 20px;
+}

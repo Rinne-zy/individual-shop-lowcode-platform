@@ -116,7 +116,6 @@ const submit = async () => {
       const userStore = useUserStore();
       userStore.setLoginUserInfo(username, '/static/m.png', token);
       setTimeout(() => {
-        setRouterConfig('/pages/my-info/index', true);
         navigateBack();
       }, 1000);
       return;
