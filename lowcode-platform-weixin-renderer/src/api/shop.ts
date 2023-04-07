@@ -26,7 +26,7 @@ export async function starShop(shopId: string) {
   const token = uni.getStorageSync(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
 
   const resp = await post({
-    url: 'user/starShops',
+    url: 'commodity/star',
     header: {
       Authorization: token,
       'Content-Type': 'application/json'
