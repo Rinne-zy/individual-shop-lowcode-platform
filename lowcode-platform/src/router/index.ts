@@ -1,14 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
-
-import home from 'lowcode-platform/pages/home/index.vue';
-import login from 'lowcode-platform/pages/login/index.vue';
-import ShopManage from 'lowcode-platform/pages/shop-manage/index.vue';
-import PageConstruction from 'lowcode-platform/pages/page-construction/index.vue';
-import OrderManage from 'lowcode-platform/pages/order-manage/index.vue';
-import CommodityManage from 'lowcode-platform/pages/commodity-manage/index.vue';
-import PictureManage from 'lowcode-platform/pages/picture-manage/index.vue';
 import { checkIsLogin } from 'lowcode-platform/hooks/use-login-hook';
+
+const home = () => import('lowcode-platform/pages/home/index.vue');
+const login = () => import('lowcode-platform/pages/login/index.vue');
+const ShopManage = () => import('lowcode-platform/pages/shop-manage/index.vue');
+const PageConstruction = () => import('lowcode-platform/pages/page-construction/index.vue');
+const OrderManage = () => import('lowcode-platform/pages/order-manage/index.vue');
+const CommodityManage = () => import('lowcode-platform/pages/commodity-manage/index.vue');
+const PictureManage = () => import('lowcode-platform/pages/picture-manage/index.vue');
 
 // 路由数组
 const routes: RouteRecordRaw[] = [
@@ -16,35 +16,35 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'home',
     alias: '/home',
-    component: () => home,
+    component: home,
     redirect: '/shop',
     children: [
       {
         path: '/shop',
-        component: () => ShopManage,
+        component: ShopManage,
       },
       {
         path: '/construction',
-        component: () => PageConstruction,
+        component: PageConstruction,
       },
       {
         path: '/order',
-        component: () => OrderManage,
+        component: OrderManage,
       },
       {
         path: '/picture',
-        component: () => PictureManage,
+        component: PictureManage,
       },
       {
         path: '/commodity',
-        component: () => CommodityManage,
+        component: CommodityManage,
       }
     ],
   },
   {
     path: '/login',
     name: 'login',
-    component: () => login,
+    component: login,
     meta: {
       notRequireLogin: true,
     }

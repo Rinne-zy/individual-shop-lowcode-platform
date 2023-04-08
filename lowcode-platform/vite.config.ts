@@ -9,6 +9,20 @@ export default defineConfig({
     vue(),
     ElementPlus()
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('vant')) {
+            return 'vant';
+          };
+          if (id.includes('element-plus')) {
+            return 'element-plus';
+          }
+        }
+      }
+    }
+  },
   resolve: {
     alias: [
       {
