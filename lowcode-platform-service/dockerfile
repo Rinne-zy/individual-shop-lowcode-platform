@@ -1,0 +1,8 @@
+FROM node
+LABEL name="lowcode-platform-service"
+LABEL version="1.0"
+ADD . /service/
+WORKDIR /service
+RUN npm install
+EXPOSE 3300
+CMD npm start

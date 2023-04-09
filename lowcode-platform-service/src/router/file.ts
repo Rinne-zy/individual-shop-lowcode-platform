@@ -16,7 +16,9 @@ router.post('/image/upload', async (ctx) => {
   // 文件名
   const name = ctx.request.body.name || (files.file as File).originalFilename;
 
-  const res = await saveImage(ctx.origin, username, name, type ,files);
+  let origin = ctx.origin.match(/(http:\/\/.*):(.*)/);
+
+  const res = await saveImage(origin ? origin[1] : 'localhost:3300', username, name, type ,files);
   ctx.body = res;
 });
 

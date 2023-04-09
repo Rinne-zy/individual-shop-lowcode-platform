@@ -6,7 +6,8 @@ import App from './App.vue';
 import router from './router';
 import { usePiniaPersistentStoragePlugin } from './plugins/pinia-store-presistent-storage-plugins';
 import { initAxios } from './hooks/use-axios-init-hook';
-import './packages/icons/iconfont.css'
+import './packages/icons/iconfont.css';
+import './assets/icon/iconfont.css';
 import material from './packages/material.json';
 import { registerComponentsAndAttr } from './packages/index';
 

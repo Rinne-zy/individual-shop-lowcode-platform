@@ -8,7 +8,7 @@ import Path from 'path';
  * @returns 文件夹绝对路径
  */
 export async function ensureUserImagesDirExists(userDir: string, needToCreated = true) {
-  const dirPath = Path.resolve(process.cwd(), `public/images/${userDir}`);
+  const dirPath = `/images/${userDir}`;
   const isExists = await fs.exists(dirPath);
   if(!isExists && needToCreated) {
     await fs.mkdir(dirPath);
@@ -84,6 +84,6 @@ function save(dirPath: string, file: File) {
  * @param filePath 需要删除的相对路径
  */
 export async function deleteImage(filePath: string) {
-  const path = Path.resolve(process.cwd(), `public/images/${filePath}`);
+  const path = `/images/${filePath}`;
   await fs.remove(path);
 }
