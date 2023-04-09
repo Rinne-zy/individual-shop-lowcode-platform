@@ -1,6 +1,14 @@
 .address {
   background-color: #fff;
   position: relative;
+  &-null {
+    display: flex;
+    flex-direction: column;
+    height: 75px;
+    padding: 12px 20px;
+    justify-content: center;
+    font-size: 14px;
+  }
   &-item {
     display: flex;
     flex-direction: column;

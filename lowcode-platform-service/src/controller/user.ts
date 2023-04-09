@@ -24,6 +24,8 @@ export async function register(username: string, password: string, userType: num
   await User.create({
     username,
     password: encryptPassword(cryptoKey, password),
+    starCommodities: {},
+    starShops: {},
     userType,
   })
 
@@ -108,7 +110,26 @@ export async function getUserStarInfo(username: string) {
   const user = await User.findOne({ username });
   if(!user) throw new Error('用户信息不存在');
 
-  const { starShops, starCommodities } = user;
+  let { starShops, starCommodities } = user;
+  let isNeedToSave = true;
+  
+  if (!starShops) {
+    starShops = {};
+    user.starShops = starShops;
+    user.markModified('starShops');
+    isNeedToSave = true;
+  };
+
+  if (!starCommodities) {
+    starCommodities = {};
+    user.starCommodities = starCommodities;
+    user.markModified('starCommodities');
+    isNeedToSave = true;
+  };
+
+  if (isNeedToSave) {
+    await user.save();
+  }
 
   return {
     code: StatusCode.Success,

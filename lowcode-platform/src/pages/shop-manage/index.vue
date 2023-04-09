@@ -16,7 +16,7 @@
             <span class="iconfont" :class="shop._id === selectShopId ? 'icon-selected': 'icon-not-selected'" />
           </div>
           <div>
-            <span class="share-btn" :data-clipboard-text="shop._id"  @click="handleShareShop(shop._id, $event)"><span class="iconfont icon-share"/></span>
+            <span class="share-btn" :data-clipboard-text="shop._id"  @click="handleShareShop(shop._id, $event)"><span class="packageIcon icon-share"/></span>
             <span class="delete-btn" @click="handleDeleteShop(shop._id, $event)"><span class="iconfont icon-delete"/></span>
           </div>
         </div>
@@ -143,7 +143,8 @@ const handleSelectShop = (id: string, e: MouseEvent) => {
 // 分享商城
 const handleShareShop =  async (id: string, e: MouseEvent) => {
   e.stopPropagation();
-  const url = `http://localhost:5174/home?id=${id}`
+  // TODO: 后续生成二维码
+  const url = `${import.meta.env.VITE_H5_RENDERER_BASE_URL}/home?id=${id}`;
   await copy(url);
   showSuccessMessage('复制线上链接成功，快去分享给你的好友吧');
 };

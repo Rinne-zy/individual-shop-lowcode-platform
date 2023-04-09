@@ -1,6 +1,6 @@
 <template>
   <div class="material-item">
-    <i class='iconfont material-item-icon' :class="`icon-${icon}`" />
+    <i class='packageIcon material-item-icon' :class="`icon-${icon}`" />
     <div class="material-item-text">{{ label }}</div>
   </div>
 </template>

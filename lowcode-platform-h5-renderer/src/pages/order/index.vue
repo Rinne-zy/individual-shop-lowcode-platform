@@ -34,9 +34,9 @@ import { useRouter } from 'vue-router';
 import AddressItem from 'lowcode-platform-h5-renderer/components/address-item/index.vue';
 import OrderItem from 'lowcode-platform-h5-renderer/components/order-item/index.vue';
 
-import { useOrderStore } from 'lowcode-platform-h5-renderer/store/order';
+import { OrderFormType, useOrderStore } from 'lowcode-platform-h5-renderer/store/order';
 import { CommodityStatus } from 'lowcode-platform-common/type/commodity';
-import { createOrder } from 'lowcode-platform-h5-renderer/api/order';
+import { createOrder, payOrderForm } from 'lowcode-platform-h5-renderer/api/order';
 
 const orderStore = useOrderStore();
 const router = useRouter();
@@ -63,17 +63,32 @@ const commoditiesSortByShop = computed(() => {
 // 处理提交订单
 const handleSubmit = () => {
   showConfirmDialog({
-      title: '确认',
-      message:'是否提交订单',
+    title: '确认',
+    message: '是否提交订单',
+  })
+    .then(async () => {
+      const ids = await createOrder();
+      pay(ids);
     })
-      .then(async () => {
-        const ids = await createOrder();
-        console.log(ids);
-        router.go(-1);
-      })
-      .catch(() => {});
-    
-    return;
+    .catch(() => { });
+
+  return;
+};
+
+const pay = (id: string | string[]) => {
+  showConfirmDialog({
+    title: '确认',
+    message: '是否立即支付',
+  })
+    .then(async () => {
+      await payOrderForm(id);
+      router.go(-1);
+    })
+    .catch(() => {
+      const orderStore = useOrderStore();
+      orderStore.activeTab = OrderFormType.Paying;
+      router.replace('/my-order');
+    });
 }
 </script>
 

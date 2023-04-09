@@ -3,7 +3,7 @@
     <nav-bar 
       title="我的订单"
       left-arrow
-      @click-left="router.go(-1)"
+      @click-left="router.replace('/info')"
     />
     <van-tabs v-model:active="orderStore.activeTab">
       <van-tab :title="textByOrderFormType[OrderFormType.Paying]" :name="OrderFormType.Paying">

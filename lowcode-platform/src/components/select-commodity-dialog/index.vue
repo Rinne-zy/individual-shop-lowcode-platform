@@ -29,7 +29,7 @@
       height="630"
       :data="commoditiesNeedToShow"
     >
-      <el-table-column type="selection" width="65" />
+      <el-table-column type="selection" width="65" :selectable="(row) => row.status === CommodityStatus.OnSale" />
       <el-table-column prop="name" label="商品名称" width="300" >
         <template #default="scope">
           <div class="commodity-name">
@@ -79,7 +79,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="handleClose">取消</el-button>
-        <el-button type="primary" @click="handleSelectConfirm">确定</el-button>
+        <el-button type="primary" :disabled="!selectedRows || selectedRows.length === 0" @click="handleSelectConfirm">确定</el-button>
       </span>
     </template>
   </el-dialog>
@@ -139,12 +139,12 @@ const {
   handleFilter,
 } = useElTableHooks<Commodity>();
 
+const selectedRows = computed(() => table.value?.getSelectionRows() as Commodity[])
+
 // 需要展示的商品
 const commoditiesNeedToShow = computed(() => {
   // 过滤已选择的商品和不在销售状态的商品
-  const leftCommodity = commodities.value.filter((commodity) =>
-  !props.selectedIds.includes(commodity._id) && commodity.status === CommodityStatus.OnSale
-);
+  const leftCommodity = commodities.value.filter((commodity) => !props.selectedIds.includes(commodity._id) );
 
   if(!search.value) {
     return leftCommodity;
@@ -204,7 +204,6 @@ getCommoditiesFromNetWork();
 
 // 处理更新级联选择框
 const handleUpdateCascaderOptions = async () => {
- await getCascaderOptions();
  await getCommoditiesFromNetWork();
 };
 
@@ -221,8 +220,7 @@ const handleClose = () => {
 
 // 处理确认选择
 const handleSelectConfirm = () => {
-  const selectedRows = table.value?.getSelectionRows() as Commodity[];
-  emits('confirm', selectedRows);
+  emits('confirm', selectedRows.value);
 };
 </script>
 

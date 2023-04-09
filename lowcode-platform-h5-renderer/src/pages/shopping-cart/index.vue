@@ -19,6 +19,7 @@
     </div>
     <van-submit-bar 
       class="submit-bar"
+      :disabled="!isSelectedCommodities"
       :loading="isLoading"
       :price="shoppingCart.totalPrice * 100"
       @submit="handleSubmit"
@@ -67,6 +68,8 @@ const shoppingCart = reactive<ShoppingCartInfo>({
   shops: [],
   totalPrice: 0
 });
+// 是否选中商品
+const isSelectedCommodities = computed(() => shoppingCart.shops.some((shop) => shop.commodities.some((commodity) => commodity.selected)))
 // 根据添加商品时间顺序排序
 const shopsOrderByAddTime = computed(() => shoppingCart.shops.sort((s1, s2) => s2.modified - s1.modified));
 // 按钮是否正在加载

@@ -158,7 +158,7 @@ const manageTypeDialogRef = ref<InstanceType<typeof ManageTypeDialog> | null>();
 // 表单实例 Dom
 const formRef = ref<FormInstance>();
 // 级联选择选项
-const { cascaderOptions } = useCascaderType(Type.Commodity);
+const { cascaderOptions, getCascaderOptions } = useCascaderType(Type.Commodity);
 // 默认的表单值
 const defaultFormValue: CommodityForm = {
   // 商品名称
@@ -302,6 +302,7 @@ const handleDeleteCascaderOptions = async (options: CascaderOption[], value: str
   const { data } = await deleteCascaderType(cascaderOptions.value.id, options, value, 'commodity');
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
+  await getCascaderOptions();
   emits('updateCascaderOptions');
 };
 // 处理添加商品类型
@@ -309,6 +310,7 @@ const handleAddCascaderOptions = async (options: CascaderOption[]) => {
   const { data } = await updateCascaderType(cascaderOptions.value.id, options);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
+  await getCascaderOptions();
   emits('updateCascaderOptions');
 };
 </script>

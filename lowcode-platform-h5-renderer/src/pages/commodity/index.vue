@@ -33,7 +33,7 @@
       <img :src="data?.shop.avatar || '/cover.png'">
       <div class="shop-info">
         <p class="shop-info-name">{{ data?.shop.name }}</p>
-        <p class="shop-info-star">已有{{ data?.shop.starNum }}人关注该店铺人关注该店铺</p>
+        <p class="shop-info-star">已有{{ data?.shop.starNum }}人关注该店铺</p>
       </div>
       <van-icon class="shop-info-arrow" name="arrow" />
     </div>

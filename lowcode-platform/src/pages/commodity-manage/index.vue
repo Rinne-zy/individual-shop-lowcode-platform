@@ -226,7 +226,6 @@ getCommoditiesFromNetWork();
 
 // 处理更新级联选择框
 const handleUpdateCascaderOptions = async () => {
- await getCascaderOptions();
  await getCommoditiesFromNetWork();
  if(isEditingIndex === -1) return;
  const commodity = commodities.value[isEditingIndex];

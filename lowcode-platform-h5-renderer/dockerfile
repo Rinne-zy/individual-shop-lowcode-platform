@@ -1,0 +1,6 @@
+FROM nginx
+LABEL name="lowcode-platform-h5-renderer"
+LABEL version="1.0"
+COPY ./dist  /user/share/lowcode-platform-h5-renderer
+COPY ./nginx.conf /etc/nginx/nginx.conf
+EXPOSE 8081

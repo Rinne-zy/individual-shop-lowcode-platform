@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { ElForm, ElFormItem, ElUpload, ElDialog, ElButton, ElInput, ElCascader } from 'element-plus';
 import type { FormInstance, UploadRequestOptions, CascaderOption } from 'element-plus';
-import { reactive, computed, ref, watch, onUnmounted, PropType, onMounted } from 'vue';
+import { reactive, computed, ref, watch, onUnmounted, onMounted } from 'vue';
 
 import ManageTypeDialog from 'lowcode-platform/components/manage-type-dialog/index.vue';
 import { useImageUpload } from 'lowcode-platform/hooks/use-image-upload-hook';
@@ -129,7 +129,7 @@ const manageTypeDialogRef = ref<InstanceType<typeof ManageTypeDialog> | null>();
 // 分类管理对话框
 const isTypeDialogVisible = ref(false);
 // 级联选择选项
-const { cascaderOptions, initCascaderType } = useCascaderType(Type.Image);
+const { cascaderOptions, initCascaderType, getCascaderOptions } = useCascaderType(Type.Image);
 
 // 图片上传钩子
 const {
@@ -269,6 +269,7 @@ const handleDeleteCascaderOptions = async (options: CascaderOption[], value: str
   const { data } = await deleteCascaderType(cascaderOptions.value.id, options, value, 'image');
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
+  await getCascaderOptions();
   emits('updateCascaderOptions');
 };
 // 处理添加图片类型
@@ -276,6 +277,7 @@ const handleAddCascaderOptions = async (options: CascaderOption[]) => {
   const { data } = await updateCascaderType(cascaderOptions.value.id, options);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
+  await getCascaderOptions();
   emits('updateCascaderOptions');
 }
 

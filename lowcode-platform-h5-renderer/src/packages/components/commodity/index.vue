@@ -22,7 +22,7 @@
         :class="{ round: propValue.isRound }"
         :style="commodityStyleByLayout[propValue.layout]"
         @add="handleAddToCart"
-        @click="handleGoToCommodity"
+        @click="handleGoToCommodity(commodity._id)"
       />
     </div>
     <!-- 一行两列 -->

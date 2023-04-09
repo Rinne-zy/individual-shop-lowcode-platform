@@ -222,7 +222,6 @@ const successUpload = () => {
 
 // 处理更新级联选择框
 const handleUpdateCascaderOptions = async () => {
- await getCascaderOptions();
  await getPicture();
  if(isEditingIndex === -1) return;
  // 重新设置图片并更新表单

@@ -1,8 +1,16 @@
 @font-face {
-  font-family: "iconfont"; /* Project id  */
-  src: url('./iconfont.woff2?t=1680074015130') format('woff2'),
-       url('./iconfont.woff?t=1680074015130') format('woff'),
-       url('./iconfont.ttf?t=1680074015130') format('truetype');
+  font-family: "packageIcon"; /* Project id 3868209 */
+  src: url('iconfont.woff2?t=1681029157166') format('woff2'),
+       url('iconfont.woff?t=1681029157166') format('woff'),
+       url('iconfont.ttf?t=1681029157166') format('truetype');
+}
+
+.packageIcon {
+  font-family: "packageIcon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .icon-share:before {
@@ -33,7 +41,7 @@
   content: "\e60b";
 }
 
-.icon-commodities:before {
+.icon-commodity:before {
   content: "\e635";
 }
 

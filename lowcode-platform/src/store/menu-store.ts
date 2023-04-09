@@ -23,7 +23,7 @@ const merchantMenuItems: Array<MenuItem> = [
   {
     name: '商品管理',
     value: '/commodity',
-    icon: 'icon-commodity'
+    icon: 'icon-commodity-manage'
   },
   {
     name: '图片管理',

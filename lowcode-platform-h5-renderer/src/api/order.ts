@@ -18,7 +18,7 @@ export async function createOrder() {
   });
 
   if(resp.status !== 200 || !resp.ok) {
-    return false;
+    throw new Error('提交订单网络错误');
   };
   const { code, msg, ids } = await resp.json();
 
@@ -27,6 +27,7 @@ export async function createOrder() {
     throw new Error('提交订单失败');
   };
 
+  showSuccessToast(msg);
   return ids as string[];
 }
 
