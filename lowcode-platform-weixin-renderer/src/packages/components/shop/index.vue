@@ -41,7 +41,7 @@ const props = defineProps({
 
 // 商店信息样式
 const shopInfoStyle = {
-  backgroundImage: `url(${props.propValue.background || '/static/default.webp'})`,
+  backgroundImage: `url(${props.propValue.background || 'http://47.97.34.219/images/default.webp'})`,
   height: `${props.propStyle.height}px`,
 };
 // 文本颜色

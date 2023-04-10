@@ -109,7 +109,6 @@ const getDetails = async () => {
   if(!res) return;
   data.value = res;
 };
-
 // 前往商城
 const handleGotoShop = async () => {
   const stop = useShopStore();
@@ -120,7 +119,6 @@ const handleGotoShop = async () => {
   // 前往商城
   switchTab('shop');
 };
-
 // 判断是否登录
 const checkIsLogin = async () => {
   const isLogin = await userStore.checkLogin();
@@ -131,7 +129,6 @@ const checkIsLogin = async () => {
   };
   return isLogin;
 }
-
 // 点击收藏
 let isStaring = false;
 const handleClickStar = async () => {
@@ -144,7 +141,6 @@ const handleClickStar = async () => {
   showSuccessToast(status ? '收藏成功' : '取消收藏');
   isStaring = false; 
 };
-
 // 点击立即购买
 const handleClickBuy = async () => {
   if(!await checkIsLogin()) return;
@@ -161,11 +157,11 @@ const handleClickCart = async () => {
   const { commodityId, shopId } = commodityDetailStore;
   await addCommodityToCart(shopId, commodityId);
 }
-
+// 加载数据
 onLoad(() => {
   getDetails();
 })
-
+// 监听页面滚动
 onPageScroll((e: any) => {
   scrollTop.value = e.scrollTop;
 })

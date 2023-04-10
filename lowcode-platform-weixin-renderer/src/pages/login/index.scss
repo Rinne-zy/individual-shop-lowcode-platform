@@ -6,3 +6,34 @@
   margin: 0 auto;
   margin-top: 30px;
 }
+
+.uni-input-wrapper {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  padding: 8px 13px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  background-color: #FFFFFF;
+}
+.uni-input {
+  height: 28px;
+  line-height: 28px;
+  font-size: 15px;
+  padding: 0px;
+  flex: 1;
+  background-color: #FFFFFF;
+}
+.uni-icon {
+  font-family: uniicons;
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  color: #999999;
+}
+.uni-eye-active {
+  color: #007AFF;
+}

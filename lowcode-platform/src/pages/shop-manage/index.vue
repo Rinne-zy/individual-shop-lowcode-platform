@@ -16,7 +16,7 @@
             <span class="iconfont" :class="shop._id === selectShopId ? 'icon-selected': 'icon-not-selected'" />
           </div>
           <div>
-            <span class="share-btn" :data-clipboard-text="shop._id"  @click="handleShareShop(shop._id, $event)"><span class="packageIcon icon-share"/></span>
+            <span class="share-btn" :data-clipboard-text="shop._id"  @click="handleShareShop(shop._id, $event)"><span class="iconfont icon-share-qrcode"/></span>
             <span class="delete-btn" @click="handleDeleteShop(shop._id, $event)"><span class="iconfont icon-delete"/></span>
           </div>
         </div>
@@ -42,6 +42,7 @@
       @confirm="handleSaveConfirm"
       :is-visible="isVisible"
     />
+    <share-dialog ref="shareDialogRef" />
   </div>
 </template>
 
@@ -51,6 +52,7 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import CreateShopDialog from 'lowcode-platform/components/create-shop-dialog/index.vue';
+import ShareDialog from 'lowcode-platform/components/share-dialog/index.vue';
 import { getSchemaById } from 'lowcode-platform/api/schema';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { getDate } from 'lowcode-platform/utils/time';
@@ -59,7 +61,6 @@ import { useShopsStore } from 'lowcode-platform/store/shop-store';
 import { deleteShop, ShopInfo } from 'lowcode-platform/api/shop';
 import { updateShopBasicInfo } from 'lowcode-platform/api/shop';
 import { showSuccessMessage } from 'lowcode-platform/utils/toast';
-import { copy } from 'lowcode-platform-common/utils/copy';
 
 const schemaStore = useSchemaStore();
 const router = useRouter();
@@ -67,6 +68,7 @@ const shopsStore = useShopsStore();
 
 // 我的商城信息
 const shops = computed(() => shopsStore.shops);
+const shareDialogRef = ref<InstanceType<typeof ShareDialog>>();
 const selectShopId = computed(() =>  shopsStore.selectShopId);
 // 商城创建对话框是否可见
 const isVisible = ref(false);
@@ -84,7 +86,7 @@ const handleClickShop = async (index: number) => {
   schemaStore.init(data.shopSchema.schema, _id);
   router.push('/construction');
 }
-
+// 处理编辑
 const handleClickEdit = (index: number, e: MouseEvent) => {
   e.stopPropagation();
   const editingShop = shops.value[index];
@@ -95,7 +97,6 @@ const handleClickEdit = (index: number, e: MouseEvent) => {
   isVisible.value = true;
   isEditingShopId = editingShop._id;
 };
-
 // 确认保存
 const handleSaveConfirm = async (formData: ShopInfo) => {
   if(!isEditingShopId) return;
@@ -106,7 +107,7 @@ const handleSaveConfirm = async (formData: ShopInfo) => {
   isEditingShopId = '';
   shopsStore.getMyShops();
 };
-
+// 删除商城
 const handleDeleteShop = (id: string, e: MouseEvent) => {
   e.stopPropagation();
   ElMessageBox.confirm(
@@ -130,7 +131,6 @@ const handleDeleteShop = (id: string, e: MouseEvent) => {
       return false;
     });
 }
-
 // 处理选择商城
 const handleSelectShop = (id: string, e: MouseEvent) => {
    e.stopPropagation();
@@ -143,13 +143,11 @@ const handleSelectShop = (id: string, e: MouseEvent) => {
 // 分享商城
 const handleShareShop =  async (id: string, e: MouseEvent) => {
   e.stopPropagation();
-  // TODO: 后续生成二维码
-  const url = `${import.meta.env.VITE_H5_RENDERER_BASE_URL}/home?id=${id}`;
-  await copy(url);
-  showSuccessMessage('复制线上链接成功，快去分享给你的好友吧');
+  shareDialogRef.value?.show(id);
 };
 
 shopsStore.getMyShops();
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

@@ -49,7 +49,7 @@ import { CommodityStatus } from 'lowcode-platform-common/type/commodity';
 import type { ChangeNumType } from 'lowcode-platform-common/type/shopping-cart';
 import { useShopStore } from 'lowcode-platform-weixin-renderer/store/schema';
 import { useCommodityDetailStore } from 'lowcode-platform-weixin-renderer/store/commodity';
-import { switchTab } from 'lowcode-platform-weixin-renderer/utils/router';
+import { navigateTo, switchTab } from 'lowcode-platform-weixin-renderer/utils/router';
 
 const props = defineProps({
   id: {
@@ -94,7 +94,6 @@ const handleChangeNum = async (commodityId: string, type: ChangeNumType) => {
 
 // 处理转跳商城逻辑
 const handleGotoShop = async () =>{
-  console.log('test');
   const stop = useShopStore();
   stop.name = props.title;
   stop._id = props.id;
@@ -108,7 +107,7 @@ const handleGoToCommodityDetail = (commodityId: string) => {
   commodityDetailStore.commodityId = commodityId;
   commodityDetailStore.shopId = props.id;
 
-  // TODO: 前往商品详情页
+  navigateTo('commodity')
 };
 
 // 删除商品

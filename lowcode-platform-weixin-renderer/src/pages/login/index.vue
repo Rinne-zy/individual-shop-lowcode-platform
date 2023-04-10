@@ -44,7 +44,7 @@
 import { reactive, ref } from 'vue';
 import { login, register } from 'lowcode-platform-weixin-renderer/api/user';
 import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
-import { navigateBack, setRouterConfig } from 'lowcode-platform-weixin-renderer/utils/router';
+import { navigateBack } from 'lowcode-platform-weixin-renderer/utils/router';
 import { showFailToast } from 'lowcode-platform-weixin-renderer/utils/toast';
 
 enum Status {
