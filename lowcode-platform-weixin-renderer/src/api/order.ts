@@ -1,7 +1,8 @@
 import type { Order } from 'lowcode-platform-common/type/order';
-import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
+import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 import { get, post } from './request';
 import { showFailToast, showSuccessToast } from 'lowcode-platform-weixin-renderer/utils/toast';
+import { handleErrorCode } from 'lowcode-platform-weixin-renderer/utils/error';
 
 /**
  * 提交订单
@@ -35,8 +36,7 @@ export async function getOrderForm() {
   const { code, msg, orders } = await resp as any;
 
   if(code !== 0) {
-    showFailToast(msg);
-    throw new Error('获取订单失败');
+    handleErrorCode(code, msg);
   };
 
   return orders as Order[];
@@ -57,9 +57,11 @@ export async function payOrderForm(ids: string | string[]) {
   const { code, msg } = await resp as any;
 
   if(code !== 0) {
-    showFailToast(msg);
-    throw new Error(msg);
+    handleErrorCode(code, msg);
+    return;
   };
+
+  showSuccessToast(msg);
 }
 
 /**
@@ -77,10 +79,11 @@ export async function cancelOrderForm(id: string) {
   const { code, msg } = await resp as any;
 
   if(code !== 0) {
-    showFailToast(msg);
-    throw new Error(msg);
+    handleErrorCode(code, msg);
+    return;
   };
 
+  showSuccessToast(msg);
 }
 /**
  * 确认订单已收货
@@ -97,9 +100,11 @@ export async function finishOrder(id: string) {
   const { code, msg } = await resp as any;
 
   if(code !== 0) {
-    throw new Error(msg);
+    handleErrorCode(code, msg);
+    return;
   };
 
+  showSuccessToast(msg);
 }
 
 /** 获取顾客的订单数据类型 */
@@ -115,8 +120,8 @@ export async function getOrderFormTypeNumber() {
   const { code, msg, status } = await resp as any;
 
   if(code !== 0) {
-    showSuccessToast(msg);
-    throw new Error('获取订单失败');
+    handleErrorCode(code, msg);
+    return;
   };
 
   return status as {

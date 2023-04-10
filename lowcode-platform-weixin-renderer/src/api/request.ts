@@ -31,7 +31,8 @@ export function post<ReturnType>(options: Partial<RequestOptions>) {
     }).then(data => {   
         resolve(data.data as ReturnType);
     }).catch(error => {
-        reject(error)
+        console.log(error);
+        reject(error);
     })
   })
 }
@@ -51,6 +52,7 @@ export function get<ReturnType>(options: Partial<RequestOptions>) {
     }).then(data => {   
         resolve(data.data as ReturnType);
     }).catch(error => {
+        console.log(error);
         reject(error)
     })
   })

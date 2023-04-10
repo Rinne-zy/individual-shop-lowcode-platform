@@ -1,9 +1,9 @@
 import { showFailToast, showSuccessToast } from 'lowcode-platform-weixin-renderer/utils/toast';
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 import type { ShoppingCartInfo } from "lowcode-platform-common/type/commodity";
-import { handleNotLogin } from "lowcode-platform-weixin-renderer/utils/login";
 import type { ChangeNumType } from 'lowcode-platform-common/type/shopping-cart';
 import { get, post } from "./request";
+import { handleErrorCode } from 'lowcode-platform-weixin-renderer/utils/error';
 
 /**
  * 获取购物车列表
@@ -22,8 +22,7 @@ export async function getShoppingCartInfo() {
   const { code, msg, cart } = await resp as any
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg)
+    handleErrorCode(code, msg);
     return;
   };
 
@@ -57,7 +56,7 @@ export async function changeCommodityNum(cartId: string, shopId: string, commodi
   const { code, msg } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
+    handleErrorCode(code, msg);
     return code;
   };
 
@@ -89,8 +88,7 @@ export async function selectCommodity(cartId: string, shopId: string, commodityI
   const { code, msg } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return code;
   };
 
@@ -120,8 +118,7 @@ export async function selectShopAllCommodities(cartId: string, shopId: string) {
   const { code, msg } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return code;
   };
 
@@ -152,8 +149,7 @@ export async function addCommodityToCart(shopId: string, commodityId: string) {
   const { code, msg, isAdd } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    throw new Error(msg);
+    handleErrorCode(code, msg);
   };
 
   showSuccessToast(isAdd ? '添加成功' : '当前商品已存在购物车中，快去结算吧！');
@@ -183,8 +179,8 @@ export async function deleteCommodityFromCart(cartId: string, shopId: string, co
   const { code, msg, isAdd } = await resp as any;
 
   if(code) {
-    showFailToast(msg);
-    throw new Error(msg);
+    handleErrorCode(code, msg);
+    return;
   };
 
   showSuccessToast(msg);

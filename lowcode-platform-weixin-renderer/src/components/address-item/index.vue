@@ -1,6 +1,6 @@
 <template>
   <view class="address">
-    <view class="address-item">
+    <view v-if="addressInfo.id !== ''" class="address-item">
       <view class="address-item-top">
         <view class="tag" v-if="addressInfo.isDefault"><u-tag text="默认" round plain size="mini" type="error" /></view>
         <view class="address-area">{{ areaInfo }}</view>
@@ -10,7 +10,8 @@
         <span>{{ addressInfo.name }}</span>
         <span class="phone">{{ addressInfo.tel }}</span>
       </view>
-      </view>
+    </view>
+    <view v-else class="address-null">当前用户未选择默认地址，请点击进行添加</view>
     <view class="divider">
       <view v-for="num in 12" :class="['divider-item', num % 2 === 0 ? 'origen' : 'blue']"></view>
     </view>

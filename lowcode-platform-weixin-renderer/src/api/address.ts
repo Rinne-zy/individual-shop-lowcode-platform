@@ -1,15 +1,8 @@
 import { showSuccessToast, showFailToast } from 'lowcode-platform-weixin-renderer/utils/toast';
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from 'lowcode-platform-common/common/index';
 import type { AddressInfo, UserAddress } from 'lowcode-platform-common/type/address';
-import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
 import { get, post } from './request';
-
-function handleNotLogin(code: number) {
-  const userStore = useUserStore();
-  if(code === 40001) {
-    userStore.isLogin = false;
-  }
-}
+import { handleErrorCode } from 'lowcode-platform-weixin-renderer/utils/error';
 
 /**
  * 根据商城 id 获取商城 schema
@@ -28,8 +21,7 @@ export async function getAddressInfo() {
   const { code, msg, userAddress } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return;
   };
 
@@ -52,8 +44,7 @@ export async function addAddressInfo(addressInfo: AddressInfo) {
   const { code, msg } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return;
   };
 
@@ -78,8 +69,7 @@ export async function updateAddressInfo(id: string, addressInfo: AddressInfo) {
   const { code, msg } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return;
   }
 
@@ -103,8 +93,7 @@ export async function deleteAddressInfo(id: string, addressInfoId: string) {
   const { code, msg } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return;
   }
 
@@ -129,8 +118,7 @@ export async function selectAddressInfo(id: string, addressInfoId: string) {
   const { code, msg } = await resp as any;
   
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return;
   }
 
@@ -153,8 +141,7 @@ export async function getSelectedAddressInfo() {
   const { code, msg, address } = await resp as any;
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    handleErrorCode(code, msg);
     return;
   }
 

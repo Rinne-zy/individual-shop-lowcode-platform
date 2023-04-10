@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
+import { handleErrorCode } from "lowcode-platform-weixin-renderer/utils/error";
 import { showFailToast } from "lowcode-platform-weixin-renderer/utils/toast";
 import { get, post } from "./request";
 
@@ -48,7 +49,7 @@ export async function login(username: string, password: string) {
   });
 
   if(code !== 0) {
-    throw new Error(msg);
+    handleErrorCode(code, msg);
   };
 
   return {
@@ -81,7 +82,7 @@ export async function register(username: string, password: string, userType: num
   });
 
   if(code !== 0) {
-    throw new Error(msg);
+    handleErrorCode(code, msg);
   };
 
 }
@@ -103,7 +104,7 @@ export async function getUserStarShops() {
   const { code, msg, shops } = await resp as any;
 
   if(code) {
-    throw new Error(msg);
+    handleErrorCode(code, msg);
   }
 
   return shops as Record<string, boolean>;
@@ -125,7 +126,7 @@ export async function getUserStarInfo() {
   const { code, msg, shops, commodities } = await resp as any;
 
   if(code) {
-    throw new Error(msg);
+    handleErrorCode(code, msg);
   }
 
   return {
@@ -153,8 +154,7 @@ export async function getUserStarCommodities() {
   const { code, msg, commodities } = await resp as any;
 
   if(code) {
-    showFailToast(msg);
-    throw new Error(msg);
+    handleErrorCode(code, msg);
   }
 
   return commodities as Record<string, boolean>;

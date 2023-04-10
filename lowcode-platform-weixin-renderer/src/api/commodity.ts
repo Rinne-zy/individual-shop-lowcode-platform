@@ -3,6 +3,7 @@ import type { Commodity } from "lowcode-platform-common/type/commodity";
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 import { get, post } from "./request";
 import { showFailToast } from "lowcode-platform-weixin-renderer/utils/toast";
+import { handleErrorCode } from "lowcode-platform-weixin-renderer/utils/error";
 
 /** 商品详情页信息 */
 export interface CommodityDetail {
@@ -52,8 +53,8 @@ export async function starCommodity(commodityId: string) {
   const { code, msg, status } = await resp as any;
 
   if(code) {
-    showFailToast(msg);
-    throw new Error(msg);
+    handleErrorCode(code, msg);
+    return;
   }
 
   return status;
