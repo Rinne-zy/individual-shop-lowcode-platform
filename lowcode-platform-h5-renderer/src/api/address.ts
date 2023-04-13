@@ -23,9 +23,9 @@ export async function getAddressInfo() {
 
   
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   }
 
   return userAddress as UserAddress;
@@ -55,9 +55,9 @@ export async function addAddressInfo(addressInfo: AddressInfo) {
   const { code, msg } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   }
 
   showSuccessToast(msg);
@@ -89,9 +89,9 @@ export async function updateAddressInfo(id: string, addressInfo: AddressInfo) {
   const { code, msg } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   }
 
   showSuccessToast(msg);
@@ -121,9 +121,9 @@ export async function deleteAddressInfo(id: string, addressInfoId: string) {
   const { code, msg } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   }
 
   showSuccessToast(msg);
@@ -154,9 +154,9 @@ export async function selectAddressInfo(id: string, addressInfoId: string) {
   const { code, msg } = await resp.json();
   
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   }
 
   showSuccessToast(msg);
@@ -179,9 +179,9 @@ export async function getSelectedAddressInfo() {
   const { code, msg, address } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   }
 
   return address as AddressInfo;

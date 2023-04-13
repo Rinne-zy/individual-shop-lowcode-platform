@@ -7,7 +7,6 @@ import { checkIsLogin } from 'lowcode-platform-h5-renderer/api/user';
 /** 用户 Store */
 export interface UserStore {
   isLogin: boolean;
-  checkLoginPromise: Promise<boolean> | null;
   username: string;
   avatar: string;
   starCommodities: string[],
@@ -21,7 +20,6 @@ export const useUserStore = defineStore('user', {
   state: (): UserStore => {
     return {
       isLogin: false,
-      checkLoginPromise: null,
       username: '',
       avatar: '',
       starCommodities: [],
@@ -63,9 +61,11 @@ export const useUserStore = defineStore('user', {
     async checkLogin() {
       const token = localStorage.getItem(`${LOCAL_STORAGE_KEY_OF_TOKEN}`);
       if(!token) return false;
-      const res = await (this.checkLoginPromise || (this.checkLoginPromise = checkIsLogin()));
+
+      const res = await checkIsLogin();
       if(!res) {
         this.isLogin = false;
+        this.clearLoginUserInfo();
       };
 
       return res;

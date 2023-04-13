@@ -22,9 +22,9 @@ export async function getShoppingCartInfo() {
   const { code, msg, cart } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   };
 
   return cart as ShoppingCartInfo;
@@ -57,9 +57,9 @@ export async function changeCommodityNum(cartId: string, shopId: string, commodi
   const { code, msg } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return code;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   };
 
   return code;
@@ -91,9 +91,9 @@ export async function selectCommodity(cartId: string, shopId: string, commodityI
   const { code, msg } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return code;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   };
 
   return code;
@@ -123,9 +123,9 @@ export async function selectShopAllCommodities(cartId: string, shopId: string) {
   const { code, msg } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
-    return code;
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   };
 
   return code;
@@ -156,8 +156,8 @@ export async function addCommodityToCart(shopId: string, commodityId: string) {
   const { code, msg, isAdd } = await resp.json();
 
   if(code) {
-    handleNotLogin(code);
-    showFailToast(msg);
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
     throw new Error(msg);
   };
 
@@ -189,7 +189,8 @@ export async function deleteCommodityFromCart(cartId: string, shopId: string, co
   const { code, msg, isAdd } = await resp.json();
 
   if(code) {
-    showFailToast(msg);
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
     throw new Error(msg);
   };
 

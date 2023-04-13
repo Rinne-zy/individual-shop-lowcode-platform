@@ -1,6 +1,7 @@
 import { showFailToast, showSuccessToast } from "vant";
 
 import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
+import { handleNotLogin } from "lowcode-platform-h5-renderer/utils/login";
 
 /**
  * 判断是否登录
@@ -51,7 +52,7 @@ export async function login(username: string, password: string) {
 
   if(code !== 0) {
     showFailToast(msg);
-    return {};
+    throw new Error(msg);
   };
 
   showSuccessToast(msg);
@@ -109,7 +110,8 @@ export async function getUserStarCommodities() {
   const { code, msg, commodities } = await resp.json();
 
   if(code) {
-    showFailToast(msg);
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
     throw new Error(msg);
   }
 
@@ -134,7 +136,8 @@ export async function getUserStarShops() {
   const { code, msg, shops } = await resp.json();
 
   if(code) {
-    showFailToast(msg);
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
     throw new Error(msg);
   }
 
@@ -159,7 +162,8 @@ export async function getUserStarInfo() {
   const { code, msg, shops, commodities } = await resp.json();
 
   if(code) {
-    showFailToast(msg);
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
     throw new Error(msg);
   }
 
@@ -171,3 +175,69 @@ export async function getUserStarInfo() {
     commodities: string[]
   }
 };
+
+/**
+ * 微信认证
+ * @param verifyCode 认证 code
+ * @returns 
+ */
+export async function wxAuth(verifyCode: string) {
+  const resp = await fetch(`${FETCH_URL_PREFIX}user/wx/h5/auth`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      code: verifyCode
+    })
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('微信登录失败');
+  const { code, msg, data, token } = await resp.json();
+
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  };
+
+  showSuccessToast(msg);
+  return {
+    data,
+    token
+  };
+}
+
+/**
+ * 微信登录
+ * @param openId 微信 openId
+ * @returns 
+ */
+export async function wxLogin(openId: string) {
+  const resp = await fetch(`${FETCH_URL_PREFIX}user/wx/h5/login`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      openId,
+    })
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('微信登录失败');
+  const { code, msg, data, needToAuth, token } = await resp.json();
+
+  if(code) {
+    if(needToAuth) {
+      return null;
+    };
+    showFailToast(msg);
+    throw new Error(msg);
+  };
+
+  showSuccessToast(msg);
+  return {
+    data,
+    token
+  };
+}

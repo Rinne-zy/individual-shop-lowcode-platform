@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
-import { SubmitBar as VanSubmitBar, Empty as VanEmpty } from 'vant';
+import { SubmitBar as VanSubmitBar, Empty as VanEmpty, showFailToast } from 'vant';
 import { useRouter } from 'vue-router';
 
 import ShoppingCartCard from 'lowcode-platform-h5-renderer/components/shopping-cart-card/index.vue';
@@ -77,29 +77,19 @@ const isLoading = ref(true);
 
 // 获取选中的地址
 const getUserSelectedAddress = async () => {
-  // 非登录情况不需要获取
-  const isLogin = await userStore.checkLogin();
-  if(!isLogin) return;
-
   const info = await getSelectedAddressInfo();
   if(!info) return;
   Object.assign(addressInfo, info);
-  };
-getUserSelectedAddress();
+};
 
 // 获取购物车
 const getShoppingCart = async () => {
-  // 非登录情况不需要获取
-  const isLogin = await userStore.checkLogin();
-  if(!isLogin) return;
-  
   isLoading.value = true;
   const cart = await getShoppingCartInfo();
   isLoading.value = false;
   if(!cart) return;
   Object.assign(shoppingCart, cart);
 };
-getShoppingCart();
 
 // 处理添加/减少商品数目
 let isChangingCommodityNum = false;
@@ -154,6 +144,22 @@ const handleSubmit = () => {
   orderStore.totalPrice = shoppingCart.totalPrice;
   router.push('/order');
 }
+// 获取购物车页面的信息
+const getShoppingCartPageInfo = async () => {
+  // 非登录情况不需要获取
+  const isLogin = await userStore.checkLogin();
+  if(!isLogin) {
+    showFailToast('登录信息已过期，请重新登录！');
+    return;
+  };
+
+  // 获取用户选择的地址
+  getUserSelectedAddress();
+  // 获取购物车信息
+  getShoppingCart();
+};
+
+getShoppingCartPageInfo();
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

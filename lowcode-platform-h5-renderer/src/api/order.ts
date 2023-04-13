@@ -1,6 +1,7 @@
 import type { Order } from 'lowcode-platform-common/type/order';
 import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
 import { showFailToast, showSuccessToast } from "vant";
+import { handleNotLogin } from 'lowcode-platform-h5-renderer/utils/login';
 
 /**
  * 提交订单
@@ -23,8 +24,9 @@ export async function createOrder() {
   const { code, msg, ids } = await resp.json();
 
   if(code !== 0) {
+    handleNotLogin(code, true);
     showFailToast(msg);
-    throw new Error('提交订单失败');
+    throw new Error(msg);
   };
 
   showSuccessToast(msg);
@@ -47,8 +49,9 @@ export async function getOrderForm() {
   const { code, msg, orders } = await resp.json();
 
   if(code !== 0) {
-    showFailToast(msg);
-    throw new Error('获取订单失败');
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   };
 
   return orders as Order[];
@@ -78,6 +81,7 @@ export async function payOrderForm(ids: string | string[]) {
   const { code, msg } = await resp.json();
 
   if(code !== 0) {
+    handleNotLogin(code, true);
     showFailToast(msg);
     throw new Error(msg);
   };
@@ -109,6 +113,7 @@ export async function cancelOrderForm(id: string) {
   const { code, msg } = await resp.json();
 
   if(code !== 0) {
+    handleNotLogin(code, true);
     showFailToast(msg);
     throw new Error(msg);
   };
@@ -139,6 +144,7 @@ export async function finishOrder(id: string) {
   const { code, msg } = await resp.json();
 
   if(code !== 0) {
+    handleNotLogin(code, true);
     showFailToast(msg);
     throw new Error(msg);
   };
@@ -162,8 +168,9 @@ export async function getOrderFormTypeNumber() {
   const { code, msg, status } = await resp.json();
 
   if(code !== 0) {
-    showFailToast(msg);
-    throw new Error('获取订单失败');
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
   };
 
   return status as {

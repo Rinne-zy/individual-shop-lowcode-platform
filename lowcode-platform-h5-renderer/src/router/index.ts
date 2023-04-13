@@ -10,6 +10,7 @@ const Commodity = () => import('lowcode-platform-h5-renderer/pages/commodity/ind
 const Home = () => import('lowcode-platform-h5-renderer/pages/home/index.vue');
 const MyInfo = () => import('lowcode-platform-h5-renderer/pages/my-info/index.vue');
 const ShoppingCart = () => import('lowcode-platform-h5-renderer/pages/shopping-cart/index.vue');
+const WeiXinLogin = () => import('lowcode-platform-h5-renderer/pages/wxlogin/index.vue');
 
 // 路由数组
 const routes: RouteRecordRaw[] = [
@@ -60,6 +61,11 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'login',
     component: Login 
+  },
+  {
+    path: '/wx-auth',
+    name: 'wx-auth',
+    component: WeiXinLogin,
   }
 ];
 

@@ -1,5 +1,6 @@
 import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from 'lowcode-platform-common/common/index';
 import type { ShopStore } from 'lowcode-platform-h5-renderer/store/schema';
+import { handleNotLogin } from 'lowcode-platform-h5-renderer/utils/login';
 import { showFailToast } from 'vant';
 
 /**
@@ -40,7 +41,8 @@ export async function starShop(shopId: string) {
   const { code, msg, status } = await resp.json();
 
   if(code) {
-    showFailToast(msg);
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
     throw new Error(msg);
   }
 

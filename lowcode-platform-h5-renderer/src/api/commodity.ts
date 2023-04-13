@@ -2,6 +2,7 @@ import { showFailToast } from "vant";
 
 import type { Commodity } from "lowcode-platform-common/type/commodity";
 import { FETCH_URL_PREFIX, LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
+import { handleNotLogin } from "lowcode-platform-h5-renderer/utils/login";
 
 /** 商品详情页信息 */
 export interface CommodityDetail {
@@ -28,7 +29,7 @@ export async function getCommodityDetail(shopId: string, commodityId: string) {
 
   if(code) {
     showFailToast(msg);
-    return null;
+    throw new Error(msg);
   };
 
   return data as CommodityDetail;
@@ -57,7 +58,8 @@ export async function starCommodity(commodityId: string) {
   const { code, msg, status } = await resp.json();
 
   if(code) {
-    showFailToast(msg);
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
     throw new Error(msg);
   }
 

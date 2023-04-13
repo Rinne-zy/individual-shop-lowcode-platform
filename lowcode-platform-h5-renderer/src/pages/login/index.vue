@@ -25,6 +25,9 @@
           <van-button round block type="primary" @click="handleConfirm">
             登录
           </van-button>
+          <van-button v-if="isWeiXin" round block type="success" @click="wxUserLogin" style="margin-top: 20px;">
+            微信登录
+          </van-button>
         </div>
       </van-tab>
       <van-tab :name="Status.Register" title="注册">
@@ -35,17 +38,31 @@
         </div>
       </van-tab>
     </van-tabs>
-
   </div>
+  <van-overlay :show="showWxLoginLoading">
+    <div class="loading-wrapper">
+      <van-loading size="24px" vertical>登录中，请稍后...</van-loading>
+    </div>  
+  </van-overlay>
 </template>
 
 <script setup lang="ts">
-import { Button as VanButton, Form as VanForm, Field as VanField, CellGroup as VanCellGroup, Tab as VanTab, Tabs as VanTabs } from 'vant';
+import { 
+  Button as VanButton,
+  Form as VanForm,
+  Field as VanField,
+  CellGroup as VanCellGroup,
+  Tab as VanTab,
+  Tabs as VanTabs,
+  Overlay as VanOverlay,
+  Loading as VanLoading,
+} from 'vant';
 import type { FormInstance } from 'vant';
 import { reactive, ref } from 'vue';
-import { login, register } from 'lowcode-platform-h5-renderer/api/user';
+import { login, register, wxLogin } from 'lowcode-platform-h5-renderer/api/user';
 import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 import { useRouter } from 'vue-router';
+import { LOCAL_STORAGE_KEY_OF_WX_OPENID } from 'lowcode-platform-common/common';
 
 enum Status {
   Login = 0,
@@ -63,6 +80,10 @@ const formInfo = reactive({
 const active = ref<Status>(Status.Login);
 //表单实例
 const form = ref<FormInstance>();
+// 是否在微信
+const isWeiXin = /MicroMessenger/i.test(window.navigator.userAgent.toLowerCase());
+// 微信登录 Loading
+const showWxLoginLoading = ref(false);
 
 // 点击按钮
 const handleConfirm = () => {
@@ -81,7 +102,6 @@ const submit = async () => {
     if(!username || !token) return;
 
     const userStore = useUserStore();
-    // TODO: 此处头像暂时使用静态头像
     userStore.setLoginUserInfo(username, '/m.png', token);
     router.go(-1);
     return;
@@ -90,7 +110,39 @@ const submit = async () => {
   await register(formInfo.username, formInfo.password, formInfo.userType);
   resetFormInfo();
   active.value = Status.Login;
-}
+};
+
+// 微信登录
+const wxAuth = async () => {
+  const appId = 'wx410dc45d2e80363d';
+  const redirectUri = 'http://47.97.34.219:8081/wx-auth';
+  const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
+  window.location.href = url;
+};
+
+// 微信登录
+const wxUserLogin = async () => {
+  showWxLoginLoading.value = true;
+  const openId = localStorage.getItem(LOCAL_STORAGE_KEY_OF_WX_OPENID) || '';
+  const res = await wxLogin(openId);
+  // 若直接登录失败，则需要唤起微信登录
+  if(!res) {
+    wxAuth();
+    return;
+  }
+
+  const { data, token } = res;
+  if(!data || !token) return;
+  const userStore = useUserStore();
+  userStore.setLoginUserInfo(data.nickName, data.avatar, token);
+  
+  setTimeout(() => {
+    showWxLoginLoading.value = false;
+    router.go(-1);
+  }, 1000)
+  return;
+};
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>
