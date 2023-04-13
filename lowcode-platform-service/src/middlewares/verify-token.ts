@@ -9,6 +9,8 @@ const authWhiteList = [
   '/commodity/getByIds',
   '/shop/get/dep',
   '/commodity/getDetail',
+  '/user/wx/h5/login',
+  '/user/wx/h5/auth',
 ]
 
 // 校验 token

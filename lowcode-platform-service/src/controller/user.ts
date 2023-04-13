@@ -5,6 +5,11 @@ import { generateToken } from "../utils/jwt";
 
 const cryptoKey = 'bG93Y29kZS1wbGF0Zm9ybQ==';
 
+export enum UserType {
+  Wx = 1,
+  Common = 2,
+}
+
 /**
  * 注册用户
  * @param username 用户名
@@ -24,9 +29,11 @@ export async function register(username: string, password: string, userType: num
   await User.create({
     username,
     password: encryptPassword(cryptoKey, password),
+    avatar: '',
+    nickName: username,
     starCommodities: {},
     starShops: {},
-    userType,
+    userType: UserType.Common
   })
 
   return {
@@ -47,6 +54,8 @@ export async function login(username: string, password: string) {
 
   const { password: encryptedPwd, userType } = user;
 
+  if(!encryptedPwd) throw new Error('微信用户请使用微信登录');
+
   // 登录失败
   if (!encryptedPwd || decryptPassword(cryptoKey, encryptedPwd) !== password) throw new Error('登录失败：密码错误');
 
@@ -58,7 +67,7 @@ export async function login(username: string, password: string) {
 
   // 生成 token
   const token = generateToken(userInfo, {
-    expiresIn: '1d'
+    expiresIn: '7d'
   })
 
   return {
@@ -136,5 +145,31 @@ export async function getUserStarInfo(username: string) {
     msg: '获取成功',
     shops: Object.keys(starShops),
     commodities: Object.keys(starCommodities)
+  }
+}
+
+/**
+ * 注册微信用户
+ * @param openId 
+ * @param avatar 
+ * @param nickName 
+ */
+export async function registerAndUpdateWxUser(openId: string, avatar: string, nickName: string) {
+  const user = await User.findOne({ username: openId });
+  if(!user) {
+    return await User.create({
+      username: openId,
+      password: '',
+      avatar: avatar,
+      nickName,
+      starCommodities: {},
+      starShops: {},
+      userType: UserType.Wx,
+    });
+  } else {
+    // 更新用户信息
+    user.avatar = avatar;
+    user.nickName = nickName;
+    return await user.save();
   }
 }

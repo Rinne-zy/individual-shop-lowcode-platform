@@ -7,6 +7,7 @@ export default async (ctx: Context, next: Next) => {
     try{
       await next();
     } catch(err) {
+      console.log(err);
       const msg = (err as Error).message;
       const code = ctx.state.statusCode || StatusCode.Error;
       ctx.body = {
