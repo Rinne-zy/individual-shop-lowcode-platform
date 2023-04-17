@@ -1,0 +1,44 @@
+.wx-auth {
+  background-color: #f8f8f8;
+  height: 100vh;
+  position: relative;
+}
+
+.avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.avatar-placeholder {
+  display: flex;
+  width: 150px;
+  height: 150px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.nickname {
+  margin-bottom: 30px;
+}
+
+.nickname-input {
+  height: 50px;
+  text-align: center;
+  background-color: #fff;
+  margin-top: 10px;
+}
+.avatar {
+  width: 150px;
+  height: 150px;
+}
+
+.avatar-select {
+  margin-bottom: 10px;
+}
+
+button::after { border: none }

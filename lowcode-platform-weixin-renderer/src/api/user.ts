@@ -1,6 +1,6 @@
+import { showSuccessToast } from 'lowcode-platform-weixin-renderer/utils/toast';
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 import { handleErrorCode } from "lowcode-platform-weixin-renderer/utils/error";
-import { showFailToast } from "lowcode-platform-weixin-renderer/utils/toast";
 import { get, post } from "./request";
 
 /**
@@ -9,6 +9,8 @@ import { get, post } from "./request";
  */
 export async function checkIsLogin() {
   const token = uni.getStorageSync(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  if(!token) return false;
 
   const resp = await get({
     url: 'user/isLogin',
@@ -84,7 +86,6 @@ export async function register(username: string, password: string, userType: num
   if(code !== 0) {
     handleErrorCode(code, msg);
   };
-
 }
 
 /**
@@ -159,3 +160,31 @@ export async function getUserStarCommodities() {
 
   return commodities as Record<string, boolean>;
 };
+
+/**
+ * 微信小程序登录
+ * @param wxCode 微信小程序登录码
+ * @returns 
+ */
+export async function wxMiniProgramLogin(wxCode: string, nickname: string) {
+  const resp = await post({
+    url: 'user/wx/miniProgram/login',
+    data: {
+      code: wxCode,
+      nickname,
+    }
+  });
+
+  const { code, msg, data, token } = await resp as any;
+
+  if(code !== 0) {
+    handleErrorCode(code, msg);
+  };
+
+  showSuccessToast(msg);
+
+  return {
+    data,
+    token
+  };
+}

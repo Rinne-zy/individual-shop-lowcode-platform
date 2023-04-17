@@ -121,7 +121,6 @@ export async function getOrderFormTypeNumber() {
 
   if(code !== 0) {
     handleErrorCode(code, msg);
-    return;
   };
 
   return status as {

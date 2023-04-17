@@ -47,7 +47,7 @@ import { computed } from 'vue';
 
 import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
 import { OrderFormType, useOrderStore } from 'lowcode-platform-weixin-renderer/store/order';
-import { getUserStarInfo } from 'lowcode-platform-weixin-renderer/api/user';
+import { checkIsLogin, getUserStarInfo } from 'lowcode-platform-weixin-renderer/api/user';
 import { getOrderFormTypeNumber } from 'lowcode-platform-weixin-renderer/api/order';
 import { onShow } from '@dcloudio/uni-app';
 import { navigateTo, setRouterConfig } from 'lowcode-platform-weixin-renderer/utils/router';
@@ -97,7 +97,10 @@ const getOrderInfo = async () => {
   userStore.deliveringOrderNumber = delivering;
 }
 
-onShow(() => {
+onShow(async () => {
+  const isLogin = await checkIsLogin();
+  if(!isLogin) return;
+
   getOrderInfo();
   getStarInfo();
 });

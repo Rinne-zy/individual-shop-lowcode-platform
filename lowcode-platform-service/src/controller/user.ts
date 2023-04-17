@@ -155,7 +155,7 @@ export async function getUserStarInfo(username: string) {
  * @param nickName 
  */
 export async function registerAndUpdateWxUser(openId: string, avatar: string, nickName: string) {
-  const user = await User.findOne({ username: openId });
+  const user = await User.findOne({ username: openId }, { password: 0 });
   if(!user) {
     return await User.create({
       username: openId,

@@ -1,3 +1,4 @@
+import User from './../models/user';
 import { StatusCode } from './../const/index';
 import WxLoginInfoSchema from '../models/wx-login-info';
 import { registerAndUpdateWxUser } from './user';
@@ -29,6 +30,10 @@ const appid = 'wx410dc45d2e80363d';
 const secret = '115f72118230554d9560db0af2697e75';
 // refreshToken 有效时间
 const refreshTokenExpires = 30 * 24 * 60 * 60 * 1000;
+// 小程序 appid
+const miniProgramAppid = 'wxcf5b7717e4ef8d3c';
+// 小程序密钥
+const miniProgramSecret = '58d2766d4af530da908082df526c7441';
 
 /**
  * 微信登录
@@ -172,6 +177,42 @@ export async function getWxUserInfo(openId: string, token: string) {
     return await registerAndUpdateWxUser(data.openid, data.headimgurl, data.nickname);
   } catch(err: any) {
     throw new Error(err);
+  }
+}
+
+/**
+ * 小程序微信登录
+ * @param code 微信小程序2登录 code
+ * @param nickName 前端获取授权的微信名
+ * @param avatar 前端获取授权的微信头像
+ * @returns 
+ */
+export async function wxMiniProgramLogin(code: string, nickName: string) {
+  const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${miniProgramAppid}&secret=${miniProgramSecret}&js_code=${code}&grant_type=authorization_code`;
+  const data = await fetchJsonPromise<UserInfoResp>(url);
+  if(data.errcode && data.errcode !== 0) {
+    throw new Error(data.errmsg);
+  };
+
+  const user = await User.findOne({ nickName }, { password: 0 });
+  if(!user) throw new Error('当前微信用户未在平台上注册，请前往 H5 端进行注册');
+
+  // 生成 token
+  const token = generateToken(
+    {
+      username: user.username,
+      userType: user.userType,
+    },
+    {
+      expiresIn: '7d'
+    }
+  );
+
+  return {
+    code: StatusCode.Success,
+    msg: '登录成功',
+    data: user,
+    token,
   }
 }
 

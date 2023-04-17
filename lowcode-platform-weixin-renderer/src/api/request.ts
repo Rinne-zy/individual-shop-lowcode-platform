@@ -18,7 +18,7 @@ export function post<ReturnType>(options: Partial<RequestOptions>) {
   // post 请求头
   const header = {
     ...options.header,
-    Authorization: uni.getStorageSync(LOCAL_STORAGE_KEY_OF_TOKEN),
+    Authorization: uni.getStorageSync(LOCAL_STORAGE_KEY_OF_TOKEN) || '',
     'Content-Type': 'application/json'
   };
 

@@ -1,3 +1,5 @@
+import { setHandleFailToast } from "./error";
+
 /**
  * 展示成功提示
  * @param msg 
@@ -7,7 +9,9 @@ export function showSuccessToast(msg: string) {
     duration: 1500,
     title: msg,
     icon: 'success',
-  })
+  });
+  
+  setHandleFailToast(undefined);
 }
 
 /**

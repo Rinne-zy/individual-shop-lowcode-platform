@@ -11,6 +11,7 @@ const authWhiteList = [
   '/commodity/getDetail',
   '/user/wx/h5/login',
   '/user/wx/h5/auth',
+  '/user/wx/miniProgram/login'
 ]
 
 // 校验 token

@@ -48,6 +48,7 @@ import type { ChangeNumType } from 'lowcode-platform-common/type/shopping-cart';
 import { changeCommodityNum, selectCommodity } from 'lowcode-platform-weixin-renderer/api/shopping-cart';
 import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
 import { useOrderStore } from 'lowcode-platform-weixin-renderer/store/order';
+import { checkIsLogin } from 'lowcode-platform-weixin-renderer/api/user';
 
 const userStore = useUserStore();
 const isLogin = computed(() => userStore.isLogin);
@@ -79,10 +80,6 @@ const canSubmit = computed(() => shoppingCart.totalPrice !== 0);
 
 // 获取选中的地址
 const getUserSelectedAddress = async () => {
-  // 非登录情况不需要获取
-  const isLogin = await userStore.checkLogin();
-  if(!isLogin) return;
-
   const info = await getSelectedAddressInfo();
   if(!info) return;
   Object.assign(addressInfo, info);
@@ -90,10 +87,6 @@ const getUserSelectedAddress = async () => {
 
 // 获取购物车
 const getShoppingCart = async () => {
-  // 非登录情况不需要获取
-  const isLogin = await userStore.checkLogin();
-  if(!isLogin) return;
-  
   isLoading.value = true;
   const cart = await getShoppingCartInfo();
   isLoading.value = false;
@@ -157,7 +150,10 @@ const handleSubmit = () => {
   //TODO: 前往清单确认界面
 }
 
-onShow(() => {
+onShow(async () => {
+  const isLogin = await checkIsLogin();
+  if(!isLogin) return;
+
   getShoppingCart();
   getUserSelectedAddress();
 });

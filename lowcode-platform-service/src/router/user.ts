@@ -3,7 +3,7 @@ import KoaRouter from 'koa-router';
 
 import { getUserStarCommodities, login, register, getUserStarShops, getUserStarInfo } from '../controller/user';
 import type { User } from '../models/user';
-import { getWxAccessToken, getWxUserInfo, wxLogin, wxLoginWithAuth } from '../controller/wx-login';
+import { wxLogin, wxLoginWithAuth, wxMiniProgramLogin } from '../controller/wx-login';
 
 // koa 路由实例
 const router = new KoaRouter();
@@ -62,6 +62,12 @@ router.post('/user/wx/h5/auth', async (ctx) => {
 router.post('/user/wx/h5/login', async (ctx) => {
   const { openId } = ctx.request.body;
   const res = await wxLogin(openId);
+  ctx.body = res;
+})
+
+router.post('/user/wx/miniProgram/login', async (ctx) => {
+  const { nickname, code } = ctx.request.body;
+  const res = await wxMiniProgramLogin(code, nickname);
   ctx.body = res;
 })
 

@@ -41,6 +41,12 @@
 			"style": {
 				"navigationBarTitleText": "我的购物车"
 			}
+		},
+		{
+			"path": "pages/wx-auth/index",
+			"style": {
+				"navigationBarTitleText": "微信登录认证"
+			}
 		}
 	],
 	"globalStyle": {

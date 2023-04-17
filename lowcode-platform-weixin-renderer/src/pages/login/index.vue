@@ -34,7 +34,10 @@
         </u-form-item>
       </u-form>
       <view class="submit-btn">
-        <u-button type="success" :text="active === Status.Login ? '登录': '注册'" @click="submit" />
+        <u-button type="primary" :text="active === Status.Login ? '登录': '注册'" @click="submit" />  
+      </view>
+      <view style="margin-top: 20px;">
+        <u-button type="success" text="微信登录" @click="wxLogin"/>
       </view>
     </view>
   </view>
@@ -121,12 +124,18 @@ const submit = async () => {
       return;
     };
 
-    // z注册
+    // 注册
     await register(formInfo.username, formInfo.password, formInfo.userType);
     resetFormInfo();
     active.value = Status.Login;
   }).catch(() => {
     showFailToast('请输入的用户名和密码');
+  })
+}
+// 微信登录
+const wxLogin = async () => {
+  uni.redirectTo({
+    url: '/pages/wx-auth/index'
   })
 }
 </script>
