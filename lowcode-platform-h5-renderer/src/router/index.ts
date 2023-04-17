@@ -11,6 +11,8 @@ const Home = () => import('lowcode-platform-h5-renderer/pages/home/index.vue');
 const MyInfo = () => import('lowcode-platform-h5-renderer/pages/my-info/index.vue');
 const ShoppingCart = () => import('lowcode-platform-h5-renderer/pages/shopping-cart/index.vue');
 const WeiXinLogin = () => import('lowcode-platform-h5-renderer/pages/wxlogin/index.vue');
+const StarShops = () => import('lowcode-platform-h5-renderer/pages/my-star-shops/index.vue');
+const StarCommodities = () => import('lowcode-platform-h5-renderer/pages/my-star-commodities/index.vue');
 
 // 路由数组
 const routes: RouteRecordRaw[] = [
@@ -66,7 +68,17 @@ const routes: RouteRecordRaw[] = [
     path: '/wx-auth',
     name: 'wx-auth',
     component: WeiXinLogin,
-  }
+  },
+  {
+    path: '/star-shops',
+    name: 'start-shop',
+    component: StarShops,
+  },
+   {
+    path: '/star-commodities',
+    name: 'start-commodities',
+    component: StarCommodities,
+   }
 ];
 
 // 路由

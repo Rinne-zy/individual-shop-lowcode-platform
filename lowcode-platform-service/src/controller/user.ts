@@ -2,6 +2,9 @@ import { StatusCode } from "../const";
 import User from "../models/user";
 import { decryptPassword, encryptPassword } from "../utils/crypto-js";
 import { generateToken } from "../utils/jwt";
+import Commodity  from './../models/commodity';
+import { getValidCommoditiesFromStarCommodities } from "./commodity";
+import { getCommoditiesFromShop, getShopBasicInfo } from "./shop";
 
 const cryptoKey = 'bG93Y29kZS1wbGF0Zm9ybQ==';
 
@@ -79,7 +82,7 @@ export async function login(username: string, password: string) {
 }
 
 /**
- * 获取用户收藏的店铺信息
+ * 获取用户收藏商城 id
  * @param username 用户名
  * @returns 
  */
@@ -87,10 +90,30 @@ export async function getUserStarCommodities(username: string) {
   const user = await User.findOne({ username });
   if(!user) throw new Error('用户信息不存在');
 
+  const commodities = await getValidCommoditiesFromStarCommodities(user.starCommodities);
+ 
   return {
     code: StatusCode.Success,
     msg: '获取成功',
-    commodities: user.starCommodities,
+    commodities,
+  }
+}
+
+/**
+ * 获取用户收藏的商品详情信息
+ * @param username 
+ * @returns 
+ */
+export async function getUserStarCommoditiesInfo(username: string) {
+  const user = await User.findOne({ username });
+  if(!user) throw new Error('用户信息不存在');
+
+  const commodities = await getValidCommoditiesFromStarCommodities(user.starCommodities, true);
+ 
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    commodities,
   }
 }
 
@@ -107,6 +130,38 @@ export async function getUserStarShops(username: string) {
     code: StatusCode.Success,
     msg: '获取成功',
     shops: user.starShops,
+  }
+}
+
+/**
+ * 获取用户收藏的商城的详细信息
+ * @param username 
+ * @returns 
+ */
+export async function getUserStarShopsInfo(username: string) {
+  const user = await User.findOne({ username });
+  if(!user) throw new Error('用户信息不存在');
+
+  const starShopsId: string[] = [];
+  // 获取收藏的商城的 id
+  Object.keys(user.starShops).forEach((id) => {
+    if(user.starShops[id]) {
+      starShopsId.push(id);
+    }
+  });
+
+  const shopsInfo = await Promise.all(starShopsId.map(async (id) => {
+    try {
+      return await getShopBasicInfo(id);
+    } catch(err) {
+      return null
+    }
+  }));
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    shops: shopsInfo.filter((info) => info),
   }
 }
 
@@ -140,11 +195,13 @@ export async function getUserStarInfo(username: string) {
     await user.save();
   }
 
+  const commodities = Object.keys(await getValidCommoditiesFromStarCommodities(starCommodities));
+
   return {
     code: StatusCode.Success,
     msg: '获取成功',
     shops: Object.keys(starShops),
-    commodities: Object.keys(starCommodities)
+    commodities: commodities
   }
 }
 

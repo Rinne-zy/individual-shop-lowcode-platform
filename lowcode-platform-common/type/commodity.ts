@@ -78,3 +78,18 @@ export interface ShoppingCartInfo {
 	// 总价
 	totalPrice: number,
 }
+
+export interface StarCommodity {
+  // 商品 id
+  id: string;
+  // 商品名称
+  name: string;
+  // 商城 id
+  shopId: string;
+  // 封面
+  cover: string;
+  // 商品描述
+  desc: string;
+  // 商品状态
+  status: CommodityStatus;
+}

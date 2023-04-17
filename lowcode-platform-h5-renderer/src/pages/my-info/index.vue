@@ -15,8 +15,8 @@
     </div>
     <div class="my-buy">
       <div class="my-buy-like">
-        <span><van-icon name="star-o" :size="20" />商品收藏<span class="num">{{ userStore.starCommodities.length }}</span></span>
-        <span><van-icon name="shop-collect-o" :size="20" />店铺关注<span class="num">{{ userStore.starShops.length }}</span></span>
+        <span @click="goToMyStarCommodities"><van-icon name="star-o" :size="20" />商品收藏<span class="num">{{ userStore.starCommodities.length }}</span></span>
+        <span @click="goToMyStarShops"><van-icon name="shop-collect-o" :size="20" />店铺关注<span class="num">{{ userStore.starShops.length }}</span></span>
       </div>
       <van-divider>我的订单</van-divider>
       <div class="my-buy-order">
@@ -106,6 +106,15 @@ const getOrderInfo = async () => {
 }
 getOrderInfo();
 
+// 前往我的收藏店铺
+const goToMyStarShops = () => {
+  router.push('/star-shops');
+}
+
+// 前往我的收藏店铺
+const goToMyStarCommodities = () => {
+  router.push('/star-commodities');
+}
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

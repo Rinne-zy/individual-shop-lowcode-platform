@@ -31,7 +31,6 @@ import { computed } from 'vue';
 import { useCommodityDetailStore } from 'lowcode-platform-h5-renderer/store/commodity';
 import { getUserStarCommodities } from 'lowcode-platform-h5-renderer/api/user';
 import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
-import { useRouter } from 'vue-router';
 
 defineProps({
   price: {
@@ -44,7 +43,6 @@ const emits = defineEmits(['clickShop', 'clickStar', 'clickBuy', 'clickCart']);
 
 const commodityDetailStore = useCommodityDetailStore(); 
 const userStore = useUserStore();
-const router = useRouter();
 
 // 是否收藏商品
 const isStar = computed(() => commodityDetailStore.isStar);
@@ -60,20 +58,12 @@ const getUserIsStarCommodity = async () => {
   };
 
   const commodities = await getUserStarCommodities();
-  commodityDetailStore.isStar = commodities[commodityDetailStore.commodityId];
+  const id = `${commodityDetailStore.commodityId}-${commodityDetailStore.shopId}`;
+  // 判断是否收藏了
+  commodityDetailStore.isStar = (commodities.findIndex((csId) => csId === id) !== -1);
   canClickStarBtn = true;
 };
 getUserIsStarCommodity();
-
-// 判断是否登录
-const checkIsLogin = async () => {
-  const isLogin = await userStore.checkLogin();
-  if(!isLogin) {
-    router.push('/login');
-    return false;
-  };
-  return isLogin;
-};
 
 // 点击商城
 const handleClickShop = () => {

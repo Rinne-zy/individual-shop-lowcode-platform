@@ -2,6 +2,8 @@ import { showFailToast, showSuccessToast } from "vant";
 
 import { LOCAL_STORAGE_KEY_OF_TOKEN, FETCH_URL_PREFIX } from "lowcode-platform-common/common/index";
 import { handleNotLogin } from "lowcode-platform-h5-renderer/utils/login";
+import type { StarCommodity } from "lowcode-platform-common/type/commodity";
+import type { Shop } from "lowcode-platform-common/type/shop";
 
 /**
  * 判断是否登录
@@ -115,7 +117,32 @@ export async function getUserStarCommodities() {
     throw new Error(msg);
   }
 
-  return commodities as Record<string, boolean>;
+  return commodities as string[];
+};
+
+/**
+ * 获取用户收藏的商品详情信息
+ * @returns 
+ */
+export async function getUserStarCommoditiesInfo() {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  const resp = await fetch(`${FETCH_URL_PREFIX}user/starCommoditiesInfo`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('获取地址请求异常');
+  const { code, msg, commodities } = await resp.json();
+
+  if(code) {
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
+  }
+
+  return commodities as StarCommodity[];
 };
 
 
@@ -142,6 +169,28 @@ export async function getUserStarShops() {
   }
 
   return shops as Record<string, boolean>;
+};
+
+/** 获取用户收藏的商城详细信息 */
+export async function getUserStarShopsInfo() {
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  const resp = await fetch(`${FETCH_URL_PREFIX}user/starShopsInfo`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('获取用户收藏商店请求异常');
+  const { code, msg, shops } = await resp.json();
+
+  if(code) {
+    const notLogin = handleNotLogin(code);
+    showFailToast(notLogin ? '登录信息已过期，请重新登录！' : msg);
+    throw new Error(msg);
+  }
+
+  return shops as Shop[];
 };
 
 

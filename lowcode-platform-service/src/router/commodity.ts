@@ -70,8 +70,8 @@ router.get('/commodity/getDetail', async (ctx) => {
 // 收藏商品
 router.post('/commodity/star', async (ctx) => {
   const { username } = ctx.state.userInfo;
-  const { commodityId } = ctx.request.body;
-  const res = await starCommodity(username, commodityId);
+  const { commodityId, shopId } = ctx.request.body;
+  const res = await starCommodity(username, commodityId, shopId);
   ctx.body = res;
 });
 

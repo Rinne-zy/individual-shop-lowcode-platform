@@ -198,14 +198,14 @@ export async function getDeployShopById(shopId: string) {
     code: StatusCode.Success,
     msg: '获取成功',
     shop: {
-        _id,
-        name,
-        username,
-        avatar,
-        schema: schema.schema,
-        commodities: schema.commodities || [],
-        depVersion: schema.version,
-        depModified: schema.modified,
+      _id,
+      name,
+      username,
+      avatar,
+      schema: schema.schema,
+      commodities: schema.commodities || [],
+      depVersion: schema.version,
+      depModified: schema.modified,
     }
   }
 };

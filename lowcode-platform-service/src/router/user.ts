@@ -1,7 +1,7 @@
 import { StatusCode } from './../const/index';
 import KoaRouter from 'koa-router';
 
-import { getUserStarCommodities, login, register, getUserStarShops, getUserStarInfo } from '../controller/user';
+import { getUserStarCommodities, login, register, getUserStarShops, getUserStarInfo, getUserStarCommoditiesInfo, getUserStarShopsInfo } from '../controller/user';
 import type { User } from '../models/user';
 import { wxLogin, wxLoginWithAuth, wxMiniProgramLogin } from '../controller/wx-login';
 
@@ -53,18 +53,35 @@ router.get('/user/starInfo', async (ctx) => {
   ctx.body = res;
 })
 
+// 获取用户收藏的商品的详情信息
+router.get('/user/starCommoditiesInfo', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const res = await getUserStarCommoditiesInfo(username);
+  ctx.body = res;
+})
+
+// 获取用户收藏的商品的详情信息
+router.get('/user/starShopsInfo', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const res = await getUserStarShopsInfo(username);
+  ctx.body = res;
+})
+
+// 微信 H5 认证
 router.post('/user/wx/h5/auth', async (ctx) => {
   const { code } = ctx.request.body;
   const res = await wxLoginWithAuth(code);
   ctx.body = res;
 })
 
+// 微信 H5 登录
 router.post('/user/wx/h5/login', async (ctx) => {
   const { openId } = ctx.request.body;
   const res = await wxLogin(openId);
   ctx.body = res;
 })
 
+// 微信小程序登录
 router.post('/user/wx/miniProgram/login', async (ctx) => {
   const { nickname, code } = ctx.request.body;
   const res = await wxMiniProgramLogin(code, nickname);

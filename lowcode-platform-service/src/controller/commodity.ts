@@ -3,6 +3,7 @@ import Shop from '../models/shop';
 import Commodity  from './../models/commodity';
 import User from './../models/user';
 import { StatusCode } from '../const';
+import { getCommoditiesFromShop } from './shop';
 
 /**
  * 获取商品
@@ -138,7 +139,7 @@ export async function getCommodityDetail(shopId: string, commodityId: string) {
  * @param username 用户名
  * @param commodityId 商品 id
  */
-export async function starCommodity(username: string, commodityId: string) {
+export async function starCommodity(username: string, commodityId: string, shopId: string) {
   const user = await User.findOne({ username });
   if(!user) throw new Error('用户名不存在');
 
@@ -148,12 +149,14 @@ export async function starCommodity(username: string, commodityId: string) {
     user.starCommodities = {};
   };
 
+  const id = `${commodityId}-${shopId}`;
+
   // 若已收藏则取消收藏
-  if(user.starCommodities[commodityId]) {
-    delete user.starCommodities[commodityId];
+  if(user.starCommodities[id]) {
+    delete user.starCommodities[id];
   } else {
     isStar = true;
-    user.starCommodities[commodityId] = true;
+    user.starCommodities[id] = true;
   }
 
   user.markModified('starCommodities');
@@ -165,3 +168,42 @@ export async function starCommodity(username: string, commodityId: string) {
     status: isStar,
   }
 };
+
+export async function getValidCommoditiesFromStarCommodities(starCommoditiesInfo: Record<string, boolean>, needDetail = false) {
+  const starCommodityIds: string[] = [];
+  // 获取收藏的商品的 id
+  Object.keys(starCommoditiesInfo).forEach((id) => {
+    if(starCommoditiesInfo[id]) {
+      starCommodityIds.push(id);
+    }
+  });
+
+  const commodities = await Promise.all(starCommodityIds.map(async (id) => {
+    try {
+      const [commodityId, shopId] = id.split('-');
+      const commoditiesInShop = await getCommoditiesFromShop(shopId);
+      // 获取当前部署的商城中是否还存在该商品
+      if(commoditiesInShop.findIndex((id) => id === commodityId) === -1) return null;
+      // 不需要详细信息只返回 id
+      if(!needDetail) return id;
+
+      const commodity = await Commodity.findById(commodityId);
+      if(!commodity) return null;
+
+      const { _id, name, imagesSrc, desc, status } = commodity;
+      return {
+        id: _id,
+        name,
+        cover: imagesSrc[0],
+        desc,
+        shopId: shopId,
+        status
+      }
+      
+    } catch(err) {
+      return null
+    }
+  }));
+
+  return commodities.filter((commodity) => commodity);
+}
