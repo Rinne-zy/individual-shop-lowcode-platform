@@ -49,6 +49,7 @@ import { changeCommodityNum, selectCommodity } from 'lowcode-platform-weixin-ren
 import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
 import { useOrderStore } from 'lowcode-platform-weixin-renderer/store/order';
 import { checkIsLogin } from 'lowcode-platform-weixin-renderer/api/user';
+import { navigateTo } from 'lowcode-platform-weixin-renderer/utils/router';
 
 const userStore = useUserStore();
 const isLogin = computed(() => userStore.isLogin);
@@ -147,7 +148,7 @@ const handleSubmit = () => {
   orderStore.shopsInfo = shopsOrderByAddTime.value;
   orderStore.totalPrice = shoppingCart.totalPrice;
 
-  //TODO: 前往清单确认界面
+  navigateTo('order');
 }
 
 onShow(async () => {

@@ -20,6 +20,7 @@ export async function createOrder() {
     throw new Error('提交订单失败');
   };
 
+  showSuccessToast(msg);
   return ids as string[];
 }
 

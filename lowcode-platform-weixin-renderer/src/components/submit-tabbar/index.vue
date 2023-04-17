@@ -3,13 +3,13 @@
     <view class="submit-text">
       <text>合计:</text>
       <text class="price">
-        ￥<text class="integer " :class="{ not: !canSubmit }">{{ integer }}</text><text style="color: #ee0a24;">.{{ decimal }}</text>
+        ￥<text class="integer" :class="{ not: !canSubmit }">{{ integer }}</text><text class="decimal" :class="{ not: !canSubmit }">.{{ decimal }}</text>
       </text>
     </view>
     <view class="submit-btn">
       <u-button
         type="error"
-        text="提交订单"
+        :text="submitBarText"
         shape='circle'
         color="linear-gradient(to right, #ff6034, #ee0a24)"
         :disabled="!canSubmit"
@@ -38,6 +38,10 @@ const props = defineProps({
   canSubmit: {
     type: Boolean,
     default: false,
+  },
+  submitBarText: {
+    type: String,
+    default: '提交订单'
   }
 });
 
@@ -58,7 +62,7 @@ const decimal = computed(() => {
 
   return `${props.price}`.split('.')[1];
 });
-
+// 提交
 const handleSubmit = () => {
   emits('submit')
 }
