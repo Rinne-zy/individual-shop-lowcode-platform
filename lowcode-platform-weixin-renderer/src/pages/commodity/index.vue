@@ -136,7 +136,7 @@ const handleClickStar = async () => {
 
   if(isStaring) return;
   isStaring = true;
-  const status = await starCommodity(commodityDetailStore.commodityId);
+  const status = await starCommodity(commodityDetailStore.commodityId, commodityDetailStore.shopId);
   commodityDetailStore.isStar = status;
   showSuccessToast(status ? '收藏成功' : '取消收藏');
   isStaring = false; 

@@ -2,6 +2,9 @@ import { showSuccessToast } from 'lowcode-platform-weixin-renderer/utils/toast';
 import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 import { handleErrorCode } from "lowcode-platform-weixin-renderer/utils/error";
 import { get, post } from "./request";
+import type { Shop } from "lowcode-platform-common/type/shop";
+import type { StarCommodity } from 'lowcode-platform-common/type/commodity';
+
 
 /**
  * 判断是否登录
@@ -112,6 +115,30 @@ export async function getUserStarShops() {
 };
 
 /**
+ * 获取用户收藏的商城信息
+ * @returns 
+ */
+export async function getUserStarShopsInfo() {
+  const token = uni.getStorageSync(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+
+  const resp = await get({
+    url: 'user/starShopsInfo',
+    header: {
+      Authorization: token,
+    }
+  });
+
+  const { code, msg, shops } = await resp as any;
+
+  if(code) {
+    handleErrorCode(code, msg);
+  }
+
+  return shops as Shop[];
+};
+
+
+/**
  * 获取用户收藏的商品
  * @returns 
  */
@@ -158,7 +185,29 @@ export async function getUserStarCommodities() {
     handleErrorCode(code, msg);
   }
 
-  return commodities as Record<string, boolean>;
+  return commodities as string[];
+};
+
+/**
+ * 获取用户收藏的商品详情信息
+ * @returns 
+ */
+export async function getUserStarCommoditiesInfo() {
+  const token = uni.getStorageSync(LOCAL_STORAGE_KEY_OF_TOKEN) || '';
+  const resp = await get({
+    url: 'user/starCommoditiesInfo',
+    header: {
+      Authorization: token,
+    }
+  });
+
+  const { code, msg, commodities } = await resp as any;
+
+  if(code) {
+    handleErrorCode(code, msg);
+  }
+
+  return commodities as StarCommodity[];
 };
 
 /**

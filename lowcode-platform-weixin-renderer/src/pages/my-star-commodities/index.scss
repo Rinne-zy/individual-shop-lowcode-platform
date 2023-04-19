@@ -1,0 +1,52 @@
+.commodities {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f7f8fa;
+  &-item {
+    display: flex;
+    position: relative;
+    padding: 20px 10px;
+    background-color: #fff;
+    margin-top: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    &-avatar {
+      margin-right: 20px;
+    }
+    &-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    &-desc {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.7);
+      overflow:hidden; 
+      // 超出两行省略号
+      text-overflow: ellipsis;
+      display: -webkit-box; 
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; 
+    }
+    &-text {
+      display: flex;
+      height: 64px;
+      flex-direction: column;
+      justify-content: space-around;
+      margin-right: 40px;
+    }
+  }
+}
+
+.right-arrow {
+  position: absolute;
+  height: 64px;
+  line-height: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
+}
+
+.avatar-image {
+  width: 64px;
+  height: 64px;
+}

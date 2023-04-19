@@ -42,11 +42,12 @@ export async function getCommodityDetail(shopId: string, commodityId: string) {
  * @param commodity 商品 id
  * @returns 
  */
-export async function starCommodity(commodityId: string) {
+export async function starCommodity(commodityId: string, shopId: string) {
   const resp = post({
     url: 'commodity/star',
     data: {
       commodityId,
+      shopId,
     }
   });
 

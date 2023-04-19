@@ -57,7 +57,9 @@ const getUserIsStarCommodity = async () => {
   };
 
   const commodities = await getUserStarCommodities();
-  commodityDetailStore.isStar = commodities[commodityDetailStore.commodityId];
+  const id = `${commodityDetailStore.commodityId}-${commodityDetailStore.shopId}`;
+  // 判断是否收藏了
+  commodityDetailStore.isStar = (commodities.findIndex((csId) => csId === id) !== -1);
   canClickStarBtn = true;
 };
 getUserIsStarCommodity();

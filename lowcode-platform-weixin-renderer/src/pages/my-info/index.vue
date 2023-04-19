@@ -13,8 +13,8 @@
     </view>
     <view class="my-buy">
       <view class="my-buy-like">
-        <view><van-icon name="star-o" :size="20" />商品收藏<text class="num">{{ userStore.starCommodities.length }}</text></view>
-        <view><van-icon name="shop-collect-o" :size="20" />店铺关注<text class="num">{{ userStore.starShops.length }}</text></view>
+        <view @click="goToMyStarCommodities"><van-icon name="star-o" :size="20" />商品收藏<text class="num">{{ userStore.starCommodities.length }}</text></view>
+        <view @click="goToMyStarShops"><van-icon name="shop-collect-o" :size="20" />店铺关注<text class="num">{{ userStore.starShops.length }}</text></view>
       </view>
       <u-divider text="我的订单"></u-divider>
       <view class="my-buy-order">
@@ -95,6 +95,15 @@ const getOrderInfo = async () => {
   userStore.payingOrderNumber = paying;
   userStore.preparingOrderNumber = preparing;
   userStore.deliveringOrderNumber = delivering;
+}
+
+// 前往我收藏的商品
+const goToMyStarCommodities = () => {
+  navigateTo('my-star-commodities');
+}
+// 前往我收藏的店铺
+const goToMyStarShops = () => {
+  navigateTo('my-star-shops');
 }
 
 onShow(async () => {

@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { NavBar, Icon as VanIcon } from 'vant';
+import { NavBar, Icon as VanIcon, showFailToast } from 'vant';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
@@ -34,11 +34,20 @@ import { getUserStarShopsInfo } from 'lowcode-platform-h5-renderer/api/user';
 import type { Shop } from "lowcode-platform-common/type/shop";
 import { useShopStore } from 'lowcode-platform-h5-renderer/store/schema';
 import { TabbarItem } from 'lowcode-platform-h5-renderer/type';
+import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 
 const router = useRouter();
 const starShops = ref([] as Shop[])
+const userStore = useUserStore();
 
 const getStarShopsInfo = async () => {
+  // 非登录情况不需要获取
+  const isLogin = await userStore.checkLogin();
+  if(!isLogin) {
+    showFailToast('登录信息已过期，请重新登录！');
+    return;
+  };
+
   const shops = await getUserStarShopsInfo();
   starShops.value = shops;
 }

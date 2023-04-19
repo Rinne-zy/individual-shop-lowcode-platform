@@ -53,6 +53,18 @@
 			"style": {
 				"navigationBarTitleText": "微信登录认证"
 			}
+		},
+		{
+			"path": "pages/my-star-commodities/index",
+			"style": {
+				"navigationBarTitleText": "收藏的商品"
+			}
+		},
+		{
+			"path": "pages/my-star-shops/index",
+			"style": {
+				"navigationBarTitleText": "收藏的店铺"
+			}
 		}
 	],
 	"globalStyle": {

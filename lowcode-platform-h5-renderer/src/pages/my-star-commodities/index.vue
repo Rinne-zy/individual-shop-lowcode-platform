@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { NavBar, Icon as VanIcon, SwipeCell as VanSwipeCell, Button as VanButton, showSuccessToast } from 'vant';
+import { NavBar, Icon as VanIcon, SwipeCell as VanSwipeCell, Button as VanButton, showSuccessToast, showFailToast } from 'vant';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
@@ -45,12 +45,21 @@ import { getUserStarCommoditiesInfo } from 'lowcode-platform-h5-renderer/api/use
 import type { StarCommodity } from "lowcode-platform-common/type/commodity";
 import { useCommodityDetailStore } from 'lowcode-platform-h5-renderer/store/commodity';
 import { starCommodity } from 'lowcode-platform-h5-renderer/api/commodity';
+import { useUserStore } from 'lowcode-platform-h5-renderer/store/user';
 
 const router = useRouter();
 const starCommodities = ref([] as StarCommodity[]);
 const commodityDetailStore = useCommodityDetailStore();
+const userStore = useUserStore();
 
 const getStarCommoditiesInfo = async () => {
+  // 非登录情况不需要获取
+  const isLogin = await userStore.checkLogin();
+  if(!isLogin) {
+    showFailToast('登录信息已过期，请重新登录！');
+    return;
+  };
+
   const commodities = await getUserStarCommoditiesInfo();
   starCommodities.value = commodities;
 }
