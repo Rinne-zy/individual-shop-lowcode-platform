@@ -57,7 +57,7 @@ export async function login(username: string, password: string) {
 
   const { password: encryptedPwd, userType } = user;
 
-  if(!encryptedPwd) throw new Error('微信用户请使用微信登录');
+  if(!encryptedPwd && userType === UserType.Wx) throw new Error('微信用户请使用微信登录');
 
   // 登录失败
   if (!encryptedPwd || decryptPassword(cryptoKey, encryptedPwd) !== password) throw new Error('登录失败：密码错误');

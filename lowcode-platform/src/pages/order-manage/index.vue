@@ -59,7 +59,7 @@
         </el-table-column>
         <el-table-column prop="customer.name" label="买家名称" width="150">
           <template #default="scope">
-            {{ scope.row.customer.username }}
+            {{ scope.row.customer.nickName || scope.row.customer.username }}
           </template>
         </el-table-column>
         <el-table-column prop="customer.address" label="买家地址" width="250">

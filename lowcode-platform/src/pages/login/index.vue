@@ -83,17 +83,6 @@
                 show-password
               />
             </el-form-item>
-            <!-- 用户类型 -->
-            <el-form-item
-              class="login-box-left-item"
-              label="用户类型："
-              label-width="auto"
-            >
-            <el-radio-group v-model="registerForm.userType">
-              <el-radio-button label="2">商家</el-radio-button>
-              <el-radio-button label="1">买家</el-radio-button>
-            </el-radio-group>
-            </el-form-item>
             <el-button
               class="login-form-btn"
               size="large"
@@ -108,13 +97,15 @@
           </el-form>
         </template>
       </div>
-      <div class="login-box-right"></div>
+      <div class="login-box-right">
+        <img src="/logo.png">
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElForm, ElFormItem, ElInput, ElButton, ElRadioGroup, ElRadioButton } from 'element-plus';
+import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
 import type { FormRules } from 'element-plus';
 
 import { reactive, ref } from 'vue';

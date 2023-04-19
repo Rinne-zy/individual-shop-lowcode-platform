@@ -96,7 +96,7 @@
   "shop": {
     "key": "Shop",
     "label": "店铺信息",
-    "icon": "shop-info",
+    "icon": "shop",
     "type": "e-commerce",
     "schema": {
       "isProportion": false,

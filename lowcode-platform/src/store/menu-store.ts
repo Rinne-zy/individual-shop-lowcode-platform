@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { UserType, useUserStore } from './user-store';
 
 // 菜单项类型
 export interface MenuItem {
@@ -37,14 +36,10 @@ const merchantMenuItems: Array<MenuItem> = [
   }
 ];
 
-// 顾客用户菜单项
-const customerMenuItems: Array<MenuItem> = [];
-
 export const useMenuStore = defineStore('menu', {
   state:() => {
-    const userStore = useUserStore();
     return {
-      menu: userStore.userType === UserType.Merchant ? merchantMenuItems : customerMenuItems,
+      menu: merchantMenuItems,
       activatedMenu: '/shop',
     }
   },

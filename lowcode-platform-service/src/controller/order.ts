@@ -1,6 +1,7 @@
 import { Document, Types } from 'mongoose';
 
 import { StatusCode } from '../const';
+import User from './../models/user';
 import ShoppingCart from '../models/shopping-cart';
 import type { ShopInShoppingCart } from '../models/shopping-cart';
 import Shop from '../models/shop';
@@ -14,10 +15,10 @@ import { getAddressDetailInfo } from './address';
 interface OrderForm {
   _id: Types.ObjectId
   shop: {
-      _id: string;
-      ownerId: string;
-      name: string;
-      avatar: string;
+    _id: string;
+    ownerId: string;
+    name: string;
+    avatar: string;
   };
   totalPrice: string;
   status: OrderStatus;
@@ -59,7 +60,13 @@ export async function createOrder(username: string) {
   const address = await getAddressDetailInfo(username);
 
   const { shops } = shoppingCart;
-  const shopsInOrder = await getOrderInfoFromShoppingCart(shops);
+
+  const [shopsInOrder, user] = await Promise.all([
+    getOrderInfoFromShoppingCart(shops),
+    User.findOne({ username }),
+  ]);
+
+  if(!user) throw new Error('用户信息错误');
 
   const ids = await Promise.all(shopsInOrder.map(async (info) => {
     if(!info) return;
@@ -72,6 +79,7 @@ export async function createOrder(username: string) {
       customer: {
         username,
         address,
+        nickName: user.nickName
       },
       commodities,
       created: Date.now(),

@@ -7,8 +7,10 @@ import { toRaw } from 'vue';
 /** 用户类型 */
 export enum UserType {
   NoLogin = 0,
-  Customer = 1,
-  Merchant = 2,
+  // 微信用户
+  Wx = 1,
+  // 普通用户
+  Common = 2,
 }
 
 /** 用户 Store */

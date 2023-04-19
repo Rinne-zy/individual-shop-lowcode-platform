@@ -27,6 +27,8 @@ export interface CustomerInOrder {
   username: string;
   // 地址
   address: string;
+  // 昵称
+  nickName: string
 };
 
 export interface CommodityInOrder {

@@ -3,7 +3,7 @@
     <el-container>
         <!-- 侧边栏 -->
         <el-aside class="home-aside" width="200px">
-          <div class="home-aside-top">顶部</div>
+          <div class="home-aside-top">低代码电商平台</div>
           <el-menu :default-active="activatedMenu" router>
             <el-menu-item
               v-for="(menuItem, index) in menu" 
@@ -36,6 +36,9 @@
           <div class="home-header-user-info">
             <img src="/azi.jpg">
             {{ userStore.userName }}
+          </div>
+          <div class="logout">
+            <el-button type="danger" @click="logout">注销</el-button>
           </div>
         </el-header>
         <!-- 主要内容 -->
@@ -183,9 +186,12 @@ const deploy = () => {
 const handlePreview = (e: MouseEvent) => {
   e.preventDefault();
   e.stopPropagation();
-  console.log('test');
-  console.log(realTimePreviewRef.value);
   realTimePreviewRef.value?.show();
+}
+
+const logout = () => {
+  userStore.clearLoginUserInfo();
+  router.replace('/login');
 }
 
 </script>
