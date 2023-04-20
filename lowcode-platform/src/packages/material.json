@@ -71,7 +71,7 @@
   "commodity": {
     "key": "Commodity",
     "label": "商品",
-    "icon": "commodities",
+    "icon": "commodity",
     "type": "e-commerce",
     "schema": {
       "isProportion": false,
@@ -100,11 +100,10 @@
     "type": "e-commerce",
     "schema": {
       "isProportion": false,
-      "componentName": "店铺信息",
+      "componentName": "商品分组",
       "isEdited": false,
       "style": {
         "width": 375,
-        "height": 180,
         "left": 0,
         "top": 0,
         "rotate": 0
@@ -117,5 +116,45 @@
         "color": "#fff"
       }
     }  
+  },
+  "grouping": {
+    "key": "Grouping",
+    "label": "商品分组",
+    "icon": "grouping",
+    "type": "e-commerce",
+    "schema": {
+      "isProportion": false,
+      "componentName": "商品分组",
+      "isEdited": false,
+      "style": {
+        "width": 375,
+        "left": 0,
+        "top": 0,
+        "rotate": 0
+      },
+      "propValue": {
+        "padding": 10,
+        "layout": "one-line-one-commodity",
+        "grouping": [
+          {
+            "name": "最新",
+            "value": "new",
+            "order": 1,
+            "commodities": [],
+            "showNumber": 5
+          },
+          {
+            "name": "最热",
+            "value": "hot",
+            "order": 2,
+            "commodities": [],
+            "showNumber": 5
+          }
+        ],
+        "isShowDesc": true,
+        "isShowOriginPrice": true,
+        "isRound": false
+      }
+    }
   }
 }

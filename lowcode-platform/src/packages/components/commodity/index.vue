@@ -69,7 +69,7 @@ import { computed, ref, watch } from "vue";
 import type { PropType } from "vue";
 
 import Card from "./card/index.vue";
-import { Commodity, CommodityLayout, CommodityPropValue } from "./type";
+import { CommoditiesOrder, Commodity, CommodityLayout, CommodityPropValue } from "./type";
 import { useCommodityStore } from "lowcode-platform/store/commodity-store";
 
 const props = defineProps({
@@ -82,11 +82,26 @@ const props = defineProps({
   propStyle: {
     type: Object,
     default: () => {},
-  },
+  }
 });
 
 const commodityStore = useCommodityStore();
-const commodities = ref([] as Commodity[]);
+// 原始商品列表
+const originCommodities = ref([] as Commodity[]);
+// 排序后商品列表
+const commodities = computed(() => {
+  if(props.propValue.sort === undefined || props.propValue.sort === CommoditiesOrder.Default) {
+    return originCommodities.value;
+  };
+
+  return originCommodities.value.sort((c1, c2) => {
+    if(props.propValue.sort === CommoditiesOrder.Time) {
+      return c2.addTime - c1.addTime;
+    }
+
+    return c2.sales - c1.sales;
+  });
+});
 
 // 商品分类
 const commodityClass = computed(() => {
@@ -107,7 +122,7 @@ const ids = computed(() => props.propValue.commodities);
 watch(
   ids, 
   async () => {
-    commodities.value = await commodityStore.getCommoditiesByIds(ids.value);
+    originCommodities.value = await commodityStore.getCommoditiesByIds(ids.value);
   },
   { deep: true, immediate: true }
 );

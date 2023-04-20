@@ -16,6 +16,7 @@
           :is="component.key"
           :prop-value="component.propValue"
           :prop-style="component.style"
+          :is-preview="true"
         />
       </div>
     </div>

@@ -41,10 +41,14 @@
   content: "\e60b";
 }
 
-.icon-commodities:before {
+.icon-commodity:before {
   content: "\e635";
 }
 
 .icon-shopping-cart:before {
   content: "\e73d";
+}
+
+.icon-grouping:before {
+  content: "\e629";
 }

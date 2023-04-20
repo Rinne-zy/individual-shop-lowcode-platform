@@ -1,0 +1,81 @@
+.group {
+  padding: 10px;
+  background-color: #f7f7f7;
+  margin-top: 10px;
+  &-top {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #606266;
+    margin-bottom: 10px;
+    .tip {
+      font-size: 14px;
+    }
+  }
+}
+
+.group:first-child {
+  margin-top: 0;
+}
+
+.add-grouping-operation {
+  margin-top: 20px;
+}
+
+.commodities-preview {
+  margin-top: 10px;
+  &-text {
+   color: #606266; 
+  }
+  &-item {
+    display: inline-block;
+    position: relative;
+    margin-left: 5px;
+    height: 80px;
+    &-operation {
+      color: #fff;
+      position: absolute;
+      display: none;
+      width: 80px;
+      height: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba($color: #000000, $alpha: 0.7);
+    }
+  }
+  &-item:first-child {
+    margin-left: 0;
+  }
+}
+
+.commodities-preview-item:hover .commodities-preview-item-operation {
+  display: flex;
+}
+
+.forward {
+  transform: rotate(-90deg);
+}
+
+.after {
+  transform: rotate(-90deg);
+}
+
+.more {
+  transform: rotate(90deg);
+}
+
+// 折叠加隐藏过渡效果
+.collapse-enter-active,
+.collapse-leave-active {
+    transition: all 0.5s;
+    // 防止折叠时元素溢出
+    overflow: hidden;
+}
+
+.collapse-enter-from,
+.collapse-leave-to {
+    height: 0px !important;
+    opacity: 0;
+}
+

@@ -7,7 +7,7 @@
         :class="{ actived: component.id === curComponentId }"
         @click="selectComponent(component.id, index)"
     >
-      <span class="packageIcon" :class="`icon-${component.key.toLocaleLowerCase()}`" />
+      <span class="packageIcon" :class="`icon-${component.key.toLocaleLowerCase()}`" style="margin-right: 5px;" />
       <span>{{ component.componentName }}</span>
       <div class="operation">
         <span class="iconfont icon-up" @click="downComponent(component.id, index)" />
