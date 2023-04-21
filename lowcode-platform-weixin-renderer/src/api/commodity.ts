@@ -1,6 +1,5 @@
 
 import type { Commodity } from "lowcode-platform-common/type/commodity";
-import { LOCAL_STORAGE_KEY_OF_TOKEN } from "lowcode-platform-common/common/index";
 import { get, post } from "./request";
 import { showFailToast } from "lowcode-platform-weixin-renderer/utils/toast";
 import { handleErrorCode } from "lowcode-platform-weixin-renderer/utils/error";
@@ -59,4 +58,29 @@ export async function starCommodity(commodityId: string, shopId: string) {
   }
 
   return status;
+}
+
+/**
+ * 根据 id 获取商品
+ * @param ids 商品 _id
+ * @returns 
+ */
+export async function getCommoditiesByType(shopId: string, type: string | undefined, number: number, sort: 'hot' | 'new') {
+  const resp = post({
+    url: `commodity/nl/${sort}`,
+    data: {
+      shopId,
+      type,
+      number,
+    }
+  });
+  
+  const { code, msg, commodities } = await resp as any;
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  }
+
+  return commodities as Commodity[];
 }

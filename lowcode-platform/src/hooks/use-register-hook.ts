@@ -12,7 +12,7 @@ export function useRegister() {
   const registerForm = reactive({
     username: '',
     password: '',
-    userType: UserType.Merchant,
+    userType: UserType.Common,
   });
 
   // 注册表单 DOM 引用

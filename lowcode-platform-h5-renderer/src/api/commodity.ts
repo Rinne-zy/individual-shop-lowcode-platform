@@ -66,3 +66,32 @@ export async function starCommodity(commodityId: string, shopId: string) {
 
   return status;
 }
+
+/**
+ * 根据 id 获取商品
+ * @param ids 商品 _id
+ * @returns 
+ */
+export async function getCommoditiesByType(shopId: string, type: string | undefined, number: number, sort: 'hot' | 'new') {
+  const resp = await fetch(`${FETCH_URL_PREFIX}commodity/nl/${sort}`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      shopId,
+      type,
+      number,
+    })
+  });
+
+  if(resp.status !== 200 || !resp.ok) throw new Error('获取商品请求异常');
+  const { code, msg, commodities } = await resp.json();
+
+  if(code) {
+    showFailToast(msg);
+    throw new Error(msg);
+  }
+
+  return commodities as Commodity[];
+}

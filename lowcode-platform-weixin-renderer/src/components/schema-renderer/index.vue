@@ -43,6 +43,13 @@
         :prop-style="component.style"
         :viewport-width="shopStore.getWidthPxNumber()"
       />
+      <my-commodity-grouping
+        v-if="component.key === 'Grouping'"
+        class="component"
+        :prop-value="(component.propValue as any)"
+        :prop-style="component.style"
+        :viewport-width="shopStore.getWidthPxNumber()"
+      />
     </view>
   </view>
 </template>
@@ -55,6 +62,7 @@ import MyText from 'lowcode-platform-weixin-renderer/packages/components/text/in
 import MySwiper from 'lowcode-platform-weixin-renderer/packages/components/swipe/index.vue';
 import MyShop from 'lowcode-platform-weixin-renderer/packages/components/shop/index.vue';
 import MyCommodity from 'lowcode-platform-weixin-renderer/packages/components/commodity/index.vue';
+import MyCommodityGrouping from 'lowcode-platform-weixin-renderer/packages/components/grouping/index.vue';
 
 import { getComponentStyleToViewPort } from 'lowcode-platform-common/utils/style';
 import { useShopStore } from 'lowcode-platform-weixin-renderer/store/schema';

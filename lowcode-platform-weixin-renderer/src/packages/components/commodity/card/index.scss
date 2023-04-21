@@ -140,9 +140,20 @@
 
 // 控制行内样式的宽度
 .inline {
-  flex-basis: 120px;
-  flex-shrink: 0;
+  width: 120px;
+  .img-warp {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+  }
   .img {
+    // 图片自适应撑满父容器
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
+    object-fit: cover
   }
 }

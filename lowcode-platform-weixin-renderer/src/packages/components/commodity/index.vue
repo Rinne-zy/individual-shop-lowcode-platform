@@ -58,11 +58,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import type { PropType } from "vue";
 
 import Card from "./card/index.vue";
-import { CommodityLayout } from "./type";
+import { CommoditiesOrder, CommodityLayout } from "./type";
 import type { Commodity, CommodityPropValue } from "./type";
 import { transformPxToVw } from "lowcode-platform-common/utils/style";
 import { addCommodityToCart } from "lowcode-platform-weixin-renderer/api/shopping-cart";
@@ -91,7 +91,24 @@ const props = defineProps({
 const shopStore = useShopStore();
 const commodityDetailStore = useCommodityDetailStore();
 
-const commodities = ref([] as Commodity[]);
+// 原始商品列表
+const originCommodities = ref([] as Commodity[]);
+// 商品 id
+const ids = computed(() => props.propValue.commodities);
+// 排序后商品列表
+const commodities = computed(() => {
+  if(props.propValue.sort === undefined || props.propValue.sort === CommoditiesOrder.Default) {
+    return originCommodities.value;
+  };
+
+  return originCommodities.value.sort((c1, c2) => {
+    if(props.propValue.sort === CommoditiesOrder.Time) {
+      return c2.addTime - c1.addTime;
+    }
+
+    return c2.sales - c1.sales;
+  });
+});
 
 // 根据商品布局获取对应的类名
 const commodityClassByLayout: Record<CommodityLayout, 'inline' | 'vertical' | 'horizon'> = {
@@ -137,10 +154,9 @@ const getCommodities = async () => {
 
   const { code, commodities: res } = await resp as any;
   if(!code) {
-    commodities.value = res;
+    originCommodities.value = res;
   }
 };
-getCommodities();
 
 let isAddingToCart = false;
 // 添加到购物车中
@@ -161,6 +177,15 @@ const handleGoToCommodity = (commodityId: string) => {
   setRouterConfig('shop', true);
   navigateTo('commodity')
 }
+
+// 监听 id 的变化
+watch(
+  ids, 
+  async () => {
+    await getCommodities();
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

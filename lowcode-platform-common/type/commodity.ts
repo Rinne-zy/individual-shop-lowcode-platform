@@ -8,7 +8,10 @@ export enum CommodityStatus {
 };
 
 export interface Commodity {
-  username: string,
+  // 商品id
+  _id: string;
+  // 用户名
+  username: string;
   // 商品名称
   name: string;
   // 商品封面

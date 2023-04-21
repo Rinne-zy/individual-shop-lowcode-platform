@@ -79,7 +79,7 @@ router.post('/commodity/star', async (ctx) => {
 router.post('/commodity/new', async (ctx) => {
   const { username } = ctx.state.userInfo;
   const { type, number } = ctx.request.body;
-  const res = await getNewCommoditiesByType(username, type, number);
+  const res = await getNewCommoditiesByType(undefined, username, type, number);
   ctx.body = res;
 })
 
@@ -87,7 +87,21 @@ router.post('/commodity/new', async (ctx) => {
 router.post('/commodity/hot', async (ctx) => {
   const { username } = ctx.state.userInfo;
   const { type, number } = ctx.request.body;
-  const res = await getHotCommoditiesByType(username, type, number);
+  const res = await getHotCommoditiesByType(undefined, username, type, number);
+  ctx.body = res;
+})
+
+// 非登录获取最新商品
+router.post('/commodity/nl/new', async (ctx) => {
+  const { type, number, shopId } = ctx.request.body;
+  const res = await getNewCommoditiesByType(shopId, undefined, type, number);
+  ctx.body = res;
+})
+
+// 非登录状态获取最热商品
+router.post('/commodity/nl/hot', async (ctx) => {
+  const { type, number, shopId } = ctx.request.body;
+  const res = await getHotCommoditiesByType(shopId, undefined, type, number);
   ctx.body = res;
 })
 

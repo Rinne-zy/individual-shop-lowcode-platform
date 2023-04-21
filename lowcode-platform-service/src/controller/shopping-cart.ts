@@ -264,14 +264,6 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
       const shopInfo = await Shop.findById(shop._id);
       if(!shopInfo) return null;
 
-      const ids = await getCommoditiesFromShop(shop._id);
-
-      // 设置用于判断该商城是否存在相应商品的 Map
-      const isOnSalesIds :Record<string, boolean> = {}
-      if(ids && ids.length) {
-        ids.forEach((value) => isOnSalesIds[value] = true);
-      };
-
       const commodities = await Promise.all(
         shop.commodities.map((commodityInCart) => new Promise<CommodityInfo | null>(async (resolve, reject) => {
           // 根据每一个商城中的商品 id 获取购物车中商品展示所需要的信息
@@ -285,11 +277,8 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
             const actualPrice = price * discount * 0.01;
             lastModified = Math.max(addTime, lastModified);
 
-            // 获取当前商品的状态，若商城 schema 中已取消该商品则需要表示为已下架
-            let actualStatus = isOnSalesIds[commodity._id.toString()] ? status : CommodityStatus.OnStore
-
             // 计算当前购物车总价
-            if(actualStatus === CommodityStatus.OnSale && selected) {
+            if(status === CommodityStatus.OnSale && selected) {
               totalPrice += actualPrice * number;
             };
 
@@ -299,7 +288,7 @@ async function getCommoditiesDetailFromShoppingCart(shopInShoppingCart: ShopInSh
               price: actualPrice,
               stock,
               cover: imagesSrc[0],
-              status: actualStatus,
+              status,
               selected,
               number,
               addTime

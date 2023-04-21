@@ -1,4 +1,4 @@
-import { Commodity as CommodityType } from './../models/commodity';
+import { CommodityStatus, Commodity as CommodityType } from './../models/commodity';
 import Shop from '../models/shop';
 import Commodity  from './../models/commodity';
 import User from './../models/user';
@@ -221,9 +221,20 @@ export async function getValidCommoditiesFromStarCommodities(starCommoditiesInfo
  * @param number 数量
  * @returns 
  */
-export async function getHotCommoditiesByType(username: string, type: string | undefined, number: number) {
+export async function getHotCommoditiesByType(
+  shopId: string | undefined,
+  username: string | undefined,
+  type: string | undefined,
+  number: number
+) {
+  if(shopId) {
+    const shop = await Shop.findById(shopId);
+    username = shop?.username;
+  }
+
   let commodities = await Commodity.find({
     username,
+    status: CommodityStatus.OnSale
   });
 
   if(type !== undefined) {
@@ -246,9 +257,20 @@ export async function getHotCommoditiesByType(username: string, type: string | u
  * @param number 数量
  * @returns 
  */
-export async function getNewCommoditiesByType(username: string, type: string | undefined, number: number) {
+export async function getNewCommoditiesByType(
+  shopId: string | undefined, 
+  username: string | undefined, 
+  type: string | undefined,
+  number: number
+) {
+  if(shopId) {
+    const shop = await Shop.findById(shopId);
+    username = shop?.username;
+  }
+  
   let commodities = await Commodity.find({
     username,
+    status: CommodityStatus.OnSale,
   });
 
   if(type !== undefined) {

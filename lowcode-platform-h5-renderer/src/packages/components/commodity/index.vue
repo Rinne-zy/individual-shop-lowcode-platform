@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import type { PropType } from "vue";
 
 import Card from "./card/index.vue";
@@ -69,6 +69,7 @@ import { addCommodityToCart } from "lowcode-platform-h5-renderer/api/shopping-ca
 import { useShopStore } from "lowcode-platform-h5-renderer/store/schema";
 import { useCommodityDetailStore } from "lowcode-platform-h5-renderer/store/commodity";
 import { useRouter } from "vue-router";
+import { CommoditiesOrder } from "../grouping/type";
 
 const props = defineProps({
   // 属性值
@@ -86,12 +87,6 @@ const props = defineProps({
     default: 375,
   }
 });
-
-const shopStore = useShopStore();
-const router = useRouter();
-const commodityDetailStore = useCommodityDetailStore();
-
-const commodities = ref([] as Commodity[]);
 
 // 根据商品布局获取对应的类名
 const commodityClassByLayout: Record<CommodityLayout, 'inline' | 'vertical' | 'horizon'> = {
@@ -112,6 +107,29 @@ const commodityStyleByLayout = {
     marginBottom: transformPxToVw(props.propValue.padding, props.viewportWidth),
   },
 }
+
+const shopStore = useShopStore();
+const router = useRouter();
+const commodityDetailStore = useCommodityDetailStore();
+
+// 原始商品列表
+const originCommodities = ref([] as Commodity[]);
+// 商品 id
+const ids = computed(() => props.propValue.commodities);
+// 排序后商品列表
+const commodities = computed(() => {
+  if(props.propValue.sort === undefined || props.propValue.sort === CommoditiesOrder.Default) {
+    return originCommodities.value;
+  };
+
+  return originCommodities.value.sort((c1, c2) => {
+    if(props.propValue.sort === CommoditiesOrder.Time) {
+      return c2.addTime - c1.addTime;
+    }
+
+    return c2.sales - c1.sales;
+  });
+});
 
 // 一行两列分组
 const columnCommodities = computed(() => {
@@ -138,10 +156,9 @@ const getCommodities = async () => {
 
   const { code, commodities: res } = await resp.json();
   if(!code) {
-    commodities.value = res;
+    originCommodities.value = res;
   }
 };
-getCommodities();
 
 let isAddingToCart = false;
 // 添加到购物车中
@@ -161,6 +178,15 @@ const handleGoToCommodity = (commodityId: string) => {
   if(!commodityId || !shopStore._id) return;
   router.push('/commodity');
 }
+
+// 监听 id 的变化
+watch(
+  ids, 
+  async () => {
+    await getCommodities();
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

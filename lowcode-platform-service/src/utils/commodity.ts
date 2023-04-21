@@ -2,6 +2,7 @@ import type { ComponentSchema } from "../models/schema";
 
 const relativeCommoditiesComponents: Record<string, boolean> = {
   Commodity: true,
+  Grouping: true,
 }
 
 /**
