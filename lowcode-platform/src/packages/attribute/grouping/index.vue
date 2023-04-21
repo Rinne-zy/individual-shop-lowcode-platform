@@ -41,6 +41,16 @@
                 <el-form-item  label="商品显示数量">
                   <el-input type="number" max="10" min="0" v-model="groupInfo.showNumber" />
                 </el-form-item>
+                <el-form-item  label="商品分类">
+                  <el-select v-model="groupInfo.type" placeholder="请选择商品分类">
+                    <el-option
+                      v-for="item in commoditiesSelectedType"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
               </template>
               <template v-else>
                 <el-button type="primary" :disabled="groupInfo.commodities.length >= maxSelectedNum" @click="handleClickAddGrouping(groupIndex)">点击选择商品</el-button>
@@ -125,6 +135,8 @@ import { execShapePointsForceUpdate } from 'lowcode-platform/hooks/use-shape-poi
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 import { CommoditiesOrder, GroupingPropValue } from 'lowcode-platform/packages/components/grouping/type';
 import type { CommodityGrouping } from 'lowcode-platform/packages/components/grouping/type';
+import { getCommoditiesSelectType } from 'lowcode-platform/api/type/index';
+import { StatusCode } from 'lowcode-platform/api/type';
 interface CommodityPreviewInfo {
   order: CommoditiesOrder,
   commodities: Commodity[],
@@ -167,14 +179,14 @@ const defaultGroupingByCommand: Record<string, CommodityGrouping> = {
     value: "new",
     order: 1,
     commodities: [],
-    showNumber: 5
+    showNumber: 5,
   },
   hot: {
     name: "最热",
     value: "hot",
     order: 2,
     commodities: [],
-    showNumber: 5
+    showNumber: 5,
   }
 }
 // 简单属性（文本输入框、开关）
@@ -228,6 +240,11 @@ const isSelectCommodityDialogVisible = ref(false);
 const operatingGroupIndex = ref(-1);
 // 分组展开的下标
 const expandingIndex = ref(props.propValue.grouping.map((value, index) => index === 0));
+// 可选择的商品分类
+const commoditiesSelectedType = ref<{
+  label: string;
+  value: string;
+}[]>([]);
 // 商品预览
 const commoditiesPreviewByGroupingValue = ref({} as Record<string, CommodityPreviewInfo>);
 // 是否已经添加最新分组
@@ -253,30 +270,37 @@ const handleAddGrouping = (command: string | number | object) => {
       value: uuidv4(),
       order: CommoditiesOrder.Default,
       commodities: [],
-      showNumber: -1
+      showNumber: -1,
+      type: undefined
     };
 
     propValue.grouping.push(groupInfo);
     // 添加商品预览
     handleAddCommoditiesPreview(groupInfo, []);
     expandingIndex.value.push(true);
+    // 记录快照
+    schemaStore.recordSnapshot();
     return;
   }
 
   const key = command as unknown as keyof typeof defaultGroupingByCommand;
   propValue.grouping.push(deepcopy(defaultGroupingByCommand[key]));
   expandingIndex.value.push(true);
+  // 记录快照
+  schemaStore.recordSnapshot();
 }
 // 处理点击添加商品按钮
 const handleClickAddGrouping = (index: number) => {
   operatingGroupIndex.value = index;
   isSelectCommodityDialogVisible.value = true;
 };
+
 // 处理选择商品关闭
 const handleCloseSelect = () => {
   isSelectCommodityDialogVisible.value = false;
   operatingGroupIndex.value = -1;
 }
+
 // 处理商品选择
 const handleSelectConfirm = (commodities: Commodity[]) => { 
   const selectedComponent = schemaStore.getSelectedComponentSchema();
@@ -303,6 +327,7 @@ const handleSelectConfirm = (commodities: Commodity[]) => {
   isSelectCommodityDialogVisible.value = false;
   operatingGroupIndex.value = -1;
 }
+
 // 处理商品预览
 const handleAddCommoditiesPreview = (groupInfo: CommodityGrouping, commodities: Commodity[]) => {
   const preview = commoditiesPreviewByGroupingValue.value[groupInfo.value];
@@ -319,6 +344,7 @@ const handleAddCommoditiesPreview = (groupInfo: CommodityGrouping, commodities: 
   const newCommodities = sortCommoditiesByGroupingOrder(groupInfo.order, [...preview.commodities, ...commodities]);
   commoditiesPreviewByGroupingValue.value[groupInfo.value].commodities = newCommodities;
 };
+
 // 前移商品
 const handleForwardCommodity = (index: number, groupIndex: number) => {
   if(index === 0) return;
@@ -337,6 +363,7 @@ const handleForwardCommodity = (index: number, groupIndex: number) => {
   schemaStore.recordSnapshot();
   execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
 }
+
 // 后移商品
 const handleAfterCommodity = (index: number, groupIndex: number) => {
   const selectedComponent = schemaStore.getSelectedComponentSchema();
@@ -354,6 +381,7 @@ const handleAfterCommodity = (index: number, groupIndex: number) => {
   schemaStore.recordSnapshot();
   execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
 }
+
 // 删除选中的商品
 const handleDeleteCommodity = (index: number, groupIndex: number) => {
   const selectedComponent = schemaStore.getSelectedComponentSchema();
@@ -370,6 +398,7 @@ const handleDeleteCommodity = (index: number, groupIndex: number) => {
   schemaStore.recordSnapshot();
   execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
 }
+
 // 删除商品分组
 const handleDeleteGroupInfo = (groupIndex: number) => {
   const selectedComponent = schemaStore.getSelectedComponentSchema();
@@ -386,6 +415,7 @@ const handleDeleteGroupInfo = (groupIndex: number) => {
     execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
   }, 100)
 }
+
 // 处理分组信息上移
 const handleUpGroupingInfo = (groupIndex: number) => {
   const selectedComponent = schemaStore.getSelectedComponentSchema();
@@ -400,6 +430,7 @@ const handleUpGroupingInfo = (groupIndex: number) => {
     execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
   }, 100)
 }
+
 // 处理分组信息下移
 const handleDownGroupingInfo = (groupIndex: number) => {
   const selectedComponent = schemaStore.getSelectedComponentSchema();
@@ -416,6 +447,7 @@ const handleDownGroupingInfo = (groupIndex: number) => {
     execShapePointsForceUpdate(editorStatusStore.selectedComponentSchemaId);
   }, 100)
 }
+
 // 根据分组顺序排序
 const sortCommoditiesByGroupingOrder = (order: CommoditiesOrder, commodities: Commodity[]) => {
   if(order === undefined || order === CommoditiesOrder.Default || commodities.length === 0) {
@@ -430,10 +462,19 @@ const sortCommoditiesByGroupingOrder = (order: CommoditiesOrder, commodities: Co
     return c2.sales - c1.sales;
   });
 }
+
 // 判断是否为默认分组
 const isDefaultGrouping = (value: string) => (value === 'new' || value === 'hot');
-// 初始化
-const init = async () => {
+
+//获取商品分类
+const getCommoditiesType = async () => {
+  const { data } = await getCommoditiesSelectType();
+  if (!data || data.code !== StatusCode.Success || !data.types) return;
+  commoditiesSelectedType.value = data.types;
+}
+
+// 初始化商品预览
+const initCommoditiesPreview = async () => {
   const { grouping } = props.propValue;
   const ids: string[] = []
   grouping.forEach((info) => {
@@ -449,8 +490,13 @@ const init = async () => {
     const { commodities } = info;
     handleAddCommoditiesPreview(info, commodities.map((id) => commodityStore.commoditiesById[id]))   
   })
-};
+}
 
+// 初始化
+const init = async () => {
+  getCommoditiesType();
+  initCommoditiesPreview();
+};
 init();
 </script>
 

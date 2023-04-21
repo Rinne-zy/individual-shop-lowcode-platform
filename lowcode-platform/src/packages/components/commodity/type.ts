@@ -31,7 +31,7 @@ export interface CommodityPropValue {
   // 是否为圆角
   isRound: boolean;
   // 排序
-  sort: CommoditiesOrder;
+  sort?: CommoditiesOrder;
 }
 
 // 商品状态

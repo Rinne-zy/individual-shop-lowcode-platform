@@ -1,5 +1,5 @@
 import KoaRouter from 'koa-router';
-import { changeCommodityStatus, createCommodity, deleteCommodity, getCommodities, getCommoditiesById, getCommodityDetail, updateCommodity } from '../controller/commodity';
+import { changeCommodityStatus, createCommodity, deleteCommodity, getCommodities, getCommoditiesById, getCommodityDetail, getHotCommoditiesByType, getNewCommoditiesByType, updateCommodity } from '../controller/commodity';
 import { starCommodity } from '../controller/commodity';
 
 // koa 路由实例
@@ -74,5 +74,21 @@ router.post('/commodity/star', async (ctx) => {
   const res = await starCommodity(username, commodityId, shopId);
   ctx.body = res;
 });
+
+// 获取最新商品
+router.post('/commodity/new', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const { type, number } = ctx.request.body;
+  const res = await getNewCommoditiesByType(username, type, number);
+  ctx.body = res;
+})
+
+// 获取最热商品
+router.post('/commodity/hot', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const { type, number } = ctx.request.body;
+  const res = await getHotCommoditiesByType(username, type, number);
+  ctx.body = res;
+})
 
 export default router;

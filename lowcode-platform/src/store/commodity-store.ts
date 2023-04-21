@@ -70,6 +70,7 @@ export interface Commodity {
 
 interface CommodityStore {
   commoditiesById: Record<string, Commodity>;
+  
 }
 
 export const useCommodityStore = defineStore('commodity', {
@@ -94,6 +95,5 @@ export const useCommodityStore = defineStore('commodity', {
 
       return ids.map((id) => this.commoditiesById[id]);
     }
-
   }
 });

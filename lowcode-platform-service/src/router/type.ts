@@ -1,5 +1,5 @@
 import KoaRouter from 'koa-router';
-import { deleteCommodityType, deleteImageType, getTypesAndLabels, updateType } from '../controller/type';
+import { deleteCommodityType, deleteImageType, getCommoditiesTypeAndLabel, getTypesAndLabels, updateType } from '../controller/type';
 
 // koa 路由实例
 const router = new KoaRouter();
@@ -40,5 +40,12 @@ router.post('/type/commodity/delete', async (ctx) => {
   const res = await deleteCommodityType(id, type, options);
   ctx.body = res;
 });
+
+// 获取可被选择的商品分类
+router.get('/type/commodity/select', async (ctx) => {
+  const { username } = ctx.state.userInfo;
+  const res = await getCommoditiesTypeAndLabel(username);
+  ctx.body = res;
+})
 
 export default router;

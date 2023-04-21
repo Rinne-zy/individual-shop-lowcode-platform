@@ -47,7 +47,7 @@
       </div>
     </div>
     <div 
-      v-if="commodities.length === 0" 
+      v-if="commodities.length === 0 && !isPreview" 
       class="commodity one-line-one-commodity"
     >
       <card 
@@ -82,6 +82,10 @@ const props = defineProps({
   propStyle: {
     type: Object,
     default: () => {},
+  },
+  isPreview: {
+    type: Boolean,
+    default: false,
   }
 });
 

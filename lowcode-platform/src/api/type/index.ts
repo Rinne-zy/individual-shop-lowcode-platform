@@ -9,6 +9,12 @@ export interface CascaderOptionsResp extends BaseResp {
   options: CascaderOption[],
 };
 
+interface typeResp extends BaseResp {
+  types: {
+    label: string;
+    value: string;
+  }[]
+}
 
 /**
  * 获取分类相关的级联选择器选项
@@ -17,8 +23,8 @@ export interface CascaderOptionsResp extends BaseResp {
  */
 export async function getCascaderType(type: string) {
   const res = await axios<CascaderOptionsResp>({
-      method: 'get',
-      url: `type/${type}/get`,
+    method: 'get',
+    url: `type/${type}/get`,
   });
 
   return res;
@@ -64,3 +70,16 @@ export async function deleteCascaderType(id: string, options: CascaderOption[], 
 
   return res;
 };
+
+/**
+ * 获取商品可选择分类
+ * @returns 
+ */
+export async function getCommoditiesSelectType() {
+  const res = await axios<typeResp>({
+    method: 'get',
+    url: '/type/commodity/select',
+  });
+
+  return res;
+}

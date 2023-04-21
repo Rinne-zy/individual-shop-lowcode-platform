@@ -169,6 +169,12 @@ export async function starCommodity(username: string, commodityId: string, shopI
   }
 };
 
+/**
+ * 从收藏的商品中获取有效的商品信息
+ * @param starCommoditiesInfo 收藏的商品信息
+ * @param needDetail 是否需要商品详细信息
+ * @returns 
+ */
 export async function getValidCommoditiesFromStarCommodities(starCommoditiesInfo: Record<string, boolean>, needDetail = false) {
   const starCommodityIds: string[] = [];
   // 获取收藏的商品的 id
@@ -206,4 +212,54 @@ export async function getValidCommoditiesFromStarCommodities(starCommoditiesInfo
   }));
 
   return commodities.filter((commodity) => commodity);
+}
+
+/**
+ * 根据分类获取最热的商品信息
+ * @param username 用户名
+ * @param type 分类
+ * @param number 数量
+ * @returns 
+ */
+export async function getHotCommoditiesByType(username: string, type: string | undefined, number: number) {
+  let commodities = await Commodity.find({
+    username,
+  });
+
+  if(type !== undefined) {
+    commodities = commodities.filter((commodity) => commodity.type === type);
+  };
+
+  commodities = commodities.sort((c1, c2) => c2.sales - c1.sales).slice(0, number);
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    commodities,
+  }
+}
+
+/**
+ * 根据分类获取最新的商品信息
+ * @param username 用户名
+ * @param type 分类
+ * @param number 数量
+ * @returns 
+ */
+export async function getNewCommoditiesByType(username: string, type: string | undefined, number: number) {
+  let commodities = await Commodity.find({
+    username,
+  });
+
+  if(type !== undefined) {
+    commodities = commodities.filter((commodity) => commodity.type === type);
+  };
+
+  commodities = commodities.sort((c1, c2) => c2.addTime - c1.addTime).slice(0, number);
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    commodities,
+  }
 }

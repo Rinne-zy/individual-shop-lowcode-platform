@@ -17,3 +17,28 @@ export function getTypeLabels(options: CascaderPanelOption[]) {
 
   return labelsByValue;
 }
+
+/**
+ * 获取最后一层的类型
+ * @param options 选项
+ * @param labelsByValue 标签
+ * @returns 
+ */
+export function getLastLayerTypeLabels(options: CascaderPanelOption[], labelsByValue: { label: string, value: string }[] = []) {
+  options.forEach((option) => {
+    if(!option || !option.children) return;
+    // 存在子分类
+    if(option.children.length !== 0) {
+      getLastLayerTypeLabels(option.children, labelsByValue);
+      return;
+    }
+
+    const { value, label } = option;
+    labelsByValue.push({
+      value,
+      label,
+    })
+  })
+
+  return labelsByValue
+}

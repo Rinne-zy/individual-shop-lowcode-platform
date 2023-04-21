@@ -4,7 +4,7 @@ import { StatusCode } from "../const";
 import type { CascaderPanelOption } from "../models/type";
 import Type from '../models/type';
 import { updateImage } from './image';
-import { getTypeLabels } from '../utils/label';
+import { getLastLayerTypeLabels, getTypeLabels } from '../utils/label';
 import { updateCommodity } from './commodity';
 
 /**
@@ -126,4 +126,32 @@ export async function getTypesAndLabels(username: string, name: string) {
     labels: getTypeLabels(res.options),
     options: res.options,
    }
+}
+
+/**
+ * 
+ * @param username 
+ * @returns 
+ */
+export async function getCommoditiesTypeAndLabel(username: string) {
+  const type = await Type.findOne({
+    username,
+    name: 'commodity'
+  });
+
+  if(!type) return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    types: []
+  }
+
+  // 商品分类
+  const commodityType = getLastLayerTypeLabels(type.options);
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    types: commodityType
+  }
+
 }

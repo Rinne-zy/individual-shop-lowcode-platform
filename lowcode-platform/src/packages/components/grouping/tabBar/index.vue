@@ -9,7 +9,7 @@
     >
       {{ tab.name }}
     </div>
-    <div class="active-border" :style="tabBarStyle" />
+    <div v-if="tabList.length !== 0" class="active-border" :style="tabBarStyle" />
   </div>
 </template>
 

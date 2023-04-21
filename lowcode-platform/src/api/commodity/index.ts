@@ -107,3 +107,21 @@ export async function getCommoditiesByIds(ids: string[]) {
 
   return res;
 }
+
+/**
+ * 根据 id 获取商品
+ * @param ids 商品 _id
+ * @returns 
+ */
+export async function getCommoditiesByType(type: string | undefined, number: number, sort: 'hot' | 'new') {
+  const res = await axios<CommodityResp>({
+    method: 'post',
+    url: `/commodity/${sort}`,
+    data: {
+      type,
+      number,
+    }
+  });
+
+  return res;
+}

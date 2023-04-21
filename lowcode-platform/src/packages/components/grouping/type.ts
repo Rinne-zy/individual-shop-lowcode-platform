@@ -27,6 +27,8 @@ export interface CommodityGrouping {
   commodities: string[];
   // 展示的数量
   showNumber: number;
+  // 分组商品类型
+  type?: string
 }
 
 export interface GroupingPropValue {
