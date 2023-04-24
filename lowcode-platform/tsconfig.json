@@ -12,7 +12,7 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["element-plus/global"],
+    "types": ["element-plus/global", "jquery"],
     "baseUrl": ".",
     "paths": {
       "lowcode-platform/*": ["src/*"]

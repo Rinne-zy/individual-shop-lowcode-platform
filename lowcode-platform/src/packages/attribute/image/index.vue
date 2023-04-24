@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElCollapse, ElFormItem,ElSelect, ElButton, ElOption } from 'element-plus';
+import { ElCollapse, ElFormItem, ElSelect, ElButton, ElOption } from 'element-plus';
 import { computed, ComputedRef, PropType, ref, onMounted } from 'vue';
 
 import CommonAttr  from '../common/index.vue';

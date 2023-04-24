@@ -50,6 +50,7 @@ import RealtimeComponents from 'lowcode-platform/components/realtime-components/
 import CreateShopDialog from 'lowcode-platform/components/create-shop-dialog/index.vue';
 import { useComponentsMaterialDrag } from 'lowcode-platform/hooks/use-material-drag-hook';
 import { useSchemaStore } from 'lowcode-platform/store/schema-store';
+import type { Schema } from 'lowcode-platform/store/schema-store';
 import { useEditorStatusStore } from 'lowcode-platform/store/editor-status-store';
 import { useComponentsMaterialClick } from 'lowcode-platform/hooks/use-material-click-hook';
 import { showConfirmMessage, showSuccessMessage } from 'lowcode-platform/utils/toast';
@@ -136,7 +137,7 @@ onBeforeRouteLeave(async (to, from) => {
     };
 
     // 当处于编辑商城状态（非新商场）
-    const { data } = await updateShopSchema(schemaStore.id, schemaStore.schema);
+    const { data } = await updateShopSchema(schemaStore.id, schemaStore.schema as Schema);
     if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
     showSuccessMessage(data.msg);
     // 保存操作
@@ -157,7 +158,7 @@ onBeforeRouteLeave(async (to, from) => {
  * @param name 
  */
 const handleSaveConfirm = async (formData: ShopInfo) => {
-  const { data } = await createShop(formData, schemaStore.schema);
+  const { data } = await createShop(formData, schemaStore.schema as Schema);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
   schemaStore.reset();

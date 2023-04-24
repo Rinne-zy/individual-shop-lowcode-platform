@@ -34,6 +34,9 @@
               :autosize="{ minRows: 3 }"
             />
           </el-form-item>
+          <el-form-item label="商品详情页详情介绍展示" label-width="80">
+            <rich-text-editor v-model="commodityForm.detail"/>
+          </el-form-item>
           <el-form-item label="商品分类" prop="type">
             <el-cascader 
               :options="cascaderOptions.options"
@@ -99,6 +102,7 @@ import type { CascaderOption, FormInstance } from 'element-plus';
 import SelectImageDialog from 'lowcode-platform/components/select-image-dialog/index.vue';
 import DraggableImageList from 'lowcode-platform/components/draggable-image-list/index.vue';
 import ManageTypeDialog from 'lowcode-platform/components/manage-type-dialog/index.vue';
+import RichTextEditor from 'lowcode-platform/components/rich-text-editor/index.vue';
 import type { Image } from 'lowcode-platform/api/image';
 import { getDate } from 'lowcode-platform/utils/time';
 import { deleteCascaderType, updateCascaderType } from 'lowcode-platform/api/type/index';
@@ -167,6 +171,8 @@ const defaultFormValue: CommodityForm = {
   imagesSrc: [] as { id: number, src: string}[],
   // 商品描述
   desc: "",
+  // 商品详情描述
+  detail: "",
   // 商品分类（用于商品分类展示）
   type: "",
   // 商品状态
@@ -255,6 +261,7 @@ const handleCancel = () => {
   Object.assign(commodityForm, deepcopy(defaultFormValue));
   emits('cancel');
 };
+
 // 处理点击确认按钮
 const handleConfirm = async () => {
   if(!await validateForm(formRef.value)) return;
@@ -265,7 +272,7 @@ const handleConfirm = async () => {
   }
   if(isEditing.value) {
     // 编辑情况下商品更新
-    await confirmUpdateCommodity( commodityForm._id as string, newCommodity);
+    await confirmUpdateCommodity(commodityForm._id as string, newCommodity);
   } else {
     // 添加新商品
     await confirmAddCommodity(newCommodity);

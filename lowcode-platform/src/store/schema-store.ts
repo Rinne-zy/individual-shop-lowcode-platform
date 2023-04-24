@@ -167,7 +167,7 @@ export const useSchemaStore = defineStore('schema', {
       if (this.snapshotIndex > 0) {
         this.snapshotIndex -= 1;
         const editorStatusStore = useEditorStatusStore();
-        const schema = deepcopy(this.snapshotSchema[this.snapshotIndex]);
+        const schema = deepcopy(this.snapshotSchema[this.snapshotIndex]) as Schema;
         editorStatusStore.resetSelectedComponent(schema);
         this.schema = schema;
       } else {
@@ -179,7 +179,7 @@ export const useSchemaStore = defineStore('schema', {
       if(this.snapshotIndex < this.snapshotSchema.length -1) {
         this.snapshotIndex += 1;
         const editorStatusStore = useEditorStatusStore();
-        const schema = deepcopy(this.snapshotSchema[this.snapshotIndex]);
+        const schema = deepcopy(this.snapshotSchema[this.snapshotIndex]) as Schema;
         editorStatusStore.resetSelectedComponent(schema);
         this.schema = schema;
       }

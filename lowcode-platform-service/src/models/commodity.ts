@@ -16,6 +16,8 @@ export interface Commodity {
   name: string;
   // 商品封面
   imagesSrc: string[];
+  // 商品详情
+  detail: string;
   // 商品描述
   desc: string;
   // 商品分类（用于商品分类展示）
@@ -44,6 +46,7 @@ const commoditySchema = new Schema<Commodity>({
   desc: String,
   type: String,
   status: Number,
+  detail: String,
   price: Number, 
   discount: Number, 
   stock: Number,

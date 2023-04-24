@@ -7,6 +7,7 @@
 
 .components-materials {
   display: flex;
+  flex-wrap: wrap;
   height: 70%;
   box-sizing: content-box;
   padding: 10px 0;
@@ -16,7 +17,10 @@
     width: calc((100% - 100px) / 3);
     user-select: none;
   }
-  &-item:first-child {
+  &-item:nth-child(3n + 1) {
     margin-left: 10px;
+  }
+  &-item:nth-child(3n + 4) {
+    margin-top: 10px;
   }
 }

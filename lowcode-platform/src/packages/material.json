@@ -68,6 +68,27 @@
       }
     }  
   },
+  "richText": {
+    "key": "richText",
+    "label": "富文本",
+    "icon": "richtext",
+    "type": "base",
+    "schema": {
+      "isProportion": false,
+      "componentName": "富文本",
+      "isEdited": false,
+      "style": {
+        "width": 375,
+        "left": 0,
+        "top": 0,
+        "rotate": 0
+      },
+      "propValue": {
+        "content": "<p>富文本<p>",
+        "fontSize": 16
+      }
+    }  
+  },
   "commodity": {
     "key": "Commodity",
     "label": "商品",

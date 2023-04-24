@@ -18,6 +18,8 @@ export interface CommodityForm {
   _id?: string;
   // 商品名称
   name: string;
+  // 商品详情
+  detail: string;
   // 商品封面
   imagesSrc: { id: number, src: string}[];
   // 商品描述
@@ -48,6 +50,8 @@ export interface Commodity {
   name: string;
   // 商品封面
   imagesSrc: string[];
+  // 商品详情
+  detail: string;
   // 商品描述
   desc: string;
   // 商品分类（用于商品分类展示）

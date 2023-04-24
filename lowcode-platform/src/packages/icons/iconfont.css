@@ -1,8 +1,8 @@
 @font-face {
   font-family: "packageIcon"; /* Project id 3868209 */
-  src: url('iconfont.woff2?t=1681029157166') format('woff2'),
-       url('iconfont.woff?t=1681029157166') format('woff'),
-       url('iconfont.ttf?t=1681029157166') format('truetype');
+  src: url('iconfont.woff2?t=1682326932546') format('woff2'),
+       url('iconfont.woff?t=1682326932546') format('woff'),
+       url('iconfont.ttf?t=1682326932546') format('truetype');
 }
 
 .packageIcon {
@@ -51,4 +51,8 @@
 
 .icon-grouping:before {
   content: "\e629";
+}
+
+.icon-richtext:before {
+  content: "\e7d3";
 }
