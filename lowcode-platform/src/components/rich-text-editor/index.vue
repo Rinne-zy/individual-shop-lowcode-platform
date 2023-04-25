@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="rich-text">
     <textarea id='rich-text-editor' ref="root" />
     <select-image-dialog 
       :is-visible="isSelectImageDialogVisible"
@@ -100,4 +100,4 @@ onMounted(() => {
 
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped src="./index.scss"></style>

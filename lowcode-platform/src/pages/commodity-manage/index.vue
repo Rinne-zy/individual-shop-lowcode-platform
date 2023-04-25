@@ -42,7 +42,7 @@
       </el-table-column>
       <el-table-column
         prop="type"
-        label="商品"
+        label="商品分类"
         width="150"
         :filters="filterType"
         :filter-method="handleFilter"

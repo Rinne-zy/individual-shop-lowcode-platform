@@ -90,7 +90,7 @@ const handleClickStarShop = async () => {
 
 // 复制
 const copyShopAddress = async () => {
-  const url = `http://localhost:5174/home?id=${shopStore._id}`;
+  const url = `http://47.97.34.219:8081/home?id=${shopStore._id}`;
   await copy(url);
   showSuccessToast('复制成功，快去分享吧');
 };

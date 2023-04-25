@@ -142,6 +142,7 @@ const columnCommodities = computed(() => {
 
 // 获取商品
 const getCommodities = async () => {
+  if(props.propValue.commodities.length === 0) return;
   const resp = await post({
     url: 'commodity/getByIds',
     header: {

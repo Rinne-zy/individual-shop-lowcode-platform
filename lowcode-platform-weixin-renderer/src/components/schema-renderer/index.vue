@@ -50,6 +50,13 @@
         :prop-style="component.style"
         :viewport-width="shopStore.getWidthPxNumber()"
       />
+      <my-rich-text 
+        v-if="component.key === 'richText'"
+        class="component"
+        :prop-value="(component.propValue as any)"
+        :prop-style="component.style"
+        :viewport-width="shopStore.getWidthPxNumber()"
+      />
     </view>
   </view>
 </template>
@@ -63,6 +70,7 @@ import MySwiper from 'lowcode-platform-weixin-renderer/packages/components/swipe
 import MyShop from 'lowcode-platform-weixin-renderer/packages/components/shop/index.vue';
 import MyCommodity from 'lowcode-platform-weixin-renderer/packages/components/commodity/index.vue';
 import MyCommodityGrouping from 'lowcode-platform-weixin-renderer/packages/components/grouping/index.vue';
+import MyRichText from 'lowcode-platform-weixin-renderer/packages/components/richtext/index.vue';
 
 import { getComponentStyleToViewPort } from 'lowcode-platform-common/utils/style';
 import { useShopStore } from 'lowcode-platform-weixin-renderer/store/schema';

@@ -69,7 +69,7 @@ import { useUserStore } from 'lowcode-platform/store/user-store';
 import { useRoute, useRouter } from 'vue-router';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { showSuccessMessage } from 'lowcode-platform/utils/toast';
-import { useSchemaStore } from 'lowcode-platform/store/schema-store';
+import { Schema, useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { createShop, deployShop, ShopInfo, updateShopSchema } from 'lowcode-platform/api/shop';
 import { showConfirmDialog } from 'vant';
 import { useShopsStore } from 'lowcode-platform/store/shop-store';
@@ -139,7 +139,7 @@ const handleClickSave = () => {
   }
 
   // 非新商城直接保存
-  updateShopSchema(schemaStore.id, schemaStore.schema).then(({ data }) => {
+  updateShopSchema(schemaStore.id, schemaStore.schema as Schema).then(({ data }) => {
     if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
     showSuccessMessage(data.msg);
   });
@@ -148,7 +148,7 @@ const handleClickSave = () => {
 
 // 确认保存
 const handleSaveConfirm = async (formData: ShopInfo) => {
-  const { data } = await createShop(formData, schemaStore.schema);
+  const { data } = await createShop(formData, schemaStore.schema as Schema);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);
   schemaStore.reset();

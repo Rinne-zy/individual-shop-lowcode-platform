@@ -23,7 +23,7 @@
     <view class="commodity-details">
       <view class="title">商品详情</view>
       <view class="info">
-        {{ commodity?.desc }}
+        <view v-html="commodity?.detail"></view>
       </view>
     </view>
     <view class="shop">

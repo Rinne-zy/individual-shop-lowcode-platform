@@ -18,6 +18,8 @@ export interface Commodity {
   imagesSrc: string[];
   // 商品描述
   desc: string;
+  // 商品详情信息
+  detail: string;
   // 商品分类（用于商品分类展示）
   type: string;
   // 商品状态

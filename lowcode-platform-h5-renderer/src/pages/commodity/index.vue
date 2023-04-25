@@ -25,7 +25,7 @@
     <div class="commodity-details">
       <div class="title">商品详情</div>
       <div class="info">
-        {{ commodity?.desc }}
+        <div v-html="commodity?.detail"></div>
       </div>
     </div>
     <div class="shop">

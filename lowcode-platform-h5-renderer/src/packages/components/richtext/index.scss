@@ -1,0 +1,10 @@
+.rich-text {
+  max-width: 100%;
+  overflow: hidden;
+  ul{ 
+    list-style: disc inside !important;
+  }  
+  ol{ 
+    list-style: decimal inside !important;
+  }  
+}

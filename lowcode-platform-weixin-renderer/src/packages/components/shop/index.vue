@@ -8,7 +8,6 @@
       </view>
       <view class="star-shop" v-if="!isStar" @click="handleClickStarShop"><van-icon name="like-o" :size="16" />收藏店铺</view>
       <view class="star-shop isStar" v-else @click="handleClickStarShop"><van-icon name="like" :size="16"/>已收藏</view>
-      <view class="share-shop" @click="copyShopAddress"><van-icon name="share-o" :size="20"/></view>
     </view>
   </view>
 </template>
@@ -22,6 +21,7 @@ import { useShopStore } from 'lowcode-platform-weixin-renderer/store/schema';
 import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
 import { getUserStarShops } from 'lowcode-platform-weixin-renderer/api/user';
 import { starShop } from 'lowcode-platform-weixin-renderer/api/shop';
+import { onShow } from '@dcloudio/uni-app';
 
 const shopStore = useShopStore();
 const userStore = useUserStore();
@@ -64,7 +64,6 @@ const getUserIsStarShop = async () => {
   isStar.value = shop[shopStore._id];
   canClickStarBtn = true;
 };
-getUserIsStarShop();
 
 // 判断是否登录
 const checkIsLogin = async () => {
@@ -85,10 +84,12 @@ const handleClickStarShop = async () => {
   canClickStarBtn = true;
 };
 
-// 复制
-const copyShopAddress = async () => {
-  // TODO 打开分享面板
-};
+onShow(() => {
+  getUserIsStarShop();
+})
+
+getUserIsStarShop();
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>
