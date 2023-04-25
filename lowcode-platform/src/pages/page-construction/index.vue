@@ -2,6 +2,7 @@
   <div class="construction-panel">
     <!-- 左侧物料区 -->
     <div class="construction-panel-left">
+      <div class="layout-tip">当前布局: <strong style="color: red;">{{ schemaStore.isFixLayoutMode() ? '固定布局' : '顺序布局' }}</strong></div>
       <components-materials-area 
         @handle-drag-start="handleDragStart"
         @handle-component-material-click="handleComponentsMaterialClick"

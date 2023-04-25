@@ -16,6 +16,13 @@
       >
         <el-switch v-model="selectedComponent.isProportion" />
       </el-form-item>
+      <el-form-item
+        v-else
+        label="是否非独占一行"
+        name="inline"
+      >
+        <el-switch v-model="selectedComponent.inline" />
+      </el-form-item>
     </el-form>
   </el-collapse-item>
 </template>
@@ -37,7 +44,7 @@ const selectedComponent = computed(() => schemaStore.getSelectedComponentSchema(
 // 通用属性
 const commonAttr = computed(() => {
   const attr = {} as Record<keyof CommonStyleSchema, string | number>;
-  Object.keys(labelByStyleKey).forEach((key) => {
+  Object.keys(labelByStyleKey.value).forEach((key) => {
     const styleKey = key as keyof CommonStyleSchema;
     const value =  selectedComponent.value.style[styleKey];
     // undefined 表示不关心属性，直接去掉
@@ -47,13 +54,27 @@ const commonAttr = computed(() => {
   return attr;
 })
 
-const labelByStyleKey: Record<string, string> = {
-  width: '宽度(单位 px)',
-  height: '高度(单位 px)',
-  left: 'x 坐标(单位 px)',
-  top: 'y 坐标(单位 px)',
-  rotate: '旋转角度(单位 deg)',
-}
+const labelByStyleKey = computed(() => {
+  if(schemaStore.isFixLayoutMode()) {
+    return {
+      width: '宽度(单位 px)',
+      height: '高度(单位 px)',
+      left: 'x 坐标(单位 px)',
+      top: 'y 坐标(单位 px)',
+      rotate: '旋转角度(单位 deg)',
+    }
+  } else {
+    return {
+      width: '宽度(单位 px)',
+      height: '高度(单位 px)',
+      marginLeft: '左边距(单位 px)',
+      marginRight: '右边距(单位 px)',
+      marginTop: '上边距(单位 px)',
+      marginBottom: '下边距(单位 px)',
+      rotate: '旋转角度(单位 deg)',
+    }
+  }
+})
 
 // 处理输入框输入变化
 const onHandleInput = () => {

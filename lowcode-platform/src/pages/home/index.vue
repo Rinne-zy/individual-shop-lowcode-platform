@@ -51,6 +51,7 @@
       ref="createShopDialogRef"
       :is-visible="isVisible"
       :is-editing="!isNewShop"
+      :can-change-layout="true"
       @cancel="isVisible = false"
       @confirm="handleSaveConfirm"
     />
@@ -69,7 +70,7 @@ import { useUserStore } from 'lowcode-platform/store/user-store';
 import { useRoute, useRouter } from 'vue-router';
 import { StatusCode } from 'lowcode-platform/api/type';
 import { showSuccessMessage } from 'lowcode-platform/utils/toast';
-import { Schema, useSchemaStore } from 'lowcode-platform/store/schema-store';
+import { EditorLayoutMode, Schema, useSchemaStore } from 'lowcode-platform/store/schema-store';
 import { createShop, deployShop, ShopInfo, updateShopSchema } from 'lowcode-platform/api/shop';
 import { showConfirmDialog } from 'vant';
 import { useShopsStore } from 'lowcode-platform/store/shop-store';
@@ -147,7 +148,11 @@ const handleClickSave = () => {
 };
 
 // 确认保存
-const handleSaveConfirm = async (formData: ShopInfo) => {
+const handleSaveConfirm = async (formData: ShopInfo, isFixMode = true) => {
+  if(!isFixMode) {
+    schemaStore.schema.editor.mode = EditorLayoutMode.Sequential
+  }
+
   const { data } = await createShop(formData, schemaStore.schema as Schema);
   if (!data || data.code !== StatusCode.Success) throw new Error(data.msg);
   showSuccessMessage(data.msg);

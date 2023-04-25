@@ -6,6 +6,7 @@
     "type": "base",
     "schema": {
       "isProportion": true,
+      "inline": false,
       "isEdited": false,
       "componentName": "图片",
       "style": {
@@ -13,7 +14,11 @@
         "height": 100,
         "left": 0,
         "top": 0,
-        "rotate": 0
+        "rotate": 0,
+        "marginTop": 0,
+        "marginBottom": 0,
+        "marginRight": 0,
+        "marginLeft": 0
       },
       "propValue": {
         "src": "",
@@ -28,13 +33,18 @@
     "type": "base",
     "schema": {
       "isProportion": false,
+      "inline": false,
       "componentName": "文本",
       "isEdited": false,
       "style": {
         "width": 375,
         "left": 0,
         "top": 0,
-        "rotate": 0
+        "rotate": 0,
+        "marginTop": 0,
+        "marginBottom": 0,
+        "marginRight": 0,
+        "marginLeft": 0
       },
       "propValue": {
         "value": "我是一则标题",
@@ -52,6 +62,7 @@
     "type": "base",
     "schema": {
       "isProportion": false,
+      "inline": false,
       "componentName": "轮播图",
       "isEdited": false,
       "style": {
@@ -59,7 +70,11 @@
         "height": 250,
         "left": 0,
         "top": 0,
-        "rotate": 0
+        "rotate": 0,
+        "marginTop": 0,
+        "marginBottom": 0,
+        "marginRight": 0,
+        "marginLeft": 0
       },
       "propValue": {
         "swipeItems": [],
@@ -75,13 +90,18 @@
     "type": "base",
     "schema": {
       "isProportion": false,
+      "inline": false,
       "componentName": "富文本",
       "isEdited": false,
       "style": {
         "width": 375,
         "left": 0,
         "top": 0,
-        "rotate": 0
+        "rotate": 0,
+        "marginTop": 0,
+        "marginBottom": 0,
+        "marginRight": 0,
+        "marginLeft": 0
       },
       "propValue": {
         "content": "<p>富文本<p>",
@@ -96,13 +116,18 @@
     "type": "e-commerce",
     "schema": {
       "isProportion": false,
+      "inline": false,
       "componentName": "商品",
       "isEdited": false,
       "style": {
         "width": 375,
         "left": 0,
         "top": 0,
-        "rotate": 0
+        "rotate": 0,
+        "marginTop": 0,
+        "marginBottom": 0,
+        "marginRight": 0,
+        "marginLeft": 0
       },
       "propValue": {
         "padding": 10,
@@ -121,18 +146,23 @@
     "type": "e-commerce",
     "schema": {
       "isProportion": false,
+      "inline": false,
       "componentName": "商品分组",
       "isEdited": false,
       "style": {
         "width": 375,
         "left": 0,
         "top": 0,
-        "rotate": 0
+        "rotate": 0,
+        "marginTop": 0,
+        "marginBottom": 0,
+        "marginRight": 0,
+        "marginLeft": 0
       },
       "propValue": {
         "title": "商品店铺标题",
         "desc": "商品店铺描述",
-        "icon": "./default.webp",
+        "icon": "http://47.97.34.219/images/default.webp",
         "useDefault": false,
         "color": "#fff"
       }
@@ -145,13 +175,18 @@
     "type": "e-commerce",
     "schema": {
       "isProportion": false,
+      "inline": false,
       "componentName": "商品分组",
       "isEdited": false,
       "style": {
         "width": 375,
         "left": 0,
         "top": 0,
-        "rotate": 0
+        "rotate": 0,
+        "marginTop": 0,
+        "marginBottom": 0,
+        "marginRight": 0,
+        "marginLeft": 0
       },
       "propValue": {
         "padding": 10,

@@ -21,6 +21,15 @@
             <div v-else class="image-uploader-icon">+</div>
           </div>
         </el-form-item>
+        <el-form-item label="商城布局">
+          <el-switch
+            v-model="isFixMode"
+            size="large"
+            active-text="绝对定位布局"
+            inactive-text="顺序布局"
+            :disabled="!canChangeLayout"
+          />
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -40,7 +49,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
-import { ElForm, ElFormItem, ElDialog, ElButton, ElInput } from 'element-plus';
+import { ElForm, ElFormItem, ElDialog, ElButton, ElInput, ElSwitch } from 'element-plus';
 import type { FormInstance } from 'element-plus';
 
 import type { Image } from 'lowcode-platform/api/image';
@@ -60,6 +69,10 @@ const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false,
+  },
+  canChangeLayout: {
+    type: Boolean,
+    default: false,
   }
 });
 
@@ -75,6 +88,8 @@ defineExpose({
 // 对话框标题
 const dialogTitle = computed(() => props.isEditing ? '更新商城 schema' : '创建商城 schema');
 const isSelectImageDialogVisible = ref(false);
+// 是否为绝对定位布局
+const isFixMode = ref(true);
 
 // 表单实例
 const formRef = ref<FormInstance>();
@@ -118,11 +133,13 @@ const handleCancel = () => {
 const reset = () => {
   form.name = '';
   form.avatar = ''
+  // 默认为绝对定位布局
+  isFixMode.value = true;
 }
 // 点击确认
 const handleConfirm = async () => {
   if(!await validateForm(formRef.value)) return;
-  emits('confirm', form);
+  emits('confirm', form, isFixMode.value);
   reset();
 };
 // 确认

@@ -48,6 +48,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isInline: {
+    type: Boolean,
+    default: false,
+  },
   commonStyle: {
     type: Object,
     default: () => {}
@@ -63,9 +67,31 @@ const style = computed(() => {
     commonStyle[key] = `${props.commonStyle[key]}px`;
   })
 
-  return {
-    ...commonStyle,
+  const { top, left, width, height, marginTop, marginBottom } = commonStyle;
+
+  const componentStyle: Record<string, string> =  {
+    width,
     rotate: `${props.commonStyle.rotate}deg`,
+  }
+
+  // 是否存在高度属性
+  if(height) {
+    componentStyle.height = height;
+  }
+
+  if(isFixedMode.value) {
+    return {
+      ...componentStyle,
+      top,
+      left,
+    }
+  } else {
+    return {
+      ...componentStyle,
+      marginTop,
+      marginBottom,
+      display: props.isInline ? 'inline-block' : 'block',
+    }
   }
 })
 

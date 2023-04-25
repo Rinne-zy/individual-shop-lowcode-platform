@@ -16,16 +16,37 @@ export function transformPxToVw(pixelValue: number, viewPortWidth: number, unitP
  * @param viewPortWidth 视口宽度
  * @returns 
  */
-export function getComponentStyleToViewPort(style: Record<string, any>, viewPortWidth = 375) {
+export function getComponentStyleToViewPort(style: Record<string, any>, viewPortWidth = 375, isFixMode = true) {
   const commonStyle: Record<string, string> = {};
   Object.keys((style)).forEach((key) => {
+    if(key === 'height' || key === 'top') {
+      commonStyle[key] = `${style[key]}px`;
+      return;
+    };
     commonStyle[key] = transformPxToVw(style[key], viewPortWidth);
   })
 
-  return {
-    ...commonStyle,
-    height: `fit-content`,
-    top: `${style.top}px`,
+  const { top, left, width, height, marginTop, marginBottom } = commonStyle;
+
+  const componentStyle: Record<string, string> =  {
+    width,
     rotate: `${style.rotate}deg`,
+  }
+
+  // 是否存在高度属性
+  componentStyle.height = height || `fit-content`;
+
+  if(isFixMode) {
+    return {
+      ...componentStyle,
+      top,
+      left,
+    }
+  } else {
+    return {
+      ...componentStyle,
+      marginTop,
+      marginBottom,
+    }
   }
 }

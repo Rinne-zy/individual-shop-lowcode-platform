@@ -16,7 +16,9 @@ export interface ComponentsSchema {
   // 组件物料的 key
   key: string;
   // 是否等比例放缩
-  isProportion: boolean,
+  isProportion: boolean;
+  // 是否为行内元素
+  inline: boolean;
   // 是否正在编辑属性面板
   isEdited: boolean,
   // 通用样式

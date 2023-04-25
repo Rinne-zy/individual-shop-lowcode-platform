@@ -1,7 +1,7 @@
 <template>
   <div class="shop" :style="shopInfoStyle">
     <div class="shop-info">
-      <img :src="props.propValue.useDefault ? shopStore.avatar : props.propValue.icon" width="60" height="60">
+      <img :src="!props.propValue.useDefault ? shopStore.avatar : props.propValue.icon" width="60" height="60">
       <div class="shop-info-text" :style="textColor">
         <div class="title">{{ props.propValue.useDefault ? shopStore.name: props.propValue.title }}</div>
         <div class="desc">{{ propValue.desc }}</div>

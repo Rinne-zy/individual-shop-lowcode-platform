@@ -5,8 +5,8 @@
     <view
       v-for="component in components"
       :key="component.id"
-      :style="getComponentStyleToViewPort(component.style)"
-      :class="[ isFixedMode ? 'fixedLayout' : 'sequentialLayout', 'component-wrap']"
+      :style="getComponentStyleToViewPort(component.style, shopStore.getWidthPxNumber(), isFixedMode)"
+      :class="getComponentLayoutClass(component.inline)"
     >
       <my-image
         v-if="component.key === 'Image'"
@@ -81,6 +81,12 @@ const shopStore = useShopStore();
 const components = computed(() => shopStore.schema.components);
 // 是否为固定定位
 const isFixedMode = computed(() => shopStore.isFixLayoutMode());
+
+const getComponentLayoutClass = (isInline: boolean) => {
+  if(isFixedMode.value) return 'fixedLayout';
+  return isInline ? 'sequentialLayout-inline' : 'sequentialLayout'
+}
+
 </script>
 
 <style lang="scss" scoped src="./index.scss"></style>

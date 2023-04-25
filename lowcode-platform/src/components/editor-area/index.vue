@@ -6,6 +6,7 @@
       :id="component.id"
       :commonStyle="component.style"
       :isProportion="component.isProportion"
+      :is-inline="component.inline"
       :class="[ isFixedMode ? 'fixedLayout' : 'sequentialLayout']"
       @on-handle-shape-mouse-down="(ref: Ref<HTMLElement>) => {
         selectComponent(component.id, index, ref);
