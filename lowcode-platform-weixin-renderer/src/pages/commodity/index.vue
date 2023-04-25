@@ -20,7 +20,7 @@
       <view class="tag"><u-tag text="新品" plain type="error" /></view>
       <view class="tag"><u-tag text="热销" plain type="error" /></view>
     </view>
-    <view class="commodity-details">
+    <view class="commodity-details" v-if="commodity?.detail">
       <view class="title">商品详情</view>
       <view class="info">
         <view v-html="commodity?.detail"></view>

@@ -42,3 +42,19 @@ export function getLastLayerTypeLabels(options: CascaderPanelOption[], labelsByV
 
   return labelsByValue
 }
+
+/**
+ * 获取所有分类 id 对应的标签名
+ * @param options 分类选项
+ * @param labelByType 标签id对应的标签名
+ * @returns 
+ */
+export function getLabelsByType(options: CascaderPanelOption[], labelByType: Record<string, string> = {}) {
+  options.forEach((option) => {
+    if(!option) return;
+    labelByType[option.value] = option.label;
+    getLabelsByType(option.children, labelByType);
+  })
+
+  return labelByType
+}

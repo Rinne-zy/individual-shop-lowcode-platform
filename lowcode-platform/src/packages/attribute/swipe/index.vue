@@ -17,7 +17,25 @@
                 <span class="iconfont icon-up" :class="[!index ? 'disable' : '' ]" @click="handleUpImage(index)"/>
                 <span class="iconfont icon-down" :class="[index === (swipeItems.length - 1) ? 'disable' : '' ]" @click="handleDownImage(index)"/>
                 <span class="iconfont icon-delete" @click="handleDelete(index)" />
-                <el-select class="swipe-images-item-operation-select" />
+                <el-select 
+                  v-model="swipeItems[index].link" 
+                  placeholder="请选择商品类型" 
+                  class="swipe-images-item-operation-select"
+                  @change=""
+                >
+                  <el-option-group
+                    v-for="group in options"
+                    :key="group.label"
+                    :label="group.label"
+                  >
+                    <el-option
+                      v-for="item in group.options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-option-group>
+                </el-select>
               </div>
             </div>
         </div>
@@ -35,7 +53,7 @@
                 <span class="iconfont icon-down" />
                 <span class="iconfont icon-up" />
                 <span class="iconfont icon-delete" />
-                <el-select class="swipe-images-item-operation-select"></el-select>
+                <el-select class="swipe-images-item-operation-select" disabled />
               </div>
             </div>
             <div style="color: #d40000; margin: 10px">请选择图片</div>
@@ -60,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElCollapse, ElCollapseItem, ElSelect, ElButton } from 'element-plus';
+import { ElCollapse, ElCollapseItem, ElSelect, ElButton, ElOptionGroup, ElOption } from 'element-plus';
 import { computed, ComputedRef, PropType, ref } from 'vue';
 
 import CommonAttr  from '../common/index.vue';
@@ -72,6 +90,8 @@ import type { SwipePropValue } from 'lowcode-platform/packages/components/swipe/
 import { useSchemaStore, ComponentsSchema } from 'lowcode-platform/store/schema-store';
 import type { Image } from 'lowcode-platform/api/image';
 import { swap } from 'lowcode-platform/utils/array';
+import { getCommoditiesSortByType } from 'lowcode-platform/api/commodity';
+import { StatusCode } from 'lowcode-platform/api/type';
 
 const props = defineProps({
   style:{
@@ -88,7 +108,12 @@ const schemaStore = useSchemaStore();
 const selectedComponent = computed(() => schemaStore.getSelectedComponentSchema()) as ComputedRef<ComponentsSchema>;
 // 轮播图项
 const swipeItems = computed(() => props.propValue.swipeItems);
-  // 轮播图最大的图片数目
+// 选择图片选项
+const options = ref<{
+  label: string
+  options: { value: string, label: string }[]
+}[]>([]);
+// 轮播图最大的图片数目
 const maxImagesNumber = 5;
 // 选择图片按钮文本
 const selectImageButtonText = computed(() => {
@@ -153,6 +178,8 @@ const handleConfirm = (selectedImages: Image[] | Image) => {
   // 重置
   editingIndex.value = -1;
   isVisible.value = false;
+  // 记录快照
+  schemaStore.recordSnapshot();
 }
 
 // 处理关闭图片对话框
@@ -164,6 +191,8 @@ const handleClose = () => {
 const handleDelete = (index: number) => {
   const swipeItems = (selectedComponent.value.propValue as unknown as SwipePropValue).swipeItems;
   swipeItems.splice(index, 1);
+  // 记录快照
+  schemaStore.recordSnapshot();
 }
 
 // 处理上移
@@ -171,6 +200,8 @@ const handleUpImage = (index: number) => {
   if(!index) return;
   const swipeItems = (selectedComponent.value.propValue as unknown as SwipePropValue).swipeItems;
   swap(swipeItems, index, index - 1);
+  // 记录快照
+  schemaStore.recordSnapshot();
 }
 
 // 处理下移
@@ -178,7 +209,23 @@ const handleDownImage = (index: number) => {
   const swipeItems = (selectedComponent.value.propValue as unknown as SwipePropValue).swipeItems;
   if(index === swipeItems.length - 1) return;
   swap(swipeItems, index, index + 1);
+  // 记录快照
+  schemaStore.recordSnapshot();
 }
+
+const handleChangeLink = () => {
+  // 记录快照
+  schemaStore.recordSnapshot();
+}
+
+// 获取商品转跳链接的商品
+const getCommoditiesSortByTypeOptions = async () => {
+  const { data } = await getCommoditiesSortByType();
+  if (!data || data.code !== StatusCode.Success || !data.options) throw new Error(data.msg);
+  options.value = data.options
+}
+
+getCommoditiesSortByTypeOptions();
 
 </script>
 

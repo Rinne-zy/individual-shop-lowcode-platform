@@ -39,6 +39,9 @@ function traverse(value: any, ids: Set<string>) {
       value[k].forEach((id: string) => ids.add(id));
       return;
     }
+    else if(k === 'link' && typeof value[k] === 'string') {
+      ids.add(value[k]);
+    }
     traverse(value[k], ids);
   };
 };

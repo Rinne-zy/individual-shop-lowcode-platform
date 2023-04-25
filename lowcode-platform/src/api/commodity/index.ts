@@ -2,6 +2,8 @@ import axios from "axios";
 
 import type { Commodity } from "lowcode-platform/store/commodity-store";
 import type { BaseResp } from "../type";
+import type { OptionsTypeForCommodities } from "../type/index";
+
 
 export interface CommodityResp extends BaseResp {
   commodities: Commodity[];
@@ -121,6 +123,20 @@ export async function getCommoditiesByType(type: string | undefined, number: num
       type,
       number,
     }
+  });
+
+  return res;
+}
+
+/**
+ * 根据 id 获取商品
+ * @param ids 商品 _id
+ * @returns 
+ */
+export async function getCommoditiesSortByType() {
+  const res = await axios<OptionsTypeForCommodities>({
+    method: 'get',
+    url: `/commodity/sort/type`
   });
 
   return res;

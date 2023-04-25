@@ -22,7 +22,7 @@
       <van-tag class="tag" plain type="danger">新品</van-tag>
       <van-tag class="tag" plain type="danger">热销</van-tag>
     </div>
-    <div class="commodity-details">
+    <div class="commodity-details" v-if="commodity?.detail">
       <div class="title">商品详情</div>
       <div class="info">
         <div v-html="commodity?.detail"></div>

@@ -9,12 +9,21 @@ export interface CascaderOptionsResp extends BaseResp {
   options: CascaderOption[],
 };
 
+export interface OptionsTypeForCommodities extends BaseResp  {
+  options: {
+    label: string
+    options: { value: string, label: string }[]
+  }[]
+}
+
 interface typeResp extends BaseResp {
   types: {
     label: string;
     value: string;
   }[]
 }
+
+
 
 /**
  * 获取分类相关的级联选择器选项

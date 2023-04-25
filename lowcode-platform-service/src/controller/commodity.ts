@@ -1,9 +1,11 @@
-import { CommodityStatus, Commodity as CommodityType } from './../models/commodity';
+import commodity, { CommodityStatus, Commodity as CommodityType } from './../models/commodity';
 import Shop from '../models/shop';
 import Commodity  from './../models/commodity';
 import User from './../models/user';
+import Type from '../models/type';
 import { StatusCode } from '../const';
 import { getCommoditiesFromShop } from './shop';
+import { getLabelsByType } from '../utils/label';
 
 /**
  * 获取商品
@@ -284,4 +286,54 @@ export async function getNewCommoditiesByType(
     msg: '获取成功',
     commodities,
   }
+}
+
+/**
+ * 获取按照商品分类分组的商品
+ * @param username 
+ * @returns 
+ */
+export async function getCommoditiesSortByType(username: string) {
+  const commoditiesByType: Record<string, {
+    label: string
+    options: { value: string, label: string }[]
+  }> = {};
+
+  const [commodities, types] = await Promise.all([
+    Commodity.find({ username,}),
+    Type.findOne({
+      username,
+      name: 'commodity',
+    })
+  ]);
+
+  if(!types || !commodities) return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    options: [],
+  };
+
+  const labelByType = getLabelsByType(types.options);
+  commodities.forEach((commodity) => {
+    const { _id, name, type } = commodity;
+    if(!commoditiesByType[type]) {
+      commoditiesByType[type] = {
+        label: labelByType[type],
+        options: [],
+      }
+    }
+
+    commoditiesByType[type].options.push({
+      label: name,
+      value: _id.toString(),
+    })
+  });
+
+  const options = Array.from(Object.values(commoditiesByType));
+
+  return {
+    code: StatusCode.Success,
+    msg: '获取成功',
+    options,
+  };
 }
