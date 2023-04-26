@@ -22,6 +22,7 @@ import { useUserStore } from 'lowcode-platform-weixin-renderer/store/user';
 import { getUserStarShops } from 'lowcode-platform-weixin-renderer/api/user';
 import { starShop } from 'lowcode-platform-weixin-renderer/api/shop';
 import { onShow } from '@dcloudio/uni-app';
+import { transformPxToVw } from 'lowcode-platform-common/utils/style';
 
 const shopStore = useShopStore();
 const userStore = useUserStore();
@@ -36,13 +37,12 @@ const props = defineProps({
   propStyle: {
     type: Object,
     default: () => {},
-  }
+  },
 });
 
 // 商店信息样式
 const shopInfoStyle = {
   backgroundImage: `url(${props.propValue.background || 'http://47.97.34.219/images/default.webp'})`,
-  height: `${props.propStyle.height}px`,
 };
 // 文本颜色
 const textColor = {

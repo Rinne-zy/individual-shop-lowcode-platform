@@ -19,10 +19,6 @@ export function transformPxToVw(pixelValue: number, viewPortWidth: number, unitP
 export function getComponentStyleToViewPort(style: Record<string, any>, viewPortWidth = 375, isFixMode = true) {
   const commonStyle: Record<string, string> = {};
   Object.keys((style)).forEach((key) => {
-    if(key === 'height' || key === 'top') {
-      commonStyle[key] = `${style[key]}px`;
-      return;
-    };
     commonStyle[key] = transformPxToVw(style[key], viewPortWidth);
   })
 

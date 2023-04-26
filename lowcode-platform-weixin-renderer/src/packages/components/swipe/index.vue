@@ -54,7 +54,7 @@ const commodityDetailStore = useCommodityDetailStore();
 // 轮播图样式
 const swipeItemStyle = computed(() => ({
   width: `${transformPxToVw(props.propStyle.width, props.viewportWidth)}`,
-  height: `${props.propStyle.height}px`,
+  height: `${transformPxToVw(props.propStyle.height, props.viewportWidth)}`,
 }));
 
 // 轮播速度（单位秒）
