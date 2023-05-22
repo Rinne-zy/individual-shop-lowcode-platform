@@ -19,7 +19,6 @@
     </div>
     <van-submit-bar 
       class="submit-bar"
-      :decimal-length="5"
       :price="orderStore.totalPrice * 100"
       button-text="确定并支付"
       @submit="handleSubmit"

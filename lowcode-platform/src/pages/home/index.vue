@@ -3,7 +3,7 @@
     <el-container>
         <!-- 侧边栏 -->
         <el-aside class="home-aside" width="200px">
-          <div class="home-aside-top">低代码电商平台</div>
+          <div class="home-aside-top">低代码微商构建平台</div>
           <el-menu :default-active="activatedMenu" router>
             <el-menu-item
               v-for="(menuItem, index) in menu" 

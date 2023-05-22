@@ -2,3 +2,16 @@
   max-width: 100%;
   overflow: hidden;
 }
+
+.content {
+  :deep(ul) {
+    list-style-type: disc !important;
+    list-style-position: inside !important;
+  }
+  
+  :deep(ol) {
+    list-style-type: decimal !important;
+    list-style-position: inside !important;
+  }
+}
+

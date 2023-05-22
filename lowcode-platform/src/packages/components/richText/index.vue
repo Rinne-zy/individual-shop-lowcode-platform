@@ -1,6 +1,6 @@
 <template>
   <div class="rich-text" :style="{ fontSize: `${propValue.fontSize}px`}">
-    <div v-html="propValue.content" />
+    <div class="content" v-html="propValue.content" />
   </div>
 </template>
 
@@ -20,6 +20,10 @@ defineProps({
     default: () => {},
   }
 });
+
+const richTextStyle = {
+
+}
 
 </script>
 
