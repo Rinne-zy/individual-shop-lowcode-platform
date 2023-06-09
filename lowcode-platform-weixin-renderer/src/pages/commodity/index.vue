@@ -36,12 +36,14 @@
     </view>
     <u-divider v-if="otherPictures.length" text="商品图片展示" />
     <view class="commodity-imgs">
-      <img
-        class=""
+      <view
         v-for="(pic, index) in otherPictures"
+        style="max-width:100%"
+        class="img-warp"
         :key="index"
-        :src="pic"
       >
+        <img class="img" :src="pic" />
+      </view>
     </view>
     <view class="padding" />
   </view>

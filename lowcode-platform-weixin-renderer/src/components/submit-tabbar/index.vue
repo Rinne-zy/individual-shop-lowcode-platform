@@ -3,7 +3,7 @@
     <view class="submit-text">
       <text>合计:</text>
       <text class="price">
-        ￥<text class="integer" :class="{ not: !canSubmit }">{{ integer }}</text><text class="decimal" :class="{ not: !canSubmit }">.{{ decimal }}</text>
+        ￥<text class="integer" :class="{ not: !canSubmit }">{{ integer }}</text><text v-if="decimal" class="decimal" :class="{ not: !canSubmit }">.{{ decimal }}</text>
       </text>
     </view>
     <view class="submit-btn">
@@ -60,7 +60,7 @@ const decimal = computed(() => {
     return '00'
   };
 
-  return `${props.price}`.split('.')[1];
+  return `${props.price}`.split('.')[1] || '';
 });
 // 提交
 const handleSubmit = () => {

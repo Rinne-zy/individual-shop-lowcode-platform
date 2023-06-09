@@ -1,6 +1,6 @@
 <template>
   <view class="rich-text" :style="{ fontSize: `${transformPxToVw(propValue.fontSize, viewportWidth)}`}">
-    <view v-html="propValue.content" />
+    <view class="rich-text-content" v-html="propValue.content" />
   </view>
 </template>
 

@@ -170,7 +170,7 @@ export async function payOrderByOrderId(ids: string[] | string, username: string
     if(!order) throw new Error('支付订单失败');
     if(order.customer.username !== username) throw new Error('用户名有误');
     // 增加商品销量
-    await Promise.all(order.commodities.map((commodity) => Commodity.findByIdAndUpdate(commodity._id, { $inc: { sales: + 1 } })));
+    await Promise.all(order.commodities.map((commodity) => Commodity.findByIdAndUpdate(commodity._id, { $inc: { sales: + commodity.number } })));
   }));
 
   return {
